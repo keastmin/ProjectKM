@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ecfc0e44283d64242a9e5884a029b318
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 269483
+  packageName: One Handed Sword Animset Pro
+  packageVersion: 1.0
+  assetPath: Assets/SwordAnimsetPro/Animations/Animator Controller/Weapon_Deployment.controller
+  uploadId: 738342
