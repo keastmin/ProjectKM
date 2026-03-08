@@ -1,7 +1,14 @@
 fileFormatVersion: 2
 guid: 698402115c0e2784389e1c365d58f031
+AssetOrigin:
+  serializedVersion: 1
+  productId: 269483
+  packageName: One Handed Sword Animset Pro
+  packageVersion: 1.0
+  assetPath: Assets/SwordAnimsetPro/Animations/Montage/Jump_Two_Montage_Anim.FBX
+  uploadId: 738342
 ModelImporter:
-  serializedVersion: 21300
+  serializedVersion: 24200
   internalIDToNameTable:
   - first:
       74: 8993902097722301239
@@ -22,8 +29,6 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -75,6 +80,7 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -92,6 +98,9 @@ ModelImporter:
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
     optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -102,6 +111,7 @@ ModelImporter:
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -585,8 +595,7 @@ ModelImporter:
     - name: ik_hand_r
       parentName: ik_hand_gun
       position: {x: -0, y: 0, z: 0}
-      rotation: {x: 0.000000007450579, y: 0.0000000074505784, z: -0.000000089406946,
-        w: 1}
+      rotation: {x: 0.000000007450579, y: 0.0000000074505784, z: -0.000000089406946, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: pelvis
       parentName: root
@@ -736,14 +745,12 @@ ModelImporter:
     - name: lowerarm_twist_01_l
       parentName: lowerarm_l
       position: {x: -0.13999976, y: 0.000000057220458, z: -0.0000003814697}
-      rotation: {x: 0.000000014901163, y: -0.000000029802322, z: 0.0000000074505815,
-        w: 1}
+      rotation: {x: 0.000000014901163, y: -0.000000029802322, z: 0.0000000074505815, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: upperarm_twist_01_l
       parentName: upperarm_l
       position: {x: -0.005000229, y: 0, z: -0.00000030517577}
-      rotation: {x: -0.0000000018626451, y: -0.000000014901161, z: -0.0000000018626451,
-        w: 1}
+      rotation: {x: -0.0000000018626451, y: -0.000000014901161, z: -0.0000000018626451, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: clavicle_r
       parentName: spine_03
@@ -773,8 +780,7 @@ ModelImporter:
     - name: Weapon_RS
       parentName: Weapon_R
       position: {x: 0.06393559, y: 0.046391904, z: 0.000000038146972}
-      rotation: {x: 0.000000014901161, y: -0.000000011175873, z: 0.000000007450582,
-        w: 1}
+      rotation: {x: 0.000000014901161, y: -0.000000011175873, z: 0.000000007450582, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: thumb_01_r
       parentName: hand_r
@@ -938,22 +944,15 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 36078ab0369161e49a29d349ae3e0739,
-    type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 36078ab0369161e49a29d349ae3e0739, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
   avatarSetup: 2
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 0
   remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 269483
-  packageName: One Handed Sword Animset Pro
-  packageVersion: 1.0
-  assetPath: Assets/SwordAnimsetPro/Animations/Montage/Jump_Two_Montage_Anim.FBX
-  uploadId: 738342
