@@ -7,7 +7,11 @@ namespace Player
     [RequireComponent(typeof(Animator))]
     public class PlayerCore : MonoBehaviour
     {
+        [Header("움직임")]
         [SerializeField] private float _jogSpeed = 5f;
+        [SerializeField] private float _runSpeed = 8f;
+
+        [Header("카메라")]
         [SerializeField] private Camera _playerCamera;
 
         private InputController _inputController;
@@ -21,6 +25,7 @@ namespace Player
         public CharacterMover CharacterMover => _characterMover;
         public Animator Animator => _animator;
         public float JogSpeed => _jogSpeed;
+        public float RunSpeed => _runSpeed;
         public Camera PlayerCamera => _playerCamera;
 
         private void Awake()

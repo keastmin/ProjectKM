@@ -6,6 +6,7 @@ public class StateMachine
 {
     public IdleState IdleState;
     public JogState JogState;
+    public RunState RunState;
 
     private StateBase _currentState;
 
@@ -13,6 +14,7 @@ public class StateMachine
     {
         IdleState = new IdleState(core);
         JogState = new JogState(core);
+        RunState = new RunState(core);
     }
 
     public void InitStateMachine(StateBase initState)
