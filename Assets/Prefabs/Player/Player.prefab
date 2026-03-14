@@ -1827,7 +1827,7 @@ GameObject:
   - component: {fileID: 7001236295133361961}
   - component: {fileID: 2470472834754288877}
   - component: {fileID: 3719325142636022138}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1863,6 +1863,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f12bf26599bf885489f9847b69cd3e18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCore
+  _jogSpeed: 5
+  _runSpeed: 8
+  _playerCamera: {fileID: 0}
 --- !u!114 &6014087233011396540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1875,9 +1878,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fafb159c42e313741a7401843443bff7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterMover
-  _height: 2
+  _height: 1.82
+  _thickness: 1.15
   _offset: {x: 0, y: 0, z: 0}
-  _stepUpHeight: 0.3
+  _stepUpHeight: 0.51
 --- !u!114 &6958755475328983317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1891,6 +1895,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.InputController
   _moveName: Move
+  _runName: Run
 --- !u!95 &4106618519233355173
 Animator:
   serializedVersion: 7
@@ -1959,10 +1964,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1.7
+  m_Radius: 0.575
+  m_Height: 1.3100001
   m_Direction: 1
-  m_Center: {x: 0, y: 1.15, z: 0}
+  m_Center: {x: 0, y: 1.165, z: 0}
 --- !u!114 &3719325142636022138
 MonoBehaviour:
   m_ObjectHideFlags: 0

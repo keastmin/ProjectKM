@@ -8,16 +8,64 @@ public class IdleState : StateBase
     public override void Enter()
     {
         Debug.Log("IdleState");
-        _core.Animator.CrossFade(PlayerAnimationNameContainer.NO_WEAPON_IDLE, 0.08f);
+        _core.TargetSpeed = 0f;
+        if (!_core.Animator.GetCurrentAnimatorStateInfo(0).IsName(PlayerAnimationNameContainer.NO_WEAPON_MOVE))
+        {
+            _core.Animator.CrossFade(PlayerAnimationNameContainer.NO_WEAPON_MOVE, 0.08f);
+        }
     }
 
     public override void Tick()
     {
+        // 이전 상태가 달리기 였으며, 현재 속도가 조깅 속도보다 빠른 상태이고,
+        // 지금 입력한 MoveInput을 통한 캐릭터가 회전하게 될 각도가 현재 각도에서 180도 +, -알파라면 턴 상태로 전환
+        Vector2 moveInput = _core.InputController.MoveInput;
+        if (_core.FSM.PrevState == _core.FSM.RunState &&
+            _core.CurrentSpeed >= (_core.RunSpeed / 2f) &&
+            moveInput.sqrMagnitude >= 0.01f &&
+            IsOppositeTurnInput(moveInput))
+        {
+            _core.FSM.Transition(_core.FSM.RunTurnState);
+            return;
+        }
+
         // 움직임 입력이 있을 경우 Jog로 이동
-        if(_core.InputController.MoveInput.sqrMagnitude >= 0.01f)
+        if (_core.InputController.MoveInput.sqrMagnitude >= 0.01f)
         {
             _core.FSM.Transition(_core.FSM.JogState);
             return;
         }
+    }
+
+    public override void FixedTick()
+    {
+        Move();
+    }
+
+    private void Move()
+    {
+        _core.CharacterMover.Move(_core.transform.forward * _core.CurrentSpeed);
+    }
+
+    private bool IsOppositeTurnInput(Vector2 moveInput)
+    {
+        Transform cam = _core.PlayerCamera.transform;
+
+        Vector3 camForward = Vector3.ProjectOnPlane(cam.forward, Vector3.up).normalized;
+        Vector3 camRight = Vector3.ProjectOnPlane(cam.right, Vector3.up).normalized;
+
+        // 입력 기준 목표 방향
+        Vector3 desiredDir = camForward * moveInput.y + camRight * moveInput.x;
+
+        if (desiredDir.sqrMagnitude < 0.0001f)
+            return false;
+
+        desiredDir.Normalize();
+
+        // 현재 바라보는 방향과 목표 방향의 수평 각도
+        float angle = Vector3.Angle(_core.transform.forward, desiredDir);
+
+        // 예: 150도 이상이면 반대 방향 턴으로 간주
+        return angle >= 160f;
     }
 }

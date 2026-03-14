@@ -7,19 +7,25 @@ public class StateMachine
     public IdleState IdleState;
     public JogState JogState;
     public RunState RunState;
+    public RunTurnState RunTurnState;
 
     private StateBase _currentState;
+    private StateBase _prevState;
+
+    public StateBase PrevState => _prevState;
 
     public StateMachine(PlayerCore core)
     {
         IdleState = new IdleState(core);
         JogState = new JogState(core);
         RunState = new RunState(core);
+        RunTurnState = new RunTurnState(core);
     }
 
     public void InitStateMachine(StateBase initState)
     {
         _currentState = initState;
+        _prevState = null;
         _currentState.Enter();
     }
 
@@ -46,6 +52,7 @@ public class StateMachine
     public void Transition(StateBase nextState)
     {
         _currentState?.Exit();
+        _prevState = _currentState;
         _currentState = nextState;
         _currentState?.Enter();
     }

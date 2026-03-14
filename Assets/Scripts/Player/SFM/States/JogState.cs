@@ -8,7 +8,11 @@ public class JogState : StateBase
     public override void Enter()
     {
         Debug.Log("Jog State");
-        _core.Animator.CrossFade(PlayerAnimationNameContainer.NO_WEAPON_JOG, 0.08f);
+        _core.TargetSpeed = _core.JogSpeed;
+        if (!_core.Animator.GetCurrentAnimatorStateInfo(0).IsName(PlayerAnimationNameContainer.NO_WEAPON_MOVE))
+        {
+            _core.Animator.CrossFade(PlayerAnimationNameContainer.NO_WEAPON_MOVE, 0.08f);
+        }
     }
 
     public override void Tick()
@@ -44,7 +48,7 @@ public class JogState : StateBase
 
     private void Move()
     {
-        _core.CharacterMover.Move(_core.transform.forward * _core.JogSpeed);
+        _core.CharacterMover.Move(_core.transform.forward * _core.CurrentSpeed);
     }
 
     // 카메라가 보고있는 정면을 구하는 함수

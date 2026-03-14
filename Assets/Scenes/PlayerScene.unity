@@ -1192,50 +1192,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
-      propertyPath: m_Height
-      value: 1.3100001
-      objectReference: {fileID: 0}
-    - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
-      propertyPath: m_Radius
-      value: 0.575
-      objectReference: {fileID: 0}
-    - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
-      propertyPath: m_Center.y
-      value: 1.165
-      objectReference: {fileID: 0}
-    - target: {fileID: 6014087233011396540, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
-      propertyPath: _height
-      value: 1.82
-      objectReference: {fileID: 0}
-    - target: {fileID: 6014087233011396540, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
-      propertyPath: _thickness
-      value: 1.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 6014087233011396540, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
-      propertyPath: _stepUpHeight
-      value: 0.51
-      objectReference: {fileID: 0}
     - target: {fileID: 6538668474974009422, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 6538668474974009422, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 6958755475328983317, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
-      propertyPath: _runName
-      value: Run
-      objectReference: {fileID: 0}
-    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
-      propertyPath: _jogSpeed
-      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: _playerCamera
       value: 
       objectReference: {fileID: 2084274438}
+    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: _runTurnMotionInfo
+      value: 
+      objectReference: {fileID: 11400000, guid: a27add68369979c41b9aeb2299ed638b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
