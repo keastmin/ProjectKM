@@ -7,6 +7,9 @@ namespace Player
     [RequireComponent(typeof(Animator))]
     public class PlayerCore : MonoBehaviour
     {
+        [Header("무기")]
+        [SerializeField] private GameObject _katana;
+
         [Header("움직임")]
         [SerializeField] private float _jogSpeed = 5f;
         [SerializeField] private float _runSpeed = 8f;
@@ -47,9 +50,12 @@ namespace Player
         }
         public Camera PlayerCamera => _playerCamera;
         public MotionWarpProfile RunTurnMotionInfo => _runTurnMotionInfo;
+        public GameObject Katana => _katana;
 
         private void Awake()
         {
+            _katana.SetActive(false);
+
             TryGetComponent(out _inputController);
             TryGetComponent(out _characterMover);
             TryGetComponent(out _animator);

@@ -8,6 +8,7 @@ public class StateMachine
     public JogState JogState;
     public RunState RunState;
     public RunTurnState RunTurnState;
+    public BasicComboAttackState BasicComboAttackState;
 
     private StateBase _currentState;
     private StateBase _prevState;
@@ -20,6 +21,7 @@ public class StateMachine
         JogState = new JogState(core);
         RunState = new RunState(core);
         RunTurnState = new RunTurnState(core);
+        BasicComboAttackState = new BasicComboAttackState(core);
     }
 
     public void InitStateMachine(StateBase initState)
