@@ -5,11 +5,20 @@ public class IdleState : StateBase
 {
     public IdleState(PlayerCore core) : base(core) { }
 
+    private bool _isWaitingComboAttackAni = false;
+
     public override void Enter()
     {
+        _isWaitingComboAttackAni = false;
+
         Debug.Log("IdleState");
         _core.TargetSpeed = 0f;
-        if (!_core.Animator.GetCurrentAnimatorStateInfo(0).IsName(PlayerAnimationNameContainer.NO_WEAPON_MOVE))
+
+        if(_core.FSM.PrevState == _core.FSM.BasicComboAttackState)
+        {
+            _isWaitingComboAttackAni = true;
+        }
+        else if (!_core.Animator.GetCurrentAnimatorStateInfo(0).IsName(PlayerAnimationNameContainer.NO_WEAPON_MOVE))
         {
             _core.Animator.CrossFade(PlayerAnimationNameContainer.NO_WEAPON_MOVE, 0.08f);
         }
@@ -17,6 +26,23 @@ public class IdleState : StateBase
 
     public override void Tick()
     {
+        if (_isWaitingComboAttackAni)
+        {
+            AnimatorStateInfo stateInfo = _core.Animator.GetCurrentAnimatorStateInfo(0);
+            if (stateInfo.normalizedTime > 0.98f)
+            {
+                _isWaitingComboAttackAni = false;
+                _core.Animator.CrossFade(PlayerAnimationNameContainer.NO_WEAPON_MOVE, 0.08f);
+            }
+        }
+
+        if (_core.InputController.BasicComboAttackInput &&
+            _core.KatanaComboDatas.Length > 0)
+        {
+            _core.FSM.Transition(_core.FSM.BasicComboAttackState);
+            return;
+        }
+
         // 이전 상태가 달리기 였으며, 현재 속도가 조깅 속도보다 빠른 상태이고,
         // 지금 입력한 MoveInput을 통한 캐릭터가 회전하게 될 각도가 현재 각도에서 180도 +, -알파라면 턴 상태로 전환
         Vector2 moveInput = _core.InputController.MoveInput;
@@ -40,6 +66,11 @@ public class IdleState : StateBase
     public override void FixedTick()
     {
         Move();
+    }
+
+    public override void Exit()
+    {
+        _isWaitingComboAttackAni = false;
     }
 
     private void Move()

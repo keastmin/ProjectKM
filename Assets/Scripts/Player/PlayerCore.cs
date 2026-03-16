@@ -14,6 +14,9 @@ namespace Player
         [SerializeField] private float _jogSpeed = 5f;
         [SerializeField] private float _runSpeed = 8f;
 
+        [Header("콤보 공격")]
+        [SerializeField] private BasicComboAttackData[] _katanaComboDatas;
+
         [Header("모션 워핑 데이터")]
         [SerializeField] private MotionWarpProfile _runTurnMotionInfo;
 
@@ -51,6 +54,7 @@ namespace Player
         public Camera PlayerCamera => _playerCamera;
         public MotionWarpProfile RunTurnMotionInfo => _runTurnMotionInfo;
         public GameObject Katana => _katana;
+        public BasicComboAttackData[] KatanaComboDatas => _katanaComboDatas;
 
         private void Awake()
         {
