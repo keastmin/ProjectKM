@@ -10,6 +10,7 @@ public class BasicComboAttackState : StateBase
     private float _stateStartTime = 0f;
 
     private Vector3 _aniMoveDelta;
+    private Quaternion _targetRot;
 
     public override void Enter()
     {
@@ -29,6 +30,18 @@ public class BasicComboAttackState : StateBase
 
         // 애니메이션 루트모션 델타값 초기화
         _aniMoveDelta = Vector3.zero;
+
+        // 입력이 있다면 그 방향으로 회전 목표 정하기
+        if(_core.InputController.MoveInput.sqrMagnitude > 0.01f)
+        {
+            Vector3 lookDir = GetLookDirectionFromCamera();
+            if(lookDir.sqrMagnitude >= 0.001f)
+                _targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
+        }
+        else
+        {
+            _targetRot = Quaternion.LookRotation(_core.transform.forward, Vector3.up);
+        }
 
         Debug.Log("BasicComboAttackState" + ", Combo: " + (_index + 1));
 
@@ -63,6 +76,7 @@ public class BasicComboAttackState : StateBase
 
     public override void FixedTick()
     {
+        PlayerRotation();
         RootMotionMove();
     }
 
@@ -84,5 +98,22 @@ public class BasicComboAttackState : StateBase
         Vector3 vel = _aniMoveDelta / Time.fixedDeltaTime;
         _core.CharacterMover.Move(vel);
         _aniMoveDelta = Vector3.zero;
+    }
+
+    // 카메라가 보고있는 정면을 구하는 함수
+    private Vector3 GetLookDirectionFromCamera()
+    {
+        Transform camTransform = _core.PlayerCamera.transform;
+        Vector3 camForward = Vector3.ProjectOnPlane(camTransform.forward, Vector3.up).normalized;
+        Vector3 camRight = Vector3.ProjectOnPlane(camTransform.right, Vector3.up).normalized;
+
+        Vector3 lookDir = camForward * _core.InputController.MoveInput.y + camRight * _core.InputController.MoveInput.x;
+
+        return lookDir;
+    }
+
+    private void PlayerRotation()
+    {
+        _core.transform.rotation = Quaternion.Slerp(_core.transform.rotation, _targetRot, 15f * Time.fixedDeltaTime);
     }
 }
