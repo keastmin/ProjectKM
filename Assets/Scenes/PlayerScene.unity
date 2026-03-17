@@ -587,6 +587,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 402464132}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1285431983 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2427026571794712103, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
+  m_PrefabInstance: {fileID: 4124165965128785361}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1285431987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285431983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad78e8320420be6448737110b9a537bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyCore
 --- !u!1 &1334924462
 GameObject:
   m_ObjectHideFlags: 0
@@ -1212,6 +1229,7 @@ GameObject:
   - component: {fileID: 1608679812782841157}
   - component: {fileID: 779454382861546454}
   - component: {fileID: 7520594279126507794}
+  - component: {fileID: 7520594279126507795}
   m_Layer: 8
   m_Name: PrototypeMap_Ground
   m_TagString: Untagged
@@ -1346,9 +1364,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: m_Radius
+      value: 0.455
+      objectReference: {fileID: 0}
+    - target: {fileID: 6014087233011396540, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: _thickness
+      value: 0.91
+      objectReference: {fileID: 0}
     - target: {fileID: 6538668474974009422, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7001236295133361961, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: m_Mass
+      value: 65
+      objectReference: {fileID: 0}
+    - target: {fileID: 7001236295133361961, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: m_ImplicitCom
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: _playerCamera
@@ -1411,10 +1445,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 6770579788928645273, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
+      propertyPath: m_Mass
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158674036653238942, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 398781b5f95fc924799f69fde99512e5, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2427026571794712103, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 1285431987}
   m_SourcePrefab: {fileID: 100100000, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
 --- !u!1 &6007133749412785146
 GameObject:
@@ -1427,6 +1472,7 @@ GameObject:
   - component: {fileID: 6418229861195191553}
   - component: {fileID: 881568918111677445}
   - component: {fileID: 2587074314706570316}
+  - component: {fileID: 6418229861195191554}
   m_Layer: 8
   m_Name: PrototypeMap_Walls
   m_TagString: Untagged
@@ -1449,6 +1495,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 543450651968658840}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &6418229861195191554
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6007133749412785146}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -744967892933103681, guid: be3ed9816d019ff4a85901f7a3aae376, type: 3}
 --- !u!1 &7338028756072900252
 GameObject:
   m_ObjectHideFlags: 0
@@ -1460,6 +1528,7 @@ GameObject:
   - component: {fileID: 2735449625677181400}
   - component: {fileID: 1186901262258035551}
   - component: {fileID: 8862171570090296020}
+  - component: {fileID: 8862171570090296021}
   m_Layer: 8
   m_Name: PrototypeMap_Obstacles
   m_TagString: Untagged
@@ -1516,6 +1585,28 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &7520594279126507795
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1497619685741533899}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 9070343936430133588, guid: be3ed9816d019ff4a85901f7a3aae376, type: 3}
 --- !u!23 &8862171570090296020
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1565,6 +1656,28 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &8862171570090296021
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7338028756072900252}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -494750335933397098, guid: be3ed9816d019ff4a85901f7a3aae376, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

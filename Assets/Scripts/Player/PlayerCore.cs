@@ -15,6 +15,7 @@ namespace Player
         [SerializeField] private float _runSpeed = 8f;
 
         [Header("콤보 공격")]
+        [SerializeField] private float _safeTransitionDuration = 0.1f;
         [SerializeField] private BasicComboAttackData[] _katanaComboDatas;
 
         [Header("모션 워핑 데이터")]
@@ -55,6 +56,7 @@ namespace Player
         public MotionWarpProfile RunTurnMotionInfo => _runTurnMotionInfo;
         public GameObject Katana => _katana;
         public BasicComboAttackData[] KatanaComboDatas => _katanaComboDatas;
+        public float SafeTransitionDuration => _safeTransitionDuration;
 
         private void Awake()
         {
