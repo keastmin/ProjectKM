@@ -10,6 +10,7 @@ public class ComboAttackDataEditor : Editor
     private const float TimelinePadding = 12f;
     private const float MinZoomFactor = 1.2f;
     private const float MaxZoomFactor = 8f;
+    private const float AttackMarkerWidth = 2f;
 
     private enum TimelineDragMode
     {
@@ -22,15 +23,18 @@ public class ComboAttackDataEditor : Editor
     private enum PreviewDragMode
     {
         None,
-        Orbit
+        Orbit,
+        Pan
     }
 
     private SerializedProperty _animationClipProperty;
     private SerializedProperty _previewModelPrefabProperty;
     private SerializedProperty _comboInputStartNormalizedTimeProperty;
     private SerializedProperty _comboInputEndNormalizedTimeProperty;
+    private SerializedProperty _attackTimingsProperty;
     private GUIStyle _timelineCenterLabelStyle;
     private GUIStyle _timelineRightLabelStyle;
+    private GUIStyle _attackMarkerLabelStyle;
 
     private PreviewRenderUtility _previewRenderUtility;
     private GameObject _previewInstance;
@@ -43,6 +47,7 @@ public class ComboAttackDataEditor : Editor
     private PreviewDragMode _previewDragMode;
     private Vector2 _previewOrbit = new Vector2(18f, 180f);
     private float _previewZoomFactor = 3.6f;
+    private Vector3 _previewPivotOffset;
 
     private void OnEnable()
     {
@@ -50,6 +55,7 @@ public class ComboAttackDataEditor : Editor
         _previewModelPrefabProperty = serializedObject.FindProperty("_previewModelPrefab");
         _comboInputStartNormalizedTimeProperty = serializedObject.FindProperty("_comboInputStartNormalizedTime");
         _comboInputEndNormalizedTimeProperty = serializedObject.FindProperty("_comboInputEndNormalizedTime");
+        _attackTimingsProperty = serializedObject.FindProperty("_attackTimings");
 
         _currentNormalizedTime = Mathf.Clamp01(_comboInputStartNormalizedTimeProperty.floatValue);
         _lastEditorTime = (float)EditorApplication.timeSinceStartup;
@@ -57,6 +63,9 @@ public class ComboAttackDataEditor : Editor
         _timelineRightLabelStyle = new GUIStyle(EditorStyles.miniLabel);
         _timelineRightLabelStyle.alignment = TextAnchor.MiddleRight;
         _timelineRightLabelStyle.normal.textColor = EditorStyles.centeredGreyMiniLabel.normal.textColor;
+        _attackMarkerLabelStyle = new GUIStyle(EditorStyles.miniLabel);
+        _attackMarkerLabelStyle.alignment = TextAnchor.MiddleCenter;
+        _attackMarkerLabelStyle.normal.textColor = new Color(1f, 0.7f, 0.45f);
         EditorApplication.update += OnEditorUpdate;
     }
 
@@ -80,6 +89,8 @@ public class ComboAttackDataEditor : Editor
 
         EditorGUILayout.Space(8f);
         DrawTimingFields(clip);
+        EditorGUILayout.Space(6f);
+        DrawAttackTimingFields(clip);
         EditorGUILayout.Space(6f);
 
         if (clip == null || prefab == null)
@@ -125,6 +136,67 @@ public class ComboAttackDataEditor : Editor
                 $"Clip Length: {clip.length:F3}s\n" +
                 $"Combo Window: {startSeconds:F3}s - {endSeconds:F3}s",
                 MessageType.None);
+        }
+    }
+
+    private void DrawAttackTimingFields(AnimationClip clip)
+    {
+        EditorGUILayout.LabelField("Attack Timings", EditorStyles.boldLabel);
+
+        if (_attackTimingsProperty.arraySize == 0)
+        {
+            EditorGUILayout.HelpBox("Add attack timing entries to define hit timings and their string IDs.", MessageType.None);
+        }
+
+        int removeIndex = -1;
+
+        for (int i = 0; i < _attackTimingsProperty.arraySize; i++)
+        {
+            SerializedProperty element = _attackTimingsProperty.GetArrayElementAtIndex(i);
+            SerializedProperty idProperty = element.FindPropertyRelative("_id");
+            SerializedProperty timeProperty = element.FindPropertyRelative("_normalizedTime");
+
+            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.LabelField($"Attack Timing {i + 1}", EditorStyles.miniBoldLabel);
+            EditorGUILayout.PropertyField(idProperty, new GUIContent("ID"));
+            timeProperty.floatValue = EditorGUILayout.Slider("Normalized Time", timeProperty.floatValue, 0f, 1f);
+
+            if (clip != null)
+            {
+                EditorGUILayout.LabelField("Seconds", $"{(timeProperty.floatValue * clip.length):F3}s");
+            }
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Set To Current"))
+            {
+                timeProperty.floatValue = _currentNormalizedTime;
+            }
+
+            if (GUILayout.Button("Remove"))
+            {
+                removeIndex = i;
+            }
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
+        }
+
+        if (removeIndex >= 0)
+        {
+            _attackTimingsProperty.DeleteArrayElementAtIndex(removeIndex);
+            ClampAttackTimingProperties();
+            serializedObject.ApplyModifiedProperties();
+            GUIUtility.ExitGUI();
+        }
+
+        if (GUILayout.Button("Add Attack Timing"))
+        {
+            int newIndex = _attackTimingsProperty.arraySize;
+            _attackTimingsProperty.InsertArrayElementAtIndex(newIndex);
+
+            SerializedProperty newElement = _attackTimingsProperty.GetArrayElementAtIndex(newIndex);
+            newElement.FindPropertyRelative("_id").stringValue = string.Empty;
+            newElement.FindPropertyRelative("_normalizedTime").floatValue = _currentNormalizedTime;
+            ClampAttackTimingProperties();
         }
     }
 
@@ -176,7 +248,7 @@ public class ComboAttackDataEditor : Editor
 
         GUI.Label(
             new Rect(previewRect.x + 8f, previewRect.y + 8f, previewRect.width - 16f, 18f),
-            "Drag: orbit  Wheel: zoom  F: frame",
+            "LMB: orbit  RMB: pan  Wheel: zoom  F: frame",
             EditorStyles.whiteMiniLabel);
     }
 
@@ -210,6 +282,8 @@ public class ComboAttackDataEditor : Editor
             timelineRect.height);
         EditorGUI.DrawRect(comboWindowRect, new Color(0.22f, 0.7f, 0.32f, 0.9f));
 
+        DrawAttackTimingMarkers(timelineRect);
+
         EditorGUI.DrawRect(startHandleRect, new Color(0.95f, 0.75f, 0.2f));
         EditorGUI.DrawRect(endHandleRect, new Color(0.95f, 0.45f, 0.2f));
         EditorGUI.DrawRect(playheadRect, new Color(0.9f, 0.95f, 1f));
@@ -242,12 +316,41 @@ public class ComboAttackDataEditor : Editor
         {
             _comboInputEndNormalizedTimeProperty.floatValue = Mathf.Max(_currentNormalizedTime, _comboInputStartNormalizedTimeProperty.floatValue);
         }
+
+        if (GUILayout.Button("Add Attack Timing At Current"))
+        {
+            int newIndex = _attackTimingsProperty.arraySize;
+            _attackTimingsProperty.InsertArrayElementAtIndex(newIndex);
+
+            SerializedProperty newElement = _attackTimingsProperty.GetArrayElementAtIndex(newIndex);
+            newElement.FindPropertyRelative("_id").stringValue = string.Empty;
+            newElement.FindPropertyRelative("_normalizedTime").floatValue = _currentNormalizedTime;
+        }
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.HelpBox(
             $"Current: {_currentNormalizedTime:F3} ({_currentNormalizedTime * clip.length:F3}s)\n" +
-            $"Window: {_comboInputStartNormalizedTimeProperty.floatValue:F3} - {_comboInputEndNormalizedTimeProperty.floatValue:F3}",
+            $"Combo Window: {_comboInputStartNormalizedTimeProperty.floatValue:F3} - {_comboInputEndNormalizedTimeProperty.floatValue:F3}\n" +
+            $"Attack Timings: {_attackTimingsProperty.arraySize}",
             MessageType.None);
+    }
+
+    private void DrawAttackTimingMarkers(Rect timelineRect)
+    {
+        for (int i = 0; i < _attackTimingsProperty.arraySize; i++)
+        {
+            SerializedProperty element = _attackTimingsProperty.GetArrayElementAtIndex(i);
+            SerializedProperty idProperty = element.FindPropertyRelative("_id");
+            SerializedProperty timeProperty = element.FindPropertyRelative("_normalizedTime");
+            float markerTime = Mathf.Clamp01(timeProperty.floatValue);
+            float x = Mathf.Lerp(timelineRect.xMin, timelineRect.xMax, markerTime);
+            Rect markerRect = new Rect(x - (AttackMarkerWidth * 0.5f), timelineRect.y - 5f, AttackMarkerWidth, timelineRect.height + 10f);
+
+            EditorGUI.DrawRect(markerRect, new Color(1f, 0.45f, 0.15f, 0.95f));
+
+            string label = string.IsNullOrWhiteSpace(idProperty.stringValue) ? $"AT{i + 1}" : idProperty.stringValue;
+            GUI.Label(new Rect(x - 32f, timelineRect.y - 20f, 64f, 14f), label, _attackMarkerLabelStyle);
+        }
     }
 
     private void HandleTimelineInput(Event evt, int controlId, Rect timelineRect, Rect startHandleRect, Rect endHandleRect)
@@ -425,7 +528,7 @@ public class ComboAttackDataEditor : Editor
 
     private void PositionCamera(Camera camera, Bounds bounds)
     {
-        Vector3 center = bounds.center;
+        Vector3 center = bounds.center + _previewPivotOffset;
         float radius = Mathf.Max(bounds.extents.magnitude, 0.5f);
         Quaternion rotation = Quaternion.Euler(_previewOrbit.x, _previewOrbit.y, 0f);
         Vector3 direction = rotation * Vector3.forward;
@@ -446,24 +549,32 @@ public class ComboAttackDataEditor : Editor
         switch (evt.GetTypeForControl(controlId))
         {
             case EventType.MouseDown:
-                if (evt.button != 0 || !previewRect.Contains(evt.mousePosition))
+                if (!previewRect.Contains(evt.mousePosition) || (evt.button != 0 && evt.button != 1))
                 {
                     return;
                 }
 
                 GUIUtility.hotControl = controlId;
-                _previewDragMode = PreviewDragMode.Orbit;
+                _previewDragMode = evt.button == 0 ? PreviewDragMode.Orbit : PreviewDragMode.Pan;
                 evt.Use();
                 break;
 
             case EventType.MouseDrag:
-                if (GUIUtility.hotControl != controlId || _previewDragMode != PreviewDragMode.Orbit)
+                if (GUIUtility.hotControl != controlId || _previewDragMode == PreviewDragMode.None)
                 {
                     return;
                 }
 
-                _previewOrbit.y += evt.delta.x * 0.6f;
-                _previewOrbit.x = Mathf.Clamp(_previewOrbit.x - (evt.delta.y * 0.5f), -80f, 80f);
+                if (_previewDragMode == PreviewDragMode.Orbit)
+                {
+                    _previewOrbit.y += evt.delta.x * 0.6f;
+                    _previewOrbit.x = Mathf.Clamp(_previewOrbit.x + (evt.delta.y * 0.5f), -80f, 80f);
+                }
+                else if (_previewDragMode == PreviewDragMode.Pan)
+                {
+                    ApplyPan(evt.delta);
+                }
+
                 evt.Use();
                 Repaint();
                 break;
@@ -502,9 +613,21 @@ public class ComboAttackDataEditor : Editor
                 break;
 
             case EventType.Repaint:
-                EditorGUIUtility.AddCursorRect(previewRect, MouseCursor.Orbit, controlId);
+                MouseCursor cursor = _previewDragMode == PreviewDragMode.Pan ? MouseCursor.Pan : MouseCursor.Orbit;
+                EditorGUIUtility.AddCursorRect(previewRect, cursor, controlId);
                 break;
         }
+    }
+
+    private void ApplyPan(Vector2 delta)
+    {
+        float radius = Mathf.Max(_previewBounds.extents.magnitude, 0.5f);
+        float panScale = radius * _previewZoomFactor * 0.0025f;
+        Quaternion rotation = Quaternion.Euler(_previewOrbit.x, _previewOrbit.y, 0f);
+        Vector3 right = rotation * Vector3.right;
+        Vector3 up = rotation * Vector3.up;
+
+        _previewPivotOffset += ((-right * delta.x) + (up * delta.y)) * panScale;
     }
 
     private void ApplyZoom(float delta)
@@ -516,6 +639,7 @@ public class ComboAttackDataEditor : Editor
     {
         _previewOrbit = new Vector2(18f, 180f);
         _previewZoomFactor = 3.6f;
+        _previewPivotOffset = Vector3.zero;
     }
 
     private void OnEditorUpdate()
@@ -554,6 +678,30 @@ public class ComboAttackDataEditor : Editor
         if (_comboInputEndNormalizedTimeProperty.floatValue < _comboInputStartNormalizedTimeProperty.floatValue)
         {
             _comboInputEndNormalizedTimeProperty.floatValue = _comboInputStartNormalizedTimeProperty.floatValue;
+        }
+
+        ClampAttackTimingProperties();
+    }
+
+    private void ClampAttackTimingProperties()
+    {
+        if (_attackTimingsProperty == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < _attackTimingsProperty.arraySize; i++)
+        {
+            SerializedProperty element = _attackTimingsProperty.GetArrayElementAtIndex(i);
+            SerializedProperty idProperty = element.FindPropertyRelative("_id");
+            SerializedProperty timeProperty = element.FindPropertyRelative("_normalizedTime");
+
+            if (idProperty.stringValue == null)
+            {
+                idProperty.stringValue = string.Empty;
+            }
+
+            timeProperty.floatValue = Mathf.Clamp01(timeProperty.floatValue);
         }
     }
 

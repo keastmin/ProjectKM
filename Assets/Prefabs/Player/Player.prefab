@@ -189,6 +189,38 @@ Transform:
   - {fileID: 1616214897386468391}
   m_Father: {fileID: 2569010458721148673}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &445614069620252833
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 469115629662995220}
+  m_Layer: 6
+  m_Name: Hitboxes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &469115629662995220
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 445614069620252833}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5181349613125651662}
+  m_Father: {fileID: 1103392367578762510}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &448146590276108035
 GameObject:
   m_ObjectHideFlags: 0
@@ -1822,12 +1854,14 @@ GameObject:
   m_Component:
   - component: {fileID: 1103392367578762510}
   - component: {fileID: 9150668991346565315}
+  - component: {fileID: 7721814424278941818}
   - component: {fileID: 6014087233011396540}
   - component: {fileID: 6958755475328983317}
   - component: {fileID: 4106618519233355173}
   - component: {fileID: 7001236295133361961}
   - component: {fileID: 2470472834754288877}
   - component: {fileID: 3719325142636022138}
+  - component: {fileID: 1139211803879265957}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -1850,6 +1884,7 @@ Transform:
   m_Children:
   - {fileID: 6704852309151567284}
   - {fileID: 5852798176326268176}
+  - {fileID: 469115629662995220}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9150668991346565315
@@ -1867,6 +1902,7 @@ MonoBehaviour:
   _katana: {fileID: 8379501271240644594}
   _jogSpeed: 5
   _runSpeed: 8
+  _safeTransitionDuration: 0.1
   _katanaComboDatas:
   - {fileID: 11400000, guid: dcfa7acc1b742e34f9e159f98b3efdee, type: 2}
   - {fileID: 11400000, guid: dc54ab3f31ae5064fb38fd8c1b699723, type: 2}
@@ -1874,6 +1910,25 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ca79c7b54a7e4f44e821fa6b2f908d2a, type: 2}
   _runTurnMotionInfo: {fileID: 11400000, guid: a27add68369979c41b9aeb2299ed638b, type: 2}
   _playerCamera: {fileID: 0}
+--- !u!114 &7721814424278941818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6538668474974009422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25858396e78dc394d8d4c6b25f590323, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player.HitController
+  _hitLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  _hitboxIDs:
+  - HitboxName: KatanaBasicAttackHitbox
+    HitboxColliders:
+    - {fileID: 5814630061041907937}
 --- !u!114 &6014087233011396540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1887,7 +1942,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterMover
   _height: 1.82
-  _thickness: 1.15
+  _thickness: 0.91
   _offset: {x: 0, y: 0, z: 0}
   _stepUpHeight: 0.51
 --- !u!114 &6958755475328983317
@@ -1935,7 +1990,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6538668474974009422}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 65
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -1973,7 +2028,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.575
+  m_Radius: 0.455
   m_Height: 1.3100001
   m_Direction: 1
   m_Center: {x: 0, y: 1.165, z: 0}
@@ -2007,6 +2062,22 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1139211803879265957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6538668474974009422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25858396e78dc394d8d4c6b25f590323, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player.HitController
+  _hitLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _hitboxIDs: []
 --- !u!1 &6778701767378972947
 GameObject:
   m_ObjectHideFlags: 0
@@ -2709,3 +2780,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6559361841581434422}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9216760200267530597
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5181349613125651662}
+  - component: {fileID: 5814630061041907937}
+  m_Layer: 6
+  m_Name: Katana Basic Combo Attack Hitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5181349613125651662
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9216760200267530597}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 469115629662995220}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5814630061041907937
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9216760200267530597}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.82, y: 1, z: 1.7}
+  m_Center: {x: 0, y: 1.14, z: 1.19}

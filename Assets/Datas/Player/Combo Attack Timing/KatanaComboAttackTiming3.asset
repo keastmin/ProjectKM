@@ -16,3 +16,6 @@ MonoBehaviour:
   _previewModelPrefab: {fileID: 919132149155446097, guid: 78619ea0e9e2ea84f9d02ae4880f9382, type: 3}
   _comboInputStartNormalizedTime: 0.43589744
   _comboInputEndNormalizedTime: 0.7150997
+  _attackTimings:
+  - _id: KatanaBasicAttackHitbox
+    _normalizedTime: 0.2415459

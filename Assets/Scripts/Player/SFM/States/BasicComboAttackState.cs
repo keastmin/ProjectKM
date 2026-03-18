@@ -1,8 +1,11 @@
+Ôªøusing System.Collections.Generic;
 using Player;
 using UnityEngine;
 
 public class BasicComboAttackState : StateBase
 {
+    private const int HitResultBufferSize = 32;
+
     public BasicComboAttackState(PlayerCore core) : base(core) { }
 
     private int _index = -1;
@@ -11,32 +14,34 @@ public class BasicComboAttackState : StateBase
 
     private Vector3 _aniMoveDelta;
     private Quaternion _targetRot;
+    
+    // Í≥µÍ≤© ÌåêÏ†ï
+    private bool[] _triggeredHitTimings = new bool[0];
+    private readonly Collider[] _hitResults = new Collider[HitResultBufferSize];
+    private readonly HashSet<IDamageable> _damagedTargets = new HashSet<IDamageable>();
 
     public override void Enter()
     {
-        // º”µµ √ ±‚»≠
         _core.TargetSpeed = 0f;
         _core.CurrentSpeed = 0f;
 
-        // π´±‚ ≤®≥ø
         _core.Katana.SetActive(true);
 
-        // «ˆ¿Á ƒﬁ∫∏ ∞¯∞› µ•¿Ã≈Õ ∞°¡Æø¿±‚
         _datas = _core.KatanaComboDatas;
 
-        // ¿Œµ¶Ω∫ ¡ı∞°«œ∞Ì √÷¥Î ¡ı∞° ºˆ ¡¶«—
         _index++;
         _index %= _datas.Length;
 
-        // æ÷¥œ∏ﬁ¿Ãº« ∑Á∆Æ∏º« µ®≈∏∞™ √ ±‚»≠
         _aniMoveDelta = Vector3.zero;
+        InitTriggeredHitTimings();
 
-        // ¿‘∑¬¿Ã ¿÷¥Ÿ∏È ±◊ πÊ«‚¿∏∑Œ »∏¿¸ ∏Ò«• ¡§«œ±‚
-        if(_core.InputController.MoveInput.sqrMagnitude > 0.01f)
+        if (_core.InputController.MoveInput.sqrMagnitude > 0.01f)
         {
             Vector3 lookDir = GetLookDirectionFromCamera();
-            if(lookDir.sqrMagnitude >= 0.001f)
+            if (lookDir.sqrMagnitude >= 0.001f)
+            {
                 _targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
+            }
         }
         else
         {
@@ -46,28 +51,30 @@ public class BasicComboAttackState : StateBase
         Debug.Log("BasicComboAttackState" + ", Combo: " + (_index + 1));
 
         _core.Animator.CrossFade(_datas[_index].AnimationName, 0.08f, 0, 0f);
-
         _stateStartTime = Time.time;
     }
 
     public override void Tick()
     {
         AnimatorStateInfo info = _core.Animator.GetCurrentAnimatorStateInfo(0);
-        bool isAniSame = (info.IsName(_datas[_index].AnimationName));
+        bool isAniSame = info.IsName(_datas[_index].AnimationName);
         float aniDelta = info.normalizedTime;
-        bool isSafeTransition = (Time.time - _stateStartTime >= _core.SafeTransitionDuration);
+        bool isSafeTransition = Time.time - _stateStartTime >= _core.SafeTransitionDuration;
 
-        // æ÷¥œ∏ﬁ¿Ãº« ªÛ≈¬∞° ∞∞∞Ì ¥Ÿ¿Ω ƒﬁ∫∏ ≈∏¿Ãπ÷¿Ã ≥°≥µ¥Ÿ∏È Idle ªÛ≈¬∑Œ ¿¸»Ø
+        if (isAniSame)
+        {
+            ProcessHitTimings(aniDelta);
+        }
+
         if (isSafeTransition && isAniSame && _datas[_index].Timing.ComboInputEndNormalizedTime <= aniDelta)
         {
             _core.FSM.Transition(_core.FSM.IdleState);
             return;
         }
 
-        // ¥Ÿ¿Ω ƒﬁ∫∏ ¿‘∑¬¿Ã ¿÷∞Ì, æ÷¥œ∏ﬁ¿Ãº« ªÛ≈¬∞° ∞∞¿∏∏Á, «ˆ¿Á æ÷¥œ∏ﬁ¿Ãº« ªÛ≈¬ ≈∏¿Ãπ÷¿Ã ¥Ÿ¿Ω ƒﬁ∫∏ ≈∏¿Ãπ÷ ≥ªø° ¿÷¥Ÿ∏È ¥Ÿ¿Ω ªÛ≈¬∑Œ
-        if(_core.InputController.BasicComboAttackInput && isAniSame &&
-           _datas[_index].Timing.ComboInputStartNormalizedTime <= aniDelta &&
-           _datas[_index].Timing.ComboInputEndNormalizedTime > aniDelta)
+        if (_core.InputController.BasicComboAttackInput && isAniSame &&
+            _datas[_index].Timing.ComboInputStartNormalizedTime <= aniDelta &&
+            _datas[_index].Timing.ComboInputEndNormalizedTime > aniDelta)
         {
             Enter();
             return;
@@ -90,6 +97,97 @@ public class BasicComboAttackState : StateBase
         _index = -1;
         _core.Katana.SetActive(false);
         _aniMoveDelta = Vector3.zero;
+        _triggeredHitTimings = new bool[0];
+        _damagedTargets.Clear();
+    }
+
+    private void InitTriggeredHitTimings()
+    {
+        AttackTimingDefinition[] attackTimings = _datas[_index].Timing != null
+            ? _datas[_index].Timing.AttackTimings
+            : null;
+
+        _triggeredHitTimings = attackTimings != null
+            ? new bool[attackTimings.Length]
+            : new bool[0];
+    }
+
+    private void ProcessHitTimings(float aniDelta)
+    {
+        ComboAttackData comboTiming = _datas[_index].Timing;
+        if (comboTiming == null || comboTiming.AttackTimings == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < comboTiming.AttackTimings.Length; i++)
+        {
+            if (_triggeredHitTimings[i])
+            {
+                continue;
+            }
+
+            AttackTimingDefinition attackTiming = comboTiming.AttackTimings[i];
+            if (attackTiming == null || attackTiming.NormalizedTime > aniDelta)
+            {
+                continue;
+            }
+
+            ApplyHitTiming(attackTiming);
+            _triggeredHitTimings[i] = true;
+        }
+    }
+
+    private void ApplyHitTiming(AttackTimingDefinition attackTiming)
+    {
+        if (!_core.HitController.TryGetHitboxes(attackTiming.Id, out BoxCollider[] hitboxes) || hitboxes == null)
+        {
+            return;
+        }
+
+        _damagedTargets.Clear();
+
+        for (int i = 0; i < hitboxes.Length; i++)
+        {
+            BoxCollider hitbox = hitboxes[i];
+            if (hitbox == null || !hitbox.enabled || !hitbox.gameObject.activeInHierarchy)
+            {
+                continue;
+            }
+
+            Transform hitboxTransform = hitbox.transform;
+            Vector3 worldCenter = hitboxTransform.TransformPoint(hitbox.center);
+            Vector3 scaledHalfExtents = Vector3.Scale(hitbox.size * 0.5f, hitboxTransform.lossyScale);
+            Vector3 worldHalfExtents = new Vector3(
+                Mathf.Abs(scaledHalfExtents.x),
+                Mathf.Abs(scaledHalfExtents.y),
+                Mathf.Abs(scaledHalfExtents.z));
+
+            int hitCount = Physics.OverlapBoxNonAlloc(
+                worldCenter,
+                worldHalfExtents,
+                _hitResults,
+                hitboxTransform.rotation,
+                _core.HitController.HitLayer,
+                QueryTriggerInteraction.Collide);
+
+            for (int j = 0; j < hitCount; j++)
+            {
+                Collider hitCollider = _hitResults[j];
+                if (hitCollider == null || hitCollider.transform.IsChildOf(_core.transform))
+                {
+                    continue;
+                }
+
+                IDamageable damageable = hitCollider.GetComponentInParent(typeof(IDamageable)) as IDamageable;
+                if (damageable == null || !_damagedTargets.Add(damageable))
+                {
+                    continue;
+                }
+
+                damageable.TakeDamage(_datas[_index].Damage);
+            }
+        }
     }
 
     private void RootMotionMove()
@@ -100,7 +198,6 @@ public class BasicComboAttackState : StateBase
         _aniMoveDelta = Vector3.zero;
     }
 
-    // ƒ´∏ﬁ∂Û∞° ∫∏∞Ì¿÷¥¬ ¡§∏È¿ª ±∏«œ¥¬ «‘ºˆ
     private Vector3 GetLookDirectionFromCamera()
     {
         Transform camTransform = _core.PlayerCamera.transform;

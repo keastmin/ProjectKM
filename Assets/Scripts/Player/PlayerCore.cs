@@ -4,6 +4,7 @@ namespace Player
 {
     [RequireComponent(typeof(InputController))]
     [RequireComponent(typeof(CharacterMover))]
+    [RequireComponent(typeof(HitController))]
     [RequireComponent(typeof(Animator))]
     public class PlayerCore : MonoBehaviour
     {
@@ -27,6 +28,7 @@ namespace Player
         // 컴포넌트
         private InputController _inputController;
         private CharacterMover _characterMover;
+        private HitController _hitController;
         private Animator _animator;
 
         // 속도
@@ -39,6 +41,7 @@ namespace Player
         public StateMachine FSM => _fsm;
         public InputController InputController => _inputController;
         public CharacterMover CharacterMover => _characterMover;
+        public HitController HitController => _hitController;
         public Animator Animator => _animator;
         public float JogSpeed => _jogSpeed;
         public float RunSpeed => _runSpeed;
@@ -64,6 +67,7 @@ namespace Player
 
             TryGetComponent(out _inputController);
             TryGetComponent(out _characterMover);
+            TryGetComponent(out _hitController);
             TryGetComponent(out _animator);
             _fsm = new StateMachine(this);
         }
