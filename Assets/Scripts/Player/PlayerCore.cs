@@ -5,6 +5,7 @@ namespace Player
     [RequireComponent(typeof(InputController))]
     [RequireComponent(typeof(CharacterMover))]
     [RequireComponent(typeof(HitController))]
+    [RequireComponent(typeof(TargetingController))]
     [RequireComponent(typeof(Animator))]
     public class PlayerCore : MonoBehaviour
     {
@@ -20,6 +21,7 @@ namespace Player
         [SerializeField] private BasicComboAttackData[] _katanaComboDatas;
 
         [Header("모션 워핑 데이터")]
+        [SerializeField] private float _basicComboAttackMotionWarpSpeed = 20f;
         [SerializeField] private MotionWarpProfile _runTurnMotionInfo;
 
         [Header("카메라")]
@@ -29,6 +31,7 @@ namespace Player
         private InputController _inputController;
         private CharacterMover _characterMover;
         private HitController _hitController;
+        private TargetingController _targetingController;
         private Animator _animator;
 
         // 속도
@@ -42,6 +45,7 @@ namespace Player
         public InputController InputController => _inputController;
         public CharacterMover CharacterMover => _characterMover;
         public HitController HitController => _hitController;
+        public TargetingController TargetingController => _targetingController;
         public Animator Animator => _animator;
         public float JogSpeed => _jogSpeed;
         public float RunSpeed => _runSpeed;
@@ -55,6 +59,7 @@ namespace Player
             get { return _currentSpeed; }
             set { _currentSpeed = value; }
         }
+        public float BasicComboAttackMotionWarpSpeed => _basicComboAttackMotionWarpSpeed;
         public Camera PlayerCamera => _playerCamera;
         public MotionWarpProfile RunTurnMotionInfo => _runTurnMotionInfo;
         public GameObject Katana => _katana;
@@ -68,6 +73,7 @@ namespace Player
             TryGetComponent(out _inputController);
             TryGetComponent(out _characterMover);
             TryGetComponent(out _hitController);
+            TryGetComponent(out _targetingController);
             TryGetComponent(out _animator);
             _fsm = new StateMachine(this);
         }

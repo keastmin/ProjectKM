@@ -5,6 +5,5 @@ public class BasicComboAttackData : ScriptableObject
 {
     public string AnimationName;
     public float Damage = 10f;
-    public MotionWarpProfile MotionWarp;
     public ComboAttackData Timing;
 }

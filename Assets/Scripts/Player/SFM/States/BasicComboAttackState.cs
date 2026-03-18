@@ -20,8 +20,21 @@ public class BasicComboAttackState : StateBase
     private readonly Collider[] _hitResults = new Collider[HitResultBufferSize];
     private readonly HashSet<IDamageable> _damagedTargets = new HashSet<IDamageable>();
 
+    // 모션 워프
+    private bool _isMotionWarp = false; // 모션 워프 여부
+    private Vector3 _warpPos = Vector3.zero; // 모션 워프할 위치
+
+    // 공격 애니메이션 상태 검증
+    AnimatorStateInfo _stateInfo;
+    private bool _isAniSame = false;
+    private float _aniNormalizedTime = 0f;
+    private bool _isSafeTransition = false;
+
     public override void Enter()
     {
+        InitStateValue(); // 상태 검증값 초기화
+        DeterminingMotionWarp(); // 모션 워프 여부 결정
+
         _core.TargetSpeed = 0f;
         _core.CurrentSpeed = 0f;
 
@@ -35,18 +48,7 @@ public class BasicComboAttackState : StateBase
         _aniMoveDelta = Vector3.zero;
         InitTriggeredHitTimings();
 
-        if (_core.InputController.MoveInput.sqrMagnitude > 0.01f)
-        {
-            Vector3 lookDir = GetLookDirectionFromCamera();
-            if (lookDir.sqrMagnitude >= 0.001f)
-            {
-                _targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
-            }
-        }
-        else
-        {
-            _targetRot = Quaternion.LookRotation(_core.transform.forward, Vector3.up);
-        }
+        SetTargetRotation(); // 회전할 방향을 구함
 
         Debug.Log("BasicComboAttackState" + ", Combo: " + (_index + 1));
 
@@ -56,25 +58,26 @@ public class BasicComboAttackState : StateBase
 
     public override void Tick()
     {
-        AnimatorStateInfo info = _core.Animator.GetCurrentAnimatorStateInfo(0);
-        bool isAniSame = info.IsName(_datas[_index].AnimationName);
-        float aniDelta = info.normalizedTime;
-        bool isSafeTransition = Time.time - _stateStartTime >= _core.SafeTransitionDuration;
+        _stateInfo = _core.Animator.GetCurrentAnimatorStateInfo(0);
+        _isAniSame = _stateInfo.IsName(_datas[_index].AnimationName);
+        _aniNormalizedTime = _stateInfo.normalizedTime;
+        _isSafeTransition = Time.time - _stateStartTime >= _core.SafeTransitionDuration;
 
-        if (isAniSame)
+        if (_isAniSame)
         {
-            ProcessHitTimings(aniDelta);
+            ProcessHitTimings(_aniNormalizedTime);
+            MotionWarpEndCheck(_aniNormalizedTime);
         }
 
-        if (isSafeTransition && isAniSame && _datas[_index].Timing.ComboInputEndNormalizedTime <= aniDelta)
+        if (_isSafeTransition && _isAniSame && _datas[_index].Timing.ComboInputEndNormalizedTime <= _aniNormalizedTime)
         {
             _core.FSM.Transition(_core.FSM.IdleState);
             return;
         }
 
-        if (_core.InputController.BasicComboAttackInput && isAniSame &&
-            _datas[_index].Timing.ComboInputStartNormalizedTime <= aniDelta &&
-            _datas[_index].Timing.ComboInputEndNormalizedTime > aniDelta)
+        if (_core.InputController.BasicComboAttackInput && _isAniSame &&
+            _datas[_index].Timing.ComboInputStartNormalizedTime <= _aniNormalizedTime &&
+            _datas[_index].Timing.ComboInputEndNormalizedTime > _aniNormalizedTime)
         {
             Enter();
             return;
@@ -84,7 +87,14 @@ public class BasicComboAttackState : StateBase
     public override void FixedTick()
     {
         PlayerRotation();
-        RootMotionMove();
+        if (_isMotionWarp)
+        {
+            MotionWarp();
+        }
+        else
+        {         
+            RootMotionMove();
+        }
     }
 
     public override void AnimationTick()
@@ -212,5 +222,69 @@ public class BasicComboAttackState : StateBase
     private void PlayerRotation()
     {
         _core.transform.rotation = Quaternion.Slerp(_core.transform.rotation, _targetRot, 15f * Time.fixedDeltaTime);
+    }
+    
+    // 상태 검증값 초기화
+    private void InitStateValue()
+    {
+        _isMotionWarp = false;
+        _aniNormalizedTime = 0f;
+        _isSafeTransition = false;
+    }
+
+    // 타겟 위치로 정해진 속도로 모션 워프 수행
+    private void MotionWarp()
+    {
+        float warpSpeed = _core.BasicComboAttackMotionWarpSpeed;
+        Vector3 dir = _warpPos - _core.transform.position;
+        _core.CharacterMover.Move(dir.normalized * warpSpeed);
+    }
+
+    // 모션 워프를 할지 방향키대로 움직일지 결정하고 모션 워프를 한다면 워프할 위치 저장
+    private void DeterminingMotionWarp()
+    {
+        if (_core.TargetingController.Target != null)
+        {
+            _isMotionWarp = true;
+            _warpPos = _core.TargetingController.GetWarpPos();
+        }
+    }
+
+    // 회전할 타겟 방향을 세팅하는 함수
+    private void SetTargetRotation()
+    {
+        if (_isMotionWarp)
+        {
+            Vector3 dir = _warpPos - _core.transform.position;
+            _targetRot = Quaternion.LookRotation(dir, Vector3.up);
+        }
+        else
+        {
+            if (_core.InputController.MoveInput.sqrMagnitude > 0.01f)
+            {
+                Vector3 lookDir = GetLookDirectionFromCamera();
+                if (lookDir.sqrMagnitude >= 0.001f)
+                {
+                    _targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
+                }
+            }
+            else
+            {
+                _targetRot = Quaternion.LookRotation(_core.transform.forward, Vector3.up);
+            }
+        }
+    }
+
+    // 모션 워프 중이라면 모션워프 종료 결정
+    private void MotionWarpEndCheck(float aniDelta)
+    {
+        bool isStartFirstAttack = aniDelta >= _datas[_index].Timing.AttackTimings[0].NormalizedTime;
+        bool isArriveTargetPos = (Vector3.Distance(_core.transform.position, _warpPos) <= 0.1f);
+
+        // 첫 공격 시작 시간을 초과했거나, 워프 위치에 도착했다면 종료
+        if(isStartFirstAttack || isArriveTargetPos)
+        {
+            _isMotionWarp = false;
+        }
     }
 }
