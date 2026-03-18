@@ -1855,6 +1855,7 @@ GameObject:
   - component: {fileID: 1103392367578762510}
   - component: {fileID: 9150668991346565315}
   - component: {fileID: 7721814424278941818}
+  - component: {fileID: 5624757362877652811}
   - component: {fileID: 6014087233011396540}
   - component: {fileID: 6958755475328983317}
   - component: {fileID: 4106618519233355173}
@@ -1929,6 +1930,22 @@ MonoBehaviour:
   - HitboxName: KatanaBasicAttackHitbox
     HitboxColliders:
     - {fileID: 5814630061041907937}
+--- !u!114 &5624757362877652811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6538668474974009422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9da0197511766194e9adfd2bc5c8ef5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TargetingController
+  _targetingDistance: 3
+  _targetingLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!114 &6014087233011396540
 MonoBehaviour:
   m_ObjectHideFlags: 0
