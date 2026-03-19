@@ -14,7 +14,7 @@ public class BasicComboAttackState : StateBase
 
     private Vector3 _aniMoveDelta;
     private Quaternion _targetRot;
-    
+
     // 공격 판정
     private bool[] _triggeredHitTimings = new bool[0];
     private readonly Collider[] _hitResults = new Collider[HitResultBufferSize];
@@ -66,7 +66,7 @@ public class BasicComboAttackState : StateBase
         if (_isAniSame)
         {
             ProcessHitTimings(_aniNormalizedTime);
-            MotionWarpEndCheck(_aniNormalizedTime);
+            MotionWarpTimeEndCheck(_aniNormalizedTime);
         }
 
         if (_isSafeTransition && _isAniSame && _datas[_index].Timing.ComboInputEndNormalizedTime <= _aniNormalizedTime)
@@ -87,12 +87,13 @@ public class BasicComboAttackState : StateBase
     public override void FixedTick()
     {
         PlayerRotation();
+        MotionWarpPositionEndCheck();
         if (_isMotionWarp)
         {
             MotionWarp();
         }
         else
-        {         
+        {
             RootMotionMove();
         }
     }
@@ -223,7 +224,7 @@ public class BasicComboAttackState : StateBase
     {
         _core.transform.rotation = Quaternion.Slerp(_core.transform.rotation, _targetRot, 15f * Time.fixedDeltaTime);
     }
-    
+
     // 상태 검증값 초기화
     private void InitStateValue()
     {
@@ -235,7 +236,8 @@ public class BasicComboAttackState : StateBase
     // 타겟 위치로 정해진 속도로 모션 워프 수행
     private void MotionWarp()
     {
-        float warpSpeed = _core.BasicComboAttackMotionWarpSpeed;
+        float frameSpeed = Vector3.Distance(_core.transform.position, _warpPos) / Time.fixedDeltaTime;
+        float warpSpeed = Mathf.Min(_core.BasicComboAttackMotionWarpSpeed, frameSpeed);
         Vector3 dir = _warpPos - _core.transform.position;
         _core.CharacterMover.Move(dir.normalized * warpSpeed);
     }
@@ -275,16 +277,19 @@ public class BasicComboAttackState : StateBase
         }
     }
 
-    // 모션 워프 중이라면 모션워프 종료 결정
-    private void MotionWarpEndCheck(float aniDelta)
+    // 모션 워프 중에 시간 초과로 인한 종료 체크
+    private void MotionWarpTimeEndCheck(float aniDelta)
     {
         bool isStartFirstAttack = aniDelta >= _datas[_index].Timing.AttackTimings[0].NormalizedTime;
-        bool isArriveTargetPos = (Vector3.Distance(_core.transform.position, _warpPos) <= 0.1f);
-
-        // 첫 공격 시작 시간을 초과했거나, 워프 위치에 도착했다면 종료
-        if(isStartFirstAttack || isArriveTargetPos)
-        {
+        if (isStartFirstAttack)
             _isMotionWarp = false;
-        }
+    }
+
+    // 모션 워프 중에 거리 도달로 인한 종료 체크
+    private void MotionWarpPositionEndCheck()
+    { 
+        bool isArriveTargetPos = (Vector3.Distance(_core.transform.position, _warpPos) <= 0.1f);
+        if(isArriveTargetPos)
+            _isMotionWarp = false;
     }
 }
