@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63c45c90e74796c4fabd0245ceeea5df, type: 3}
   m_Name: KatanaComboAttackTiming1
   m_EditorClassIdentifier: Assembly-CSharp::ComboAttackData
+  _basicComboAttackId: 
   _animationClip: {fileID: 7400000, guid: 176622ba397203e4ba506e84c7aa9949, type: 2}
   _previewModelPrefab: {fileID: 919132149155446097, guid: 78619ea0e9e2ea84f9d02ae4880f9382, type: 3}
   _comboInputStartNormalizedTime: 0.34472933
@@ -19,3 +20,7 @@ MonoBehaviour:
   _attackTimings:
   - _id: KatanaBasicAttackHitbox
     _normalizedTime: 0.30193236
+  _attackEffectTimings:
+  - _id: KatanaBasicComboAttack1
+    _startNormalizedTime: 0.2596401
+    _endNormalizedTime: 0.34472933

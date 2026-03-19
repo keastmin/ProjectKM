@@ -5,6 +5,7 @@ using UnityEngine;
 public class BasicComboAttackState : StateBase
 {
     private const int HitResultBufferSize = 32;
+    private const float EffectDestroyPadding = 0.5f;
 
     public BasicComboAttackState(PlayerCore core) : base(core) { }
 
@@ -17,6 +18,7 @@ public class BasicComboAttackState : StateBase
 
     // 공격 판정
     private bool[] _triggeredHitTimings = new bool[0];
+    private bool[] _triggeredEffectTimings = new bool[0];
     private readonly Collider[] _hitResults = new Collider[HitResultBufferSize];
     private readonly HashSet<IDamageable> _damagedTargets = new HashSet<IDamageable>();
 
@@ -66,6 +68,7 @@ public class BasicComboAttackState : StateBase
         if (_isAniSame)
         {
             ProcessHitTimings(_aniNormalizedTime);
+            ProcessEffectTimings(_aniNormalizedTime);
             MotionWarpTimeEndCheck(_aniNormalizedTime);
         }
 
@@ -109,17 +112,22 @@ public class BasicComboAttackState : StateBase
         _core.Katana.SetActive(false);
         _aniMoveDelta = Vector3.zero;
         _triggeredHitTimings = new bool[0];
+        _triggeredEffectTimings = new bool[0];
         _damagedTargets.Clear();
     }
 
     private void InitTriggeredHitTimings()
     {
-        AttackTimingDefinition[] attackTimings = _datas[_index].Timing != null
-            ? _datas[_index].Timing.AttackTimings
-            : null;
+        ComboAttackData comboTiming = _datas[_index].Timing;
+        AttackTimingDefinition[] attackTimings = comboTiming != null ? comboTiming.AttackTimings : null;
+        AttackEffectTimingDefinition[] attackEffectTimings = comboTiming != null ? comboTiming.AttackEffectTimings : null;
 
         _triggeredHitTimings = attackTimings != null
             ? new bool[attackTimings.Length]
+            : new bool[0];
+
+        _triggeredEffectTimings = attackEffectTimings != null
+            ? new bool[attackEffectTimings.Length]
             : new bool[0];
     }
 
@@ -146,6 +154,32 @@ public class BasicComboAttackState : StateBase
 
             ApplyHitTiming(attackTiming);
             _triggeredHitTimings[i] = true;
+        }
+    }
+
+    private void ProcessEffectTimings(float aniDelta)
+    {
+        ComboAttackData comboTiming = _datas[_index].Timing;
+        if (comboTiming == null || comboTiming.AttackEffectTimings == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < comboTiming.AttackEffectTimings.Length; i++)
+        {
+            if (_triggeredEffectTimings[i])
+            {
+                continue;
+            }
+
+            AttackEffectTimingDefinition effectTiming = comboTiming.AttackEffectTimings[i];
+            if (effectTiming == null || effectTiming.NormalizedTime > aniDelta)
+            {
+                continue;
+            }
+
+            ApplyAttackEffect(effectTiming);
+            _triggeredEffectTimings[i] = true;
         }
     }
 
@@ -199,6 +233,40 @@ public class BasicComboAttackState : StateBase
                 damageable.TakeDamage(_datas[_index].Damage);
             }
         }
+    }
+
+    private void ApplyAttackEffect(AttackEffectTimingDefinition effectTiming)
+    {
+        if (!_core.AttackEffectController.TryGetAttackEffectData(effectTiming.Id, out AttackEffectController.AttackEffectData effectData))
+        {
+            return;
+        }
+
+        if (effectData.AttackEffect == null || effectData.EffectSpawnTransform == null)
+        {
+            return;
+        }
+
+        ParticleSystem effectInstance = Object.Instantiate(
+            effectData.AttackEffect,
+            effectData.EffectSpawnTransform);
+
+        Object.Destroy(effectInstance.gameObject, GetEffectDestroyDelay(effectInstance));
+    }
+
+    private static float GetEffectDestroyDelay(ParticleSystem effectInstance)
+    {
+        if (effectInstance == null)
+        {
+            return EffectDestroyPadding;
+        }
+
+        ParticleSystem.MainModule main = effectInstance.main;
+        float startLifetime = main.startLifetime.mode == ParticleSystemCurveMode.TwoConstants
+            ? main.startLifetime.constantMax
+            : main.startLifetime.constant;
+
+        return Mathf.Max(main.duration + startLifetime, EffectDestroyPadding);
     }
 
     private void RootMotionMove()
@@ -280,7 +348,14 @@ public class BasicComboAttackState : StateBase
     // 모션 워프 중에 시간 초과로 인한 종료 체크
     private void MotionWarpTimeEndCheck(float aniDelta)
     {
-        bool isStartFirstAttack = aniDelta >= _datas[_index].Timing.AttackTimings[0].NormalizedTime;
+        ComboAttackData comboTiming = _datas[_index].Timing;
+        bool isStartFirstAttack =
+            comboTiming != null &&
+            comboTiming.AttackTimings != null &&
+            comboTiming.AttackTimings.Length > 0 &&
+            comboTiming.AttackTimings[0] != null &&
+            aniDelta >= comboTiming.AttackTimings[0].NormalizedTime;
+
         if (isStartFirstAttack)
             _isMotionWarp = false;
     }

@@ -6,6 +6,7 @@ namespace Player
     [RequireComponent(typeof(CharacterMover))]
     [RequireComponent(typeof(HitController))]
     [RequireComponent(typeof(TargetingController))]
+    [RequireComponent(typeof(AttackEffectController))]
     [RequireComponent(typeof(Animator))]
     public class PlayerCore : MonoBehaviour
     {
@@ -32,6 +33,7 @@ namespace Player
         private CharacterMover _characterMover;
         private HitController _hitController;
         private TargetingController _targetingController;
+        private AttackEffectController _attackEffectController;
         private Animator _animator;
 
         // 속도
@@ -46,6 +48,7 @@ namespace Player
         public CharacterMover CharacterMover => _characterMover;
         public HitController HitController => _hitController;
         public TargetingController TargetingController => _targetingController;
+        public AttackEffectController AttackEffectController => _attackEffectController;
         public Animator Animator => _animator;
         public float JogSpeed => _jogSpeed;
         public float RunSpeed => _runSpeed;
@@ -74,6 +77,7 @@ namespace Player
             TryGetComponent(out _characterMover);
             TryGetComponent(out _hitController);
             TryGetComponent(out _targetingController);
+            TryGetComponent(out _attackEffectController);
             TryGetComponent(out _animator);
             _fsm = new StateMachine(this);
         }

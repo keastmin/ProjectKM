@@ -5,12 +5,13 @@ using UnityEngine;
 public class ComboAttackDataEditor : Editor
 {
     private const float PreviewHeight = 280f;
-    private const float TimelineHeight = 44f;
+    private const float TimelineHeight = 64f;
     private const float TimelineHandleWidth = 10f;
     private const float TimelinePadding = 12f;
     private const float MinZoomFactor = 1.2f;
     private const float MaxZoomFactor = 8f;
     private const float AttackMarkerWidth = 2f;
+    private const float EffectMarkerHeight = 8f;
 
     private enum TimelineDragMode
     {
@@ -27,14 +28,17 @@ public class ComboAttackDataEditor : Editor
         Pan
     }
 
+    private SerializedProperty _basicComboAttackIdProperty;
     private SerializedProperty _animationClipProperty;
     private SerializedProperty _previewModelPrefabProperty;
     private SerializedProperty _comboInputStartNormalizedTimeProperty;
     private SerializedProperty _comboInputEndNormalizedTimeProperty;
     private SerializedProperty _attackTimingsProperty;
+    private SerializedProperty _attackEffectTimingsProperty;
     private GUIStyle _timelineCenterLabelStyle;
     private GUIStyle _timelineRightLabelStyle;
     private GUIStyle _attackMarkerLabelStyle;
+    private GUIStyle _effectMarkerLabelStyle;
 
     private PreviewRenderUtility _previewRenderUtility;
     private GameObject _previewInstance;
@@ -51,11 +55,13 @@ public class ComboAttackDataEditor : Editor
 
     private void OnEnable()
     {
+        _basicComboAttackIdProperty = serializedObject.FindProperty("_basicComboAttackId");
         _animationClipProperty = serializedObject.FindProperty("_animationClip");
         _previewModelPrefabProperty = serializedObject.FindProperty("_previewModelPrefab");
         _comboInputStartNormalizedTimeProperty = serializedObject.FindProperty("_comboInputStartNormalizedTime");
         _comboInputEndNormalizedTimeProperty = serializedObject.FindProperty("_comboInputEndNormalizedTime");
         _attackTimingsProperty = serializedObject.FindProperty("_attackTimings");
+        _attackEffectTimingsProperty = serializedObject.FindProperty("_attackEffectTimings");
 
         _currentNormalizedTime = Mathf.Clamp01(_comboInputStartNormalizedTimeProperty.floatValue);
         _lastEditorTime = (float)EditorApplication.timeSinceStartup;
@@ -66,6 +72,9 @@ public class ComboAttackDataEditor : Editor
         _attackMarkerLabelStyle = new GUIStyle(EditorStyles.miniLabel);
         _attackMarkerLabelStyle.alignment = TextAnchor.MiddleCenter;
         _attackMarkerLabelStyle.normal.textColor = new Color(1f, 0.7f, 0.45f);
+        _effectMarkerLabelStyle = new GUIStyle(EditorStyles.miniLabel);
+        _effectMarkerLabelStyle.alignment = TextAnchor.MiddleCenter;
+        _effectMarkerLabelStyle.normal.textColor = new Color(0.45f, 0.85f, 1f);
         EditorApplication.update += OnEditorUpdate;
     }
 
@@ -79,6 +88,8 @@ public class ComboAttackDataEditor : Editor
     {
         serializedObject.Update();
 
+        DrawBasicComboAttackLinkField();
+        EditorGUILayout.Space(6f);
         EditorGUILayout.PropertyField(_animationClipProperty);
         EditorGUILayout.PropertyField(_previewModelPrefabProperty);
 
@@ -92,10 +103,12 @@ public class ComboAttackDataEditor : Editor
         EditorGUILayout.Space(6f);
         DrawAttackTimingFields(clip);
         EditorGUILayout.Space(6f);
+        DrawAttackEffectTimingFields(clip);
+        EditorGUILayout.Space(6f);
 
         if (clip == null || prefab == null)
         {
-            EditorGUILayout.HelpBox("Assign an Animation Clip and a Preview Model Prefab to scrub the clip and define the combo input window below.", MessageType.Info);
+            EditorGUILayout.HelpBox("Assign an Animation Clip and a Preview Model Prefab to scrub the clip and define timing data below.", MessageType.Info);
         }
         else
         {
@@ -105,6 +118,30 @@ public class ComboAttackDataEditor : Editor
         }
 
         serializedObject.ApplyModifiedProperties();
+    }
+
+    private void DrawBasicComboAttackLinkField()
+    {
+        EditorGUILayout.LabelField("Basic Combo Attack Link", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(_basicComboAttackIdProperty, new GUIContent("Basic Combo Attack ID"));
+
+        BasicComboAttackData linkedAttackData = FindBasicComboAttackDataById(_basicComboAttackIdProperty.stringValue);
+
+        using (new EditorGUI.DisabledScope(true))
+        {
+            EditorGUILayout.ObjectField("Resolved Data", linkedAttackData, typeof(BasicComboAttackData), false);
+        }
+
+        if (string.IsNullOrWhiteSpace(_basicComboAttackIdProperty.stringValue))
+        {
+            EditorGUILayout.HelpBox("Enter the ID of an existing BasicComboAttackData asset.", MessageType.Info);
+            return;
+        }
+
+        if (linkedAttackData == null)
+        {
+            EditorGUILayout.HelpBox("Could not find a BasicComboAttackData asset with the given ID.", MessageType.Warning);
+        }
     }
 
     private void DrawTimingFields(AnimationClip clip)
@@ -200,6 +237,67 @@ public class ComboAttackDataEditor : Editor
         }
     }
 
+    private void DrawAttackEffectTimingFields(AnimationClip clip)
+    {
+        EditorGUILayout.LabelField("Attack Effect Timings", EditorStyles.boldLabel);
+
+        if (_attackEffectTimingsProperty.arraySize == 0)
+        {
+            EditorGUILayout.HelpBox("Add attack effect timing entries to define effect IDs and their start timings.", MessageType.None);
+        }
+
+        int removeIndex = -1;
+
+        for (int i = 0; i < _attackEffectTimingsProperty.arraySize; i++)
+        {
+            SerializedProperty element = _attackEffectTimingsProperty.GetArrayElementAtIndex(i);
+            SerializedProperty idProperty = element.FindPropertyRelative("_id");
+            SerializedProperty timeProperty = element.FindPropertyRelative("_normalizedTime");
+
+            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.LabelField($"Attack Effect Timing {i + 1}", EditorStyles.miniBoldLabel);
+            EditorGUILayout.PropertyField(idProperty, new GUIContent("ID"));
+            timeProperty.floatValue = EditorGUILayout.Slider("Normalized Time", timeProperty.floatValue, 0f, 1f);
+
+            if (clip != null)
+            {
+                EditorGUILayout.LabelField("Seconds", $"{(timeProperty.floatValue * clip.length):F3}s");
+            }
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Set To Current"))
+            {
+                timeProperty.floatValue = _currentNormalizedTime;
+            }
+
+            if (GUILayout.Button("Remove"))
+            {
+                removeIndex = i;
+            }
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
+        }
+
+        if (removeIndex >= 0)
+        {
+            _attackEffectTimingsProperty.DeleteArrayElementAtIndex(removeIndex);
+            ClampAttackEffectTimingProperties();
+            serializedObject.ApplyModifiedProperties();
+            GUIUtility.ExitGUI();
+        }
+
+        if (GUILayout.Button("Add Attack Effect Timing"))
+        {
+            int newIndex = _attackEffectTimingsProperty.arraySize;
+            _attackEffectTimingsProperty.InsertArrayElementAtIndex(newIndex);
+
+            SerializedProperty newElement = _attackEffectTimingsProperty.GetArrayElementAtIndex(newIndex);
+            newElement.FindPropertyRelative("_id").stringValue = string.Empty;
+            newElement.FindPropertyRelative("_normalizedTime").floatValue = _currentNormalizedTime;
+            ClampAttackEffectTimingProperties();
+        }
+    }
+
     private void DrawPreviewToolbar(AnimationClip clip)
     {
         EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
@@ -283,6 +381,7 @@ public class ComboAttackDataEditor : Editor
         EditorGUI.DrawRect(comboWindowRect, new Color(0.22f, 0.7f, 0.32f, 0.9f));
 
         DrawAttackTimingMarkers(timelineRect);
+        DrawAttackEffectTimingMarkers(timelineRect);
 
         EditorGUI.DrawRect(startHandleRect, new Color(0.95f, 0.75f, 0.2f));
         EditorGUI.DrawRect(endHandleRect, new Color(0.95f, 0.45f, 0.2f));
@@ -294,15 +393,15 @@ public class ComboAttackDataEditor : Editor
             EditorStyles.miniBoldLabel);
 
         GUI.Label(
-            new Rect(timelineRect.xMin, timelineRect.yMax + 2f, 90f, 16f),
+            new Rect(timelineRect.xMin, timelineRect.yMax + 18f, 90f, 16f),
             "0.000",
             EditorStyles.miniLabel);
         GUI.Label(
-            new Rect(timelineRect.center.x - 25f, timelineRect.yMax + 2f, 50f, 16f),
+            new Rect(timelineRect.center.x - 25f, timelineRect.yMax + 18f, 50f, 16f),
             "0.500",
             _timelineCenterLabelStyle);
         GUI.Label(
-            new Rect(timelineRect.xMax - 50f, timelineRect.yMax + 2f, 50f, 16f),
+            new Rect(timelineRect.xMax - 50f, timelineRect.yMax + 18f, 50f, 16f),
             "1.000",
             _timelineRightLabelStyle);
 
@@ -326,12 +425,23 @@ public class ComboAttackDataEditor : Editor
             newElement.FindPropertyRelative("_id").stringValue = string.Empty;
             newElement.FindPropertyRelative("_normalizedTime").floatValue = _currentNormalizedTime;
         }
+
+        if (GUILayout.Button("Add Attack Effect At Current"))
+        {
+            int newIndex = _attackEffectTimingsProperty.arraySize;
+            _attackEffectTimingsProperty.InsertArrayElementAtIndex(newIndex);
+
+            SerializedProperty newElement = _attackEffectTimingsProperty.GetArrayElementAtIndex(newIndex);
+            newElement.FindPropertyRelative("_id").stringValue = string.Empty;
+            newElement.FindPropertyRelative("_normalizedTime").floatValue = _currentNormalizedTime;
+        }
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.HelpBox(
             $"Current: {_currentNormalizedTime:F3} ({_currentNormalizedTime * clip.length:F3}s)\n" +
             $"Combo Window: {_comboInputStartNormalizedTimeProperty.floatValue:F3} - {_comboInputEndNormalizedTimeProperty.floatValue:F3}\n" +
-            $"Attack Timings: {_attackTimingsProperty.arraySize}",
+            $"Attack Timings: {_attackTimingsProperty.arraySize}\n" +
+            $"Attack Effect Timings: {_attackEffectTimingsProperty.arraySize}",
             MessageType.None);
     }
 
@@ -353,6 +463,29 @@ public class ComboAttackDataEditor : Editor
         }
     }
 
+    private void DrawAttackEffectTimingMarkers(Rect timelineRect)
+    {
+        for (int i = 0; i < _attackEffectTimingsProperty.arraySize; i++)
+        {
+            SerializedProperty element = _attackEffectTimingsProperty.GetArrayElementAtIndex(i);
+            SerializedProperty idProperty = element.FindPropertyRelative("_id");
+            SerializedProperty timeProperty = element.FindPropertyRelative("_normalizedTime");
+            float time = Mathf.Clamp01(timeProperty.floatValue);
+            float x = Mathf.Lerp(timelineRect.xMin, timelineRect.xMax, time);
+
+            Rect rangeRect = new Rect(
+                x - (AttackMarkerWidth * 0.5f),
+                timelineRect.yMax + 2f,
+                AttackMarkerWidth,
+                EffectMarkerHeight);
+
+            EditorGUI.DrawRect(rangeRect, new Color(0.2f, 0.7f, 1f, 0.9f));
+
+            string label = string.IsNullOrWhiteSpace(idProperty.stringValue) ? $"FX{i + 1}" : idProperty.stringValue;
+            GUI.Label(new Rect(x - 32f, rangeRect.yMax + 1f, 64f, 14f), label, _effectMarkerLabelStyle);
+        }
+    }
+
     private void HandleTimelineInput(Event evt, int controlId, Rect timelineRect, Rect startHandleRect, Rect endHandleRect)
     {
         switch (evt.GetTypeForControl(controlId))
@@ -365,7 +498,7 @@ public class ComboAttackDataEditor : Editor
 
                 GUIUtility.hotControl = controlId;
                 _isPlaying = false;
-                _dragMode = ResolveDragMode(evt.mousePosition, timelineRect, startHandleRect, endHandleRect);
+                _dragMode = ResolveDragMode(evt.mousePosition, startHandleRect, endHandleRect);
                 UpdateTimelineFromMouse(evt.mousePosition, timelineRect);
                 evt.Use();
                 break;
@@ -399,7 +532,7 @@ public class ComboAttackDataEditor : Editor
         }
     }
 
-    private TimelineDragMode ResolveDragMode(Vector2 mousePosition, Rect timelineRect, Rect startHandleRect, Rect endHandleRect)
+    private TimelineDragMode ResolveDragMode(Vector2 mousePosition, Rect startHandleRect, Rect endHandleRect)
     {
         if (startHandleRect.Contains(mousePosition))
         {
@@ -681,6 +814,7 @@ public class ComboAttackDataEditor : Editor
         }
 
         ClampAttackTimingProperties();
+        ClampAttackEffectTimingProperties();
     }
 
     private void ClampAttackTimingProperties()
@@ -693,6 +827,28 @@ public class ComboAttackDataEditor : Editor
         for (int i = 0; i < _attackTimingsProperty.arraySize; i++)
         {
             SerializedProperty element = _attackTimingsProperty.GetArrayElementAtIndex(i);
+            SerializedProperty idProperty = element.FindPropertyRelative("_id");
+            SerializedProperty timeProperty = element.FindPropertyRelative("_normalizedTime");
+
+            if (idProperty.stringValue == null)
+            {
+                idProperty.stringValue = string.Empty;
+            }
+
+            timeProperty.floatValue = Mathf.Clamp01(timeProperty.floatValue);
+        }
+    }
+
+    private void ClampAttackEffectTimingProperties()
+    {
+        if (_attackEffectTimingsProperty == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < _attackEffectTimingsProperty.arraySize; i++)
+        {
+            SerializedProperty element = _attackEffectTimingsProperty.GetArrayElementAtIndex(i);
             SerializedProperty idProperty = element.FindPropertyRelative("_id");
             SerializedProperty timeProperty = element.FindPropertyRelative("_normalizedTime");
 
@@ -723,5 +879,26 @@ public class ComboAttackDataEditor : Editor
             DestroyImmediate(_previewInstance);
             _previewInstance = null;
         }
+    }
+
+    private static BasicComboAttackData FindBasicComboAttackDataById(string comboAttackId)
+    {
+        if (string.IsNullOrWhiteSpace(comboAttackId))
+        {
+            return null;
+        }
+
+        string[] guids = AssetDatabase.FindAssets("t:BasicComboAttackData");
+        for (int i = 0; i < guids.Length; i++)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+            BasicComboAttackData attackData = AssetDatabase.LoadAssetAtPath<BasicComboAttackData>(path);
+            if (attackData != null && attackData.Id == comboAttackId)
+            {
+                return attackData;
+            }
+        }
+
+        return null;
     }
 }

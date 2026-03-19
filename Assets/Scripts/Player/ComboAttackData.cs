@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [System.Serializable]
 public class AttackTimingDefinition
@@ -16,9 +17,29 @@ public class AttackTimingDefinition
     }
 }
 
+[System.Serializable]
+public class AttackEffectTimingDefinition
+{
+    [SerializeField] private string _id;
+    [FormerlySerializedAs("_startNormalizedTime")]
+    [SerializeField] [Range(0f, 1f)] private float _normalizedTime = 0.35f;
+
+    public string Id => _id;
+    public float NormalizedTime => _normalizedTime;
+
+    public void Clamp()
+    {
+        _normalizedTime = Mathf.Clamp01(_normalizedTime);
+        _id = _id ?? string.Empty;
+    }
+}
+
 [CreateAssetMenu(fileName = "ComboAttackData", menuName = "Player/Combat/Combo Attack Data")]
 public class ComboAttackData : ScriptableObject
 {
+    [Header("Link")]
+    [SerializeField] private string _basicComboAttackId;
+
     [Header("Animation")]
     [SerializeField] private AnimationClip _animationClip;
     [SerializeField] private GameObject _previewModelPrefab;
@@ -29,15 +50,19 @@ public class ComboAttackData : ScriptableObject
 
     [Header("Attack Timings")]
     [SerializeField] private AttackTimingDefinition[] _attackTimings = new AttackTimingDefinition[0];
+    [SerializeField] private AttackEffectTimingDefinition[] _attackEffectTimings = new AttackEffectTimingDefinition[0];
 
+    public string BasicComboAttackId => _basicComboAttackId;
     public AnimationClip AnimationClip => _animationClip;
     public GameObject PreviewModelPrefab => _previewModelPrefab;
     public float ComboInputStartNormalizedTime => _comboInputStartNormalizedTime;
     public float ComboInputEndNormalizedTime => _comboInputEndNormalizedTime;
     public AttackTimingDefinition[] AttackTimings => _attackTimings;
+    public AttackEffectTimingDefinition[] AttackEffectTimings => _attackEffectTimings;
 
     private void OnValidate()
     {
+        _basicComboAttackId = _basicComboAttackId ?? string.Empty;
         _comboInputStartNormalizedTime = Mathf.Clamp01(_comboInputStartNormalizedTime);
         _comboInputEndNormalizedTime = Mathf.Clamp01(_comboInputEndNormalizedTime);
 
@@ -60,6 +85,22 @@ public class ComboAttackData : ScriptableObject
             }
 
             _attackTimings[i].Clamp();
+        }
+
+        if (_attackEffectTimings == null)
+        {
+            _attackEffectTimings = new AttackEffectTimingDefinition[0];
+            return;
+        }
+
+        for (int i = 0; i < _attackEffectTimings.Length; i++)
+        {
+            if (_attackEffectTimings[i] == null)
+            {
+                _attackEffectTimings[i] = new AttackEffectTimingDefinition();
+            }
+
+            _attackEffectTimings[i].Clamp();
         }
     }
 }
