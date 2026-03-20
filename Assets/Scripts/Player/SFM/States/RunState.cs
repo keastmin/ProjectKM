@@ -9,9 +9,9 @@ public class RunState : StateBase
     {
         Debug.Log("Run State");
         _core.TargetSpeed = _core.RunSpeed;
-        if (!_core.Animator.GetCurrentAnimatorStateInfo(0).IsName(PlayerAnimationNameContainer.NO_WEAPON_MOVE))
+        if (_core.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash != PlayerAnimationHash.No_Weapon_Move)
         {
-            _core.Animator.CrossFade(PlayerAnimationNameContainer.NO_WEAPON_MOVE, 0.08f);
+            _core.Animator.CrossFade(PlayerAnimationHash.No_Weapon_Move, 0.08f);
         }
     }
 

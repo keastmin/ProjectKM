@@ -14,25 +14,27 @@ public class IdleState : StateBase
         Debug.Log("IdleState");
         _core.TargetSpeed = 0f;
 
+        // 이전 상태 애니메이션을 기다려야 하는 경우 구분
         if(_core.FSM.PrevState == _core.FSM.BasicComboAttackState)
         {
             _isWaitingComboAttackAni = true;
         }
-        else if (!_core.Animator.GetCurrentAnimatorStateInfo(0).IsName(PlayerAnimationNameContainer.NO_WEAPON_MOVE))
+        else if (_core.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash != PlayerAnimationHash.No_Weapon_Move)
         {
-            _core.Animator.CrossFade(PlayerAnimationNameContainer.NO_WEAPON_MOVE, 0.08f);
+            _core.Animator.CrossFade(PlayerAnimationHash.No_Weapon_Move, 0.08f);
         }
     }
 
     public override void Tick()
     {
+        // 이전 상태 애니메이션을 기다려야 될 때
         if (_isWaitingComboAttackAni)
         {
             AnimatorStateInfo stateInfo = _core.Animator.GetCurrentAnimatorStateInfo(0);
             if (stateInfo.normalizedTime > 0.98f)
             {
                 _isWaitingComboAttackAni = false;
-                _core.Animator.CrossFade(PlayerAnimationNameContainer.NO_WEAPON_MOVE, 0.08f);
+                _core.Animator.CrossFade(PlayerAnimationHash.No_Weapon_Move, 0.08f);
             }
         }
 

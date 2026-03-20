@@ -39,13 +39,17 @@ public class RunTurnState : StateBase
         _warpStartTime = Time.time;
         _warpDuration = ResolveWarpDuration();
 
-        _core.Animator.CrossFade(PlayerAnimationNameContainer.NO_WEAPON_RUN_TURN, 0.08f);
+        _core.Animator.CrossFade(PlayerAnimationHash.No_Weapon_Run_Turn, 0.08f);
     }
 
     public override void Tick()
     {
+        AnimatorStateInfo info;
+        if (!AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, PlayerAnimationHash.No_Weapon_Run_Turn, out info))
+            return;
+
         // 트랜지션 조건은 기존처럼 실제 애니메이션 상태를 기준으로 판단
-        float animationNormalizedTime = GetAnimationNormalizedTime();
+        float animationNormalizedTime = info.normalizedTime;
         bool isFinishTurn = animationNormalizedTime >= 0.99f;
 
         if (isFinishTurn)
@@ -113,28 +117,6 @@ public class RunTurnState : StateBase
 
         // 프로필이 없을 때의 fallback
         return 0.6f;
-    }
-
-    private float GetAnimationNormalizedTime()
-    {
-        Animator animator = _core.Animator;
-
-        if (animator.IsInTransition(0))
-        {
-            AnimatorStateInfo next = animator.GetNextAnimatorStateInfo(0);
-            if (next.IsName(PlayerAnimationNameContainer.NO_WEAPON_RUN_TURN))
-            {
-                return Mathf.Clamp01(next.normalizedTime);
-            }
-        }
-
-        AnimatorStateInfo current = animator.GetCurrentAnimatorStateInfo(0);
-        if (current.IsName(PlayerAnimationNameContainer.NO_WEAPON_RUN_TURN))
-        {
-            return Mathf.Clamp01(current.normalizedTime);
-        }
-
-        return 0f;
     }
 
     private float ResolveTurnSign()

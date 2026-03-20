@@ -11,7 +11,6 @@ public class BasicComboAttackState : StateBase
 
     private int _index = -1;
     private BasicComboAttackData[] _datas;
-    private float _stateStartTime = 0f;
 
     private Vector3 _aniMoveDelta;
     private Quaternion _targetRot;
@@ -28,9 +27,8 @@ public class BasicComboAttackState : StateBase
 
     // 공격 애니메이션 상태 검증
     AnimatorStateInfo _stateInfo;
-    private bool _isAniSame = false;
     private float _aniNormalizedTime = 0f;
-    private bool _isSafeTransition = false;
+    private int _aniHash;
 
     public override void Enter()
     {
@@ -55,30 +53,25 @@ public class BasicComboAttackState : StateBase
         Debug.Log("BasicComboAttackState" + ", Combo: " + (_index + 1));
 
         _core.Animator.CrossFade(_datas[_index].AnimationName, 0.08f, 0, 0f);
-        _stateStartTime = Time.time;
     }
 
     public override void Tick()
     {
-        _stateInfo = _core.Animator.GetCurrentAnimatorStateInfo(0);
-        _isAniSame = _stateInfo.IsName(_datas[_index].AnimationName);
+        PlayerAnimationHash.TryGetHash(_datas[_index].AnimationName, out _aniHash);
+        AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _aniHash, out _stateInfo);
         _aniNormalizedTime = _stateInfo.normalizedTime;
-        _isSafeTransition = Time.time - _stateStartTime >= _core.SafeTransitionDuration;
 
-        if (_isAniSame)
-        {
-            ProcessHitTimings(_aniNormalizedTime);
-            ProcessEffectTimings(_aniNormalizedTime);
-            MotionWarpTimeEndCheck(_aniNormalizedTime);
-        }
+        ProcessHitTimings(_aniNormalizedTime);
+        ProcessEffectTimings(_aniNormalizedTime);
+        MotionWarpTimeEndCheck(_aniNormalizedTime);
 
-        if (_isSafeTransition && _isAniSame && _datas[_index].Timing.ComboInputEndNormalizedTime <= _aniNormalizedTime)
+        if (_datas[_index].Timing.ComboInputEndNormalizedTime <= _aniNormalizedTime)
         {
             _core.FSM.Transition(_core.FSM.IdleState);
             return;
         }
 
-        if (_core.InputController.BasicComboAttackInput && _isAniSame &&
+        if (_core.InputController.BasicComboAttackInput &&
             _datas[_index].Timing.ComboInputStartNormalizedTime <= _aniNormalizedTime &&
             _datas[_index].Timing.ComboInputEndNormalizedTime > _aniNormalizedTime)
         {
@@ -298,7 +291,6 @@ public class BasicComboAttackState : StateBase
     {
         _isMotionWarp = false;
         _aniNormalizedTime = 0f;
-        _isSafeTransition = false;
     }
 
     // 타겟 위치로 정해진 속도로 모션 워프 수행
