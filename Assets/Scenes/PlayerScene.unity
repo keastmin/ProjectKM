@@ -2772,15 +2772,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Height
-      value: 1.4300001
+      value: 1.3100001
       objectReference: {fileID: 0}
     - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Radius
-      value: 0.5
+      value: 0.56
       objectReference: {fileID: 0}
     - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Center.y
-      value: 1.155
+      value: 1.165
       objectReference: {fileID: 0}
     - target: {fileID: 6014087233011396540, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Enabled
@@ -3407,13 +3407,17 @@ PrefabInstance:
       propertyPath: m_UseGravity
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8055304358693729453, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
+      propertyPath: _animator
+      value: 
+      objectReference: {fileID: 7432965456616064119}
     - target: {fileID: 8158674036653238942, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
       propertyPath: m_Height
       value: 2.84
       objectReference: {fileID: 0}
     - target: {fileID: 8158674036653238942, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
       propertyPath: m_Radius
-      value: 1.42
+      value: 0.85
       objectReference: {fileID: 0}
     - target: {fileID: 8158674036653238942, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
       propertyPath: m_Center.y
