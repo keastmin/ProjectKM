@@ -1,3 +1,4 @@
+using NoiRC.SRMove;
 using UnityEngine;
 
 namespace Player
@@ -18,7 +19,6 @@ namespace Player
         [SerializeField] private float _runSpeed = 8f;
 
         [Header("콤보 공격")]
-        [SerializeField] private float _safeTransitionDuration = 0.1f;
         [SerializeField] private BasicComboAttackData[] _katanaComboDatas;
 
         [Header("모션 워핑 데이터")]
@@ -30,7 +30,8 @@ namespace Player
 
         // 컴포넌트
         private InputController _inputController;
-        private CharacterMover _characterMover;
+        //private CharacterMover _characterMover;
+        private AvatarMover _avatarMover;
         private HitController _hitController;
         private TargetingController _targetingController;
         private AttackEffectController _attackEffectController;
@@ -45,7 +46,8 @@ namespace Player
 
         public StateMachine FSM => _fsm;
         public InputController InputController => _inputController;
-        public CharacterMover CharacterMover => _characterMover;
+        //public CharacterMover CharacterMover => _characterMover;
+        public AvatarMover Mover => _avatarMover;
         public HitController HitController => _hitController;
         public TargetingController TargetingController => _targetingController;
         public AttackEffectController AttackEffectController => _attackEffectController;
@@ -67,14 +69,14 @@ namespace Player
         public MotionWarpProfile RunTurnMotionInfo => _runTurnMotionInfo;
         public GameObject Katana => _katana;
         public BasicComboAttackData[] KatanaComboDatas => _katanaComboDatas;
-        public float SafeTransitionDuration => _safeTransitionDuration;
 
         private void Awake()
         {
             _katana.SetActive(false);
 
             TryGetComponent(out _inputController);
-            TryGetComponent(out _characterMover);
+            //TryGetComponent(out _characterMover);
+            TryGetComponent(out _avatarMover);
             TryGetComponent(out _hitController);
             TryGetComponent(out _targetingController);
             TryGetComponent(out _attackEffectController);

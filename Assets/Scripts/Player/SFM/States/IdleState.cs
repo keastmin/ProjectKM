@@ -77,7 +77,8 @@ public class IdleState : StateBase
 
     private void Move()
     {
-        _core.CharacterMover.Move(_core.transform.forward * _core.CurrentSpeed);
+        //_core.CharacterMover.Move(_core.transform.forward * _core.CurrentSpeed);
+        _core.Mover.Move(_core.transform.forward * _core.CurrentSpeed);
     }
 
     private bool IsOppositeTurnInput(Vector2 moveInput)

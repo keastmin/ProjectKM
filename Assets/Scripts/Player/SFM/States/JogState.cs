@@ -55,7 +55,8 @@ public class JogState : StateBase
 
     private void Move()
     {
-        _core.CharacterMover.Move(_core.transform.forward * _core.CurrentSpeed);
+        //_core.CharacterMover.Move(_core.transform.forward * _core.CurrentSpeed);
+        _core.Mover.Move(_core.transform.forward * _core.CurrentSpeed);
     }
 
     // 카메라가 보고있는 정면을 구하는 함수

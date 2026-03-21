@@ -266,7 +266,8 @@ public class BasicComboAttackState : StateBase
     {
         _aniMoveDelta.y = 0f;
         Vector3 vel = _aniMoveDelta / Time.fixedDeltaTime;
-        _core.CharacterMover.Move(vel);
+        //_core.CharacterMover.Move(vel);
+        _core.Mover.Move(vel);
         _aniMoveDelta = Vector3.zero;
     }
 
@@ -299,7 +300,8 @@ public class BasicComboAttackState : StateBase
         float frameSpeed = Vector3.Distance(_core.transform.position, _warpPos) / Time.fixedDeltaTime;
         float warpSpeed = Mathf.Min(_core.BasicComboAttackMotionWarpSpeed, frameSpeed);
         Vector3 dir = _warpPos - _core.transform.position;
-        _core.CharacterMover.Move(dir.normalized * warpSpeed);
+        //_core.CharacterMover.Move(dir.normalized * warpSpeed);
+        _core.Mover.Move(dir.normalized * warpSpeed);
     }
 
     // 모션 워프를 할지 방향키대로 움직일지 결정하고 모션 워프를 한다면 워프할 위치 저장
