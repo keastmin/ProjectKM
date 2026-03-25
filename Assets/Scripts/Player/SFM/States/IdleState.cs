@@ -27,6 +27,12 @@ public class IdleState : StateBase
 
     public override void Tick()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _core.FSM.Transition(_core.FSM.DamagedState);
+            return;
+        }
+
         // 이전 상태 애니메이션을 기다려야 될 때
         if (_isWaitingComboAttackAni)
         {
