@@ -17,6 +17,7 @@ public class HellCatDamagedState : IState
 
     public void Enter()
     {
+        _core.DamagedFlag = false;
         _core.Animator.CrossFade(_damagedHash, 0.03f, 0, 0f);
     }
 
@@ -26,7 +27,6 @@ public class HellCatDamagedState : IState
 
         if (_core.DamagedFlag)
         {
-            _core.DamagedFlag = false;
             _core.FSM.Transition(_core.FSM.DamagedState);
             return;
         }

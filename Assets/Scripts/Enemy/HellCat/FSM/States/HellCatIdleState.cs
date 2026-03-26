@@ -22,7 +22,6 @@ public class HellCatIdleState : IState
     {
         if (_core.DamagedFlag)
         {
-            _core.DamagedFlag = false;
             _core.FSM.Transition(_core.FSM.DamagedState);
             return;
         }
