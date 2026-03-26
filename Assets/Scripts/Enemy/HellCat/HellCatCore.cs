@@ -12,7 +12,11 @@ public class HellCatCore : EnemyCore
         base.Awake();
         TryGetComponent(out _rigidbody);
 
-        _fsm = new HellCatFSM(this);
+        _fsm = new HellCatFSM(this);       
+    }
+
+    private void Start()
+    {
         _fsm.Initialize(_fsm.IdleState);
     }
 

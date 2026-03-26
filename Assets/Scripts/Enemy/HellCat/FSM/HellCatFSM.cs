@@ -3,12 +3,14 @@ using UnityEngine;
 public class HellCatFSM
 {
     public HellCatIdleState IdleState;
+    public HellCatDamagedState DamagedState;
 
     private IState _currentState;
 
     public HellCatFSM(HellCatCore core)
     {
         IdleState = new HellCatIdleState(core);
+        DamagedState = new HellCatDamagedState(core);
     }
 
     public void Initialize(IState initState)
