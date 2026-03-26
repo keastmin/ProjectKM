@@ -404,7 +404,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 7227527523439970200, guid: d3ffbb53d382790469e6c8f926efe5f6, type: 3}
+  - {fileID: 2100000, guid: 8cfa1e0243427844aa41ff438677cf2a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -775,13 +775,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2177496810997191849}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.074, y: 0.78, z: -1.591}
+  m_LocalRotation: {x: -0, y: -0.011127496, z: -0, w: 0.99993813}
+  m_LocalPosition: {x: 0.1, y: 0.71, z: -1.59}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3540976463141701855}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -1.275, z: 0}
 --- !u!1 &2243115277794960719
 GameObject:
   m_ObjectHideFlags: 0
@@ -1982,15 +1982,17 @@ GameObject:
   m_Component:
   - component: {fileID: 1103392367578762510}
   - component: {fileID: 9150668991346565315}
+  - component: {fileID: 5921264619617047054}
   - component: {fileID: 7721814424278941818}
   - component: {fileID: 5624757362877652811}
   - component: {fileID: 6014087233011396540}
   - component: {fileID: 6958755475328983317}
+  - component: {fileID: 807235723518459982}
   - component: {fileID: 4106618519233355173}
   - component: {fileID: 7001236295133361961}
   - component: {fileID: 2470472834754288877}
   - component: {fileID: 3719325142636022138}
-  - component: {fileID: 1139211803879265957}
+  - component: {fileID: 2323424914846325773}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -2032,7 +2034,6 @@ MonoBehaviour:
   _katana: {fileID: 8379501271240644594}
   _jogSpeed: 5
   _runSpeed: 8
-  _safeTransitionDuration: 0.1
   _katanaComboDatas:
   - {fileID: 11400000, guid: dcfa7acc1b742e34f9e159f98b3efdee, type: 2}
   - {fileID: 11400000, guid: dc54ab3f31ae5064fb38fd8c1b699723, type: 2}
@@ -2041,6 +2042,31 @@ MonoBehaviour:
   _basicComboAttackMotionWarpSpeed: 20
   _runTurnMotionInfo: {fileID: 11400000, guid: a27add68369979c41b9aeb2299ed638b, type: 2}
   _playerCamera: {fileID: 0}
+--- !u!114 &5921264619617047054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6538668474974009422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3da6e04561f5f2b44998d33911404b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AttackEffectController
+  _effectIDs:
+  - EffectName: KatanaBasicComboAttack1
+    AttackEffect: {fileID: 7212742308784055358, guid: f2308f09fe722c54cb5cd7c8932feb22, type: 3}
+    SpawnTransform: {fileID: 6503526858248983263}
+  - EffectName: KatanaBasicComboAttack2
+    AttackEffect: {fileID: 7212742308784055358, guid: f2308f09fe722c54cb5cd7c8932feb22, type: 3}
+    SpawnTransform: {fileID: 2076219026418302351}
+  - EffectName: KatanaBasicComboAttack3
+    AttackEffect: {fileID: 7212742308784055358, guid: f2308f09fe722c54cb5cd7c8932feb22, type: 3}
+    SpawnTransform: {fileID: 4793298195213899530}
+  - EffectName: KatanaBasicComboAttack4
+    AttackEffect: {fileID: 5123993082347529029, guid: 2ab6120951470b44e9f526680019fbe3, type: 3}
+    SpawnTransform: {fileID: 7267716536505729209}
 --- !u!114 &7721814424278941818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2085,13 +2111,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6538668474974009422}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fafb159c42e313741a7401843443bff7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterMover
   _height: 1.82
-  _thickness: 1.03
+  _thickness: 1.12
   _offset: {x: 0, y: 0, z: 0}
   _stepUpHeight: 0.51
 --- !u!114 &6958755475328983317
@@ -2109,6 +2135,43 @@ MonoBehaviour:
   _moveName: Move
   _runName: Run
   _basicComboAttackName: BasicComboAttack
+--- !u!114 &807235723518459982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6538668474974009422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e26b4fc903fae5d4e8dcb092492afb05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NoiRC.SRMove.AvatarMover
+  _height: 1.87
+  _thickness: 1
+  _colliderOffset: {x: 0, y: 0, z: 0}
+  _enableGravity: 1
+  _gravityAccel: {x: 0, y: -9.81, z: 0}
+  _gravitySpeedMax: 20
+  _groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 257
+  _groundProbeExtraDistance: 10
+  _groundProbeThickness: 0.1
+  _groundProbeFindRealNormal: 0
+  _stepSmoothDelay: 0.1
+  _stepUpHeight: 0.44
+  _stepDownHeight: 0.5
+  _stepUpSmooth: 10
+  _stepDownSmooth: 10
+  _stepSmoothMovingMultipler: 1
+  _alignVelocityToSlope: 1
+  _slopeApproxRange: 1
+  _slopeApproxIters: 4
+  _debugGroundDetection: 0
+  _debugSlopeApproximation: 0
+  _rigidbody: {fileID: 7001236295133361961}
+  _collider: {fileID: 2470472834754288877}
 --- !u!95 &4106618519233355173
 Animator:
   serializedVersion: 7
@@ -2177,10 +2240,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.515
-  m_Height: 1.3100001
+  m_Radius: 0.5
+  m_Height: 1.4300001
   m_Direction: 1
-  m_Center: {x: 0, y: 1.165, z: 0}
+  m_Center: {x: 0, y: 1.155, z: 0}
 --- !u!114 &3719325142636022138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2211,7 +2274,7 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &1139211803879265957
+--- !u!114 &2323424914846325773
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2220,13 +2283,39 @@ MonoBehaviour:
   m_GameObject: {fileID: 6538668474974009422}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25858396e78dc394d8d4c6b25f590323, type: 3}
+  m_Script: {fileID: 11500000, guid: 7729ee5b701c7e948b0513a104de6e44, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Player.HitController
-  _hitLayer:
+  m_EditorClassIdentifier: Assembly-CSharp::Player.CameraDistanceDitherFade
+  _targetCamera: {fileID: 0}
+  _fadeOrigin: {fileID: 1103392367578762510}
+  _targetRenderers:
+  - {fileID: 4851740535892906511}
+  _fadeStartDistance: 3
+  _fadeEndDistance: 0.8
+  _fadeCurve:
     serializedVersion: 2
-    m_Bits: 0
-  _hitboxIDs: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6778701767378972947
 GameObject:
   m_ObjectHideFlags: 0

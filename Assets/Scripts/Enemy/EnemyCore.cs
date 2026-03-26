@@ -9,17 +9,9 @@ public class EnemyCore : MonoBehaviour, IDamageable
     private const string DAMAGED_NAME = "Damaged";
     private int _damagedHash;
 
-    private Rigidbody _rigidbody;
-
-    private void Awake()
+    protected virtual void Awake()
     {
-        TryGetComponent(out _rigidbody);
         _damagedHash = Animator.StringToHash("Base Layer." + DAMAGED_NAME);
-    }
-
-    private void FixedUpdate()
-    {
-        _rigidbody.linearVelocity = Vector3.zero;
     }
 
     public void TakeDamage(float damage)
