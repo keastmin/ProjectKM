@@ -2,10 +2,17 @@ using UnityEngine;
 
 public class HellCatCore : EnemyCore
 {
+    [SerializeField] private float _basicAttackCoolDown = 4f;
+
     private Rigidbody _rigidbody;
 
     private HellCatFSM _fsm;
     public HellCatFSM FSM => _fsm;
+
+    // cool down
+    private float _currentBasicAttackCoolTime = 0f;
+
+    public bool IsBasicAttackEnable => (_currentBasicAttackCoolTime >= _basicAttackCoolDown);
 
     protected override void Awake()
     {
@@ -20,8 +27,14 @@ public class HellCatCore : EnemyCore
         _fsm.Initialize(_fsm.IdleState);
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
+        // Basic Attack 쿨타임 관리
+        if (_currentBasicAttackCoolTime < _basicAttackCoolDown)
+            _currentBasicAttackCoolTime += Time.deltaTime;
+
         _fsm.Tick();
     }
 
