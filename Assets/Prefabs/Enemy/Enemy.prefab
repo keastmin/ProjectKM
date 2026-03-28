@@ -1406,8 +1406,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af80121a216d20a4a8745ac602d9b2af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HellCatCore
+  _enemyAttackColliders:
+  - Name: Basic Attack
+    AttackCollider: {fileID: 6986457428123105093}
+  _enableSuperArmour: 1
+  _superArmourDuration: 3
+  _superArmourDamage: 80
+  _superArmourHoldTime: 3
   _animator: {fileID: 6983833570609188103}
   _damageStatus: {fileID: 13726469198907656}
+  _basicAttackCoolDown: 4
 --- !u!136 &8158674036653238942
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3092,6 +3100,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1471596855609536094}
+  - component: {fileID: 6986457428123105093}
+  - component: {fileID: 1448290191448745838}
   m_Layer: 0
   m_Name: hand_r
   m_TagString: Untagged
@@ -3119,6 +3129,39 @@ Transform:
   - {fileID: 8266314698194212775}
   m_Father: {fileID: 5662997910331017730}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &6986457428123105093
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6058499934751646850}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.19
+  m_Center: {x: 0.27, y: 0, z: 0.06}
+--- !u!114 &1448290191448745838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6058499934751646850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 580f02dcc06fe1a45b99d8859b27d735, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyGiveDamage
 --- !u!1 &6070991284968949002
 GameObject:
   m_ObjectHideFlags: 0

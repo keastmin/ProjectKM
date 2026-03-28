@@ -4,6 +4,7 @@ public class HellCatFSM
 {
     public HellCatIdleState IdleState;
     public HellCatDamagedState DamagedState;
+    public HellCatBasicAttackState BasicAttackState;
 
     private IState _currentState;
 
@@ -11,6 +12,7 @@ public class HellCatFSM
     {
         IdleState = new HellCatIdleState(core);
         DamagedState = new HellCatDamagedState(core);
+        BasicAttackState = new HellCatBasicAttackState(core);
     }
 
     public void Initialize(IState initState)

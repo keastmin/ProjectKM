@@ -10,9 +10,9 @@ public class HellCatCore : EnemyCore
     public HellCatFSM FSM => _fsm;
 
     // cool down
-    private float _currentBasicAttackCoolTime = 0f;
+    public float CurrentBasicAttackCoolTime { get; set; } = 0f;
 
-    public bool IsBasicAttackEnable => (_currentBasicAttackCoolTime >= _basicAttackCoolDown);
+    public bool IsBasicAttackEnable => (CurrentBasicAttackCoolTime >= _basicAttackCoolDown);
 
     protected override void Awake()
     {
@@ -32,8 +32,10 @@ public class HellCatCore : EnemyCore
         base.Update();
 
         // Basic Attack 쿨타임 관리
-        if (_currentBasicAttackCoolTime < _basicAttackCoolDown)
-            _currentBasicAttackCoolTime += Time.deltaTime;
+        if (CurrentBasicAttackCoolTime < _basicAttackCoolDown)
+        {
+            CurrentBasicAttackCoolTime += Time.deltaTime;
+        }
 
         _fsm.Tick();
     }

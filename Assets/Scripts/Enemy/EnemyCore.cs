@@ -1,13 +1,21 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyCore : MonoBehaviour, IDamageable
 {
+    [Header("공격")]
+    [SerializeField] private List<EnemyAttackColliderName> _enemyAttackColliders;
+
+    [Header("슈퍼아머")]
     [SerializeField] private bool _enableSuperArmour = true;
     [SerializeField] private float _superArmourDuration = 3f;
     [SerializeField] private float _superArmourDamage = 80f;
     [SerializeField] private float _superArmourHoldTime = 3f;
 
+    [Header("컴포넌트")]
     [SerializeField] private Animator _animator;
+
+    [Header("테스트")]
     [SerializeField] private DamageStatus _damageStatus;
 
     private float _lastDamageTime = float.MinValue;
@@ -18,8 +26,24 @@ public class EnemyCore : MonoBehaviour, IDamageable
     public bool DamagedFlag { get; set; }
     public bool IsSuperArmour => _enableSuperArmour && _superArmourRemainTime > 0f;
 
+    // 공격 데이터
+    public Dictionary<string, GameObject> AttackObjectDic;
+
     protected virtual void Awake()
     {
+        // 적 공격 이름과 콜라이더 딕셔너리 초기화
+        if(_enemyAttackColliders != null)
+        {
+            AttackObjectDic = new Dictionary<string, GameObject>();
+            foreach(var ac in _enemyAttackColliders)
+            {
+                if (ac.AttackObject != null)
+                {
+                    AttackObjectDic.Add(ac.Name, ac.AttackObject);
+                    //ac.AttackObject.SetActive(false);
+                }
+            }
+        }
     }
 
     protected virtual void Update()

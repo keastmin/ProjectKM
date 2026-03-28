@@ -13,6 +13,9 @@ public class DamagedState : StateBase
 
     public override void Enter()
     {
+        // 데미지 플래그 복원
+        _core.DamageFlag = false;
+
         Debug.Log("Damaged State");
 
         _core.Animator.CrossFade(PlayerAnimationHash.Katana_Damaged_Front, 0.03f, 0, 0f);

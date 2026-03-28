@@ -30,7 +30,7 @@ ModelImporter:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
-    optimizeGameObjects: 0
+    optimizeGameObjects: 1
     removeConstantScaleCurves: 0
     motionNodeName: 
     animationImportErrors: 
@@ -44,7 +44,110 @@ ModelImporter:
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
-    extraExposedTransformPaths: []
+    extraExposedTransformPaths:
+    - root
+    - root/pelvis
+    - root/pelvis/spine_01
+    - root/pelvis/spine_01/spine_02
+    - root/pelvis/spine_01/spine_02/spine_03
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_l
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l/index_02_l
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/middle_01_l
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/middle_01_l/middle_02_l
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/pinky_01_l
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/pinky_01_l/pinky_02_l
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/ring_01_l
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/ring_01_l/ring_02_l
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l/thumb_02_l
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_r
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r/index_02_r
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/middle_01_r
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/middle_01_r/middle_02_r
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/pinky_01_r
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/pinky_01_r/pinky_02_r
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/ring_01_r
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/ring_01_r/ring_02_r
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r
+    - root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r/thumb_02_r
+    - root/pelvis/spine_01/spine_02/spine_03/neck_01
+    - root/pelvis/spine_01/spine_02/spine_03/neck_01/head
+    - root/pelvis/spine_01/spine_02/spine_03/neck_01/head/eye_l
+    - root/pelvis/spine_01/spine_02/spine_03/neck_01/head/eye_r
+    - root/pelvis/spine_01/spine_02/spine_03/neck_01/head/jaw
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine/spike_spine1
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine2
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine2/spike_spine3
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine4
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine4/spike_spine5
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine6
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine6/spike_spine7
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine8
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine8/spike_spine9
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine_l
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine_l/spike_spine_l1
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine_l2
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine_l2/spike_spine_l3
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine_l4
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine_l4/spike_spine_l5
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine_r
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine_r/spike_spine_r1
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine_r2
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine_r2/spike_spine_r3
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine_r4
+    - root/pelvis/spine_01/spine_02/spine_03/spike_spine_r4/spike_spine_r5
+    - root/pelvis/Tail_joint
+    - root/pelvis/Tail_joint/Tail_joint1
+    - root/pelvis/Tail_joint/Tail_joint1/Tail_joint2
+    - root/pelvis/Tail_joint/Tail_joint1/Tail_joint2/Tail_joint3
+    - root/pelvis/Tail_joint/Tail_joint1/Tail_joint2/Tail_joint3/Tail_joint4
+    - root/pelvis/Tail_joint/Tail_joint1/Tail_joint2/Tail_joint3/Tail_joint4/Claw_l
+    - root/pelvis/Tail_joint/Tail_joint1/Tail_joint2/Tail_joint3/Tail_joint4/Claw_l/Claw_l1
+    - root/pelvis/Tail_joint/Tail_joint1/Tail_joint2/Tail_joint3/Tail_joint4/Claw_r
+    - root/pelvis/Tail_joint/Tail_joint1/Tail_joint2/Tail_joint3/Tail_joint4/Claw_r/Claw_r1
+    - root/pelvis/thigh_l
+    - root/pelvis/thigh_l/calf_l
+    - root/pelvis/thigh_l/calf_l/foot_l
+    - root/pelvis/thigh_l/calf_l/foot_l/ball_l
+    - root/pelvis/thigh_l/calf_l/foot_l/ball_l/index_b_01_l
+    - root/pelvis/thigh_l/calf_l/foot_l/ball_l/index_b_01_l/index_b_02_l
+    - root/pelvis/thigh_l/calf_l/foot_l/ball_l/Middle_b_01_l
+    - root/pelvis/thigh_l/calf_l/foot_l/ball_l/Middle_b_01_l/Middle_b_02_l
+    - root/pelvis/thigh_l/calf_l/foot_l/ball_l/ring_b_01_l
+    - root/pelvis/thigh_l/calf_l/foot_l/ball_l/ring_b_01_l/ring_b_02_l
+    - root/pelvis/thigh_r
+    - root/pelvis/thigh_r/calf_r
+    - root/pelvis/thigh_r/calf_r/foot_r
+    - root/pelvis/thigh_r/calf_r/foot_r/ball_r
+    - root/pelvis/thigh_r/calf_r/foot_r/ball_r/index_b_01_r
+    - root/pelvis/thigh_r/calf_r/foot_r/ball_r/index_b_01_r/index_b_02_r
+    - root/pelvis/thigh_r/calf_r/foot_r/ball_r/Middle_b_01_r
+    - root/pelvis/thigh_r/calf_r/foot_r/ball_r/Middle_b_01_r/Middle_b_02_r
+    - root/pelvis/thigh_r/calf_r/foot_r/ball_r/ring_b_01_r
+    - root/pelvis/thigh_r/calf_r/foot_r/ball_r/ring_b_01_r/ring_b_02_r
+    - SciFi_HellCat
+    - SciFi_HellCat/Armor
+    - SciFi_HellCat/Armor/ArmorBackLegs1
+    - SciFi_HellCat/Armor/ArmorFrontLeg
+    - SciFi_HellCat/Armor/ArmorPlate
+    - SciFi_HellCat/Armor/ArmorTail
+    - SciFi_HellCat/Armor/ArmorTube
+    - SciFi_HellCat/Body
+    - SciFi_HellCat/Body/Body1
+    - SciFi_HellCat/Body/BodyEyes1
+    - SciFi_HellCat/Body/BodyHead
+    - SciFi_HellCat/Body/BodyJaw
+    - SciFi_HellCat/Body/BodyLegs1
+    - SciFi_HellCat/Body/BodyTail1
     extraUserProperties: []
     clipAnimations: []
     isReadable: 0

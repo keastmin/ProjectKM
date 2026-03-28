@@ -15,8 +15,8 @@ TagManager:
   - Enemy
   - Environmental
   - Wall Collider
-  - 
-  - 
+  - Player Hurtbox
+  - Enemy Attack
   - 
   - 
   - 

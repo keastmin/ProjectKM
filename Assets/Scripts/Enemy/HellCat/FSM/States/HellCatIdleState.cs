@@ -25,6 +25,12 @@ public class HellCatIdleState : IState
             _core.FSM.Transition(_core.FSM.DamagedState);
             return;
         }
+
+        if (_core.IsBasicAttackEnable)
+        {
+            _core.FSM.Transition(_core.FSM.BasicAttackState);
+            return;
+        }
     }
 
     public void FixedTick()

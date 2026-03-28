@@ -9,7 +9,7 @@ namespace Player
     [RequireComponent(typeof(TargetingController))]
     [RequireComponent(typeof(AttackEffectController))]
     [RequireComponent(typeof(Animator))]
-    public class PlayerCore : MonoBehaviour
+    public class PlayerCore : MonoBehaviour, IDamageable
     {
         [Header("무기")]
         [SerializeField] private GameObject _katana;
@@ -70,6 +70,8 @@ namespace Player
         public GameObject Katana => _katana;
         public BasicComboAttackData[] KatanaComboDatas => _katanaComboDatas;
 
+        public bool DamageFlag { get; set; } = false;
+
         private void Awake()
         {
             _katana.SetActive(false);
@@ -91,6 +93,13 @@ namespace Player
 
         private void Update()
         {
+            // 언제든 데미지를 받을 수 있음
+            if (DamageFlag)
+            {
+                _fsm.Transition(_fsm.DamagedState);
+                return;
+            }
+
             _fsm.Tick();
         }
 
@@ -115,6 +124,11 @@ namespace Player
             CurrentSpeed = Mathf.Lerp(CurrentSpeed, TargetSpeed, Time.fixedDeltaTime * 8f);
             if (Mathf.Abs(CurrentSpeed - TargetSpeed) <= 0.01f) CurrentSpeed = TargetSpeed;
             _animator.SetFloat("MoveSpeed", CurrentSpeed);
+        }
+
+        public void TakeDamage(float damage)
+        {
+            DamageFlag = true;
         }
     }
 }
