@@ -360,6 +360,7 @@ GameObject:
   m_Component:
   - component: {fileID: 668194258}
   - component: {fileID: 668194259}
+  - component: {fileID: 668194260}
   m_Layer: 11
   m_Name: Attack Colliders
   m_TagString: Untagged
@@ -396,6 +397,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 580f02dcc06fe1a45b99d8859b27d735, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyGiveDamage
+--- !u!54 &668194260
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 668194257}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!4 &854077066 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1471596855609536094, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
@@ -426,15 +454,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 939492566}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.00000007450578, y: 0.3774099, z: 0.00000007450578, w: 0.92604625}
   m_LocalPosition: {x: -0.261, y: 0, z: -0.234}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 668194258}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &939492568
-SphereCollider:
+  m_LocalEulerAnglesHint: {x: 0, y: 44.347, z: 0}
+--- !u!136 &939492568
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -446,13 +474,15 @@ SphereCollider:
     m_Bits: 1024
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 1015
+    m_Bits: 3063
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.17
+  serializedVersion: 2
+  m_Radius: 0.14
+  m_Height: 1
+  m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &985927904
 GameObject:
@@ -964,10 +994,10 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 3063
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0

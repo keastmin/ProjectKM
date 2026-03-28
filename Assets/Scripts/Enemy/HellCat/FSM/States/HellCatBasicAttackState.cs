@@ -19,8 +19,8 @@ public class HellCatBasicAttackState : IState
     public void Enter()
     {
         _core.Animator.CrossFade(_animationHash, 0.08f, 0, 0f);
-        //if (_core.AttackObjectDic.ContainsKey(COLLIDER_NAME))
-        //    _core.AttackObjectDic[COLLIDER_NAME].SetActive(true);
+        if (_core.AttackObjectDic.ContainsKey(COLLIDER_NAME))
+            _core.AttackObjectDic[COLLIDER_NAME].SetActive(true);
     }
 
     public void Tick()
@@ -60,7 +60,7 @@ public class HellCatBasicAttackState : IState
         // 쿨타임 초기화
         _core.CurrentBasicAttackCoolTime = 0f;
 
-        //if (_core.AttackObjectDic.ContainsKey(COLLIDER_NAME))
-        //    _core.AttackObjectDic[COLLIDER_NAME].SetActive(false);
+        if (_core.AttackObjectDic.ContainsKey(COLLIDER_NAME))
+            _core.AttackObjectDic[COLLIDER_NAME].SetActive(false);
     }
 }

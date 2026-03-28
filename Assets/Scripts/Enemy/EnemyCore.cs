@@ -40,7 +40,7 @@ public class EnemyCore : MonoBehaviour, IDamageable
                 if (ac.AttackObject != null)
                 {
                     AttackObjectDic.Add(ac.Name, ac.AttackObject);
-                    //ac.AttackObject.SetActive(false);
+                    ac.AttackObject.SetActive(false);
                 }
             }
         }

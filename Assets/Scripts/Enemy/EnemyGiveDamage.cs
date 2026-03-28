@@ -17,20 +17,13 @@ public class EnemyGiveDamage : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        IDamageable damageTarget = other.GetComponentInParent<IDamageable>();
-
-        if (damageTarget != null)
-        {
-            damageTarget.TakeDamage(10f);
-            //_damageTarget.Add(damageTarget);
-        }
-        //GiveDamage(other);
+        GiveDamage(other);
     }
 
-    //private void OnTriggerStay(Collider other)
-    //{
-    //    GiveDamage(other);
-    //}
+    private void OnTriggerStay(Collider other)
+    {
+        GiveDamage(other);
+    }
 
     private void GiveDamage(Collider other)
     {
@@ -38,6 +31,7 @@ public class EnemyGiveDamage : MonoBehaviour
 
         if(damageTarget != null && !_damageTarget.Contains(damageTarget))
         {
+            Debug.Log("데미지 줌: " + other.name);
             damageTarget.TakeDamage(10f);
             _damageTarget.Add(damageTarget);
         }
