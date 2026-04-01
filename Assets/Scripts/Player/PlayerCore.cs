@@ -28,6 +28,9 @@ namespace Player
         [Header("카메라")]
         [SerializeField] private Camera _playerCamera;
 
+        [Header("상태")]
+        [SerializeField] private StateVariableContainter _stateVariables;
+
         // 컴포넌트
         private InputController _inputController;
         //private CharacterMover _characterMover;
@@ -69,6 +72,7 @@ namespace Player
         public MotionWarpProfile RunTurnMotionInfo => _runTurnMotionInfo;
         public GameObject Katana => _katana;
         public BasicComboAttackData[] KatanaComboDatas => _katanaComboDatas;
+        public StateVariableContainter StateVariables => _stateVariables;
 
         public bool DamageFlag { get; set; } = false;
 

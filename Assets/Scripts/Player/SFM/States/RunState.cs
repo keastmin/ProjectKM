@@ -17,6 +17,12 @@ public class RunState : StateBase
 
     public override void Tick()
     {
+        if (_core.InputController.DodgeInput)
+        {
+            _core.FSM.Transition(_core.FSM.DodgeState);
+            return;
+        }
+
         // 이전 상태가 달리기 였으며, 현재 속도가 조깅 속도보다 빠른 상태이고,
         // 지금 입력한 MoveInput을 통한 캐릭터가 회전하게 될 각도가 현재 각도에서 180도 +, -알파라면 턴 상태로 전환
         Vector2 moveInput = _core.InputController.MoveInput;
@@ -30,12 +36,6 @@ public class RunState : StateBase
         if (_core.InputController.MoveInput.sqrMagnitude < 0.01f)
         {
             _core.FSM.Transition(_core.FSM.IdleState);
-            return;
-        }
-
-        if (_core.InputController.RunInput)
-        {
-            _core.FSM.Transition(_core.FSM.JogState);
             return;
         }
     }

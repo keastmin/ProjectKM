@@ -17,6 +17,12 @@ public class JogState : StateBase
 
     public override void Tick()
     {
+        if (_core.InputController.DodgeInput)
+        {
+            _core.FSM.Transition(_core.FSM.DodgeState);
+            return;
+        }
+
         if (_core.InputController.BasicComboAttackInput &&
             _core.KatanaComboDatas.Length > 0)
         {
@@ -27,12 +33,6 @@ public class JogState : StateBase
         if (_core.InputController.MoveInput.sqrMagnitude < 0.01f)
         {
             _core.FSM.Transition(_core.FSM.IdleState);
-            return;
-        }
-
-        if (_core.InputController.RunInput)
-        {
-            _core.FSM.Transition(_core.FSM.RunState);
             return;
         }
     }

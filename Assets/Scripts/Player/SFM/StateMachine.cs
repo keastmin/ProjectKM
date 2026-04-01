@@ -10,6 +10,7 @@ public class StateMachine
     public RunTurnState RunTurnState;
     public BasicComboAttackState BasicComboAttackState;
     public DamagedState DamagedState;
+    public DodgeState DodgeState;
 
     private StateBase _currentState;
     private StateBase _prevState;
@@ -24,6 +25,7 @@ public class StateMachine
         RunTurnState = new RunTurnState(core);
         BasicComboAttackState = new BasicComboAttackState(core);
         DamagedState = new DamagedState(core);
+        DodgeState = new DodgeState(core);
     }
 
     public void InitStateMachine(StateBase initState)

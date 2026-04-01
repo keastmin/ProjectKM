@@ -38,6 +38,12 @@ public class IdleState : StateBase
             }
         }
 
+        if (_core.InputController.DodgeInput)
+        {
+            _core.FSM.Transition(_core.FSM.DodgeState);
+            return;
+        }
+
         if (_core.InputController.BasicComboAttackInput &&
             _core.KatanaComboDatas.Length > 0)
         {

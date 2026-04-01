@@ -1370,6 +1370,7 @@ GameObject:
   - component: {fileID: 1790323282932646699}
   - component: {fileID: 8158674036653238942}
   - component: {fileID: 6770579788928645273}
+  - component: {fileID: 6841976261048271963}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
@@ -1466,6 +1467,58 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &6841976261048271963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2427026571794712103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7729ee5b701c7e948b0513a104de6e44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player.CameraDistanceDitherFade
+  _targetCamera: {fileID: 0}
+  _fadeOrigin: {fileID: 452543645356406848}
+  _targetRenderers:
+  - {fileID: 5129439825081003369}
+  - {fileID: 8973757579764761559}
+  - {fileID: 156317849707717050}
+  - {fileID: 4901943873072738007}
+  - {fileID: 8037938707273622258}
+  - {fileID: 5021200817437979928}
+  - {fileID: 500948138632627138}
+  - {fileID: 4714056710384350382}
+  - {fileID: 2609621800948521408}
+  - {fileID: 1146358093945236498}
+  - {fileID: 8487806912168282477}
+  _fadeStartDistance: 3
+  _fadeEndDistance: 0.8
+  _fadeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2429552883604500423
 GameObject:
   m_ObjectHideFlags: 0

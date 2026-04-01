@@ -16,7 +16,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Run",
+                    "name": "Dodge",
                     "type": "Button",
                     "id": "5a8a460f-1e2d-4dfb-8d2e-99efc9eaf594",
                     "expectedControlType": "",
@@ -97,7 +97,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";PC",
-                    "action": "Run",
+                    "action": "Dodge",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

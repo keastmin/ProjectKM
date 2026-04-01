@@ -1,5 +1,60 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6966509088530453
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6619249258242069112}
+  - component: {fileID: 799251570587353390}
+  m_Layer: 10
+  m_Name: Hurtbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6619249258242069112
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6966509088530453}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1103392367578762510}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &799251570587353390
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6966509088530453}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.23
+  m_Height: 1.45
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &47478239617374370
 GameObject:
   m_ObjectHideFlags: 0
@@ -404,7 +459,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8cfa1e0243427844aa41ff438677cf2a, type: 2}
+  - {fileID: 2100000, guid: 7b070171d23af2a46bb2769debe2762f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2017,6 +2072,7 @@ Transform:
   - {fileID: 5852798176326268176}
   - {fileID: 469115629662995220}
   - {fileID: 2610213198064457521}
+  - {fileID: 6619249258242069112}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9150668991346565315
@@ -2042,6 +2098,11 @@ MonoBehaviour:
   _basicComboAttackMotionWarpSpeed: 20
   _runTurnMotionInfo: {fileID: 11400000, guid: a27add68369979c41b9aeb2299ed638b, type: 2}
   _playerCamera: {fileID: 0}
+  _stateVariables:
+    _dodgeVariable:
+      _dodgeTime: 0.6
+      _frontDodgeDistance: 2
+      _backDodgeDistance: 2
 --- !u!114 &5921264619617047054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2133,7 +2194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.InputController
   _moveName: Move
-  _runName: Run
+  _dodgeName: Dodge
   _basicComboAttackName: BasicComboAttack
 --- !u!114 &807235723518459982
 MonoBehaviour:
