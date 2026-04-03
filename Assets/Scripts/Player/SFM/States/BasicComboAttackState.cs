@@ -65,6 +65,12 @@ public class BasicComboAttackState : StateBase
         ProcessEffectTimings(_aniNormalizedTime);
         MotionWarpTimeEndCheck(_aniNormalizedTime);
 
+        if (_core.InputController.DodgeInput)
+        {
+            _core.FSM.Transition(_core.FSM.DodgeState);
+            return;
+        }
+
         if (_datas[_index].Timing.ComboInputEndNormalizedTime <= _aniNormalizedTime)
         {
             _core.FSM.Transition(_core.FSM.IdleState);

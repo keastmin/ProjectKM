@@ -23,4 +23,22 @@ public static class PlayerStateUtil
 
         return (camForward * core.InputController.MoveInput.y + camRight * core.InputController.MoveInput.x).normalized;
     }
+
+    /// <summary>
+    /// 플레이어를 원하는 방향으로 회전시키는 함수
+    /// </summary>
+    public static void RotateTowardsDirection(PlayerCore core, Vector3 facingDirection, float rotationLerpSpeed)
+    {
+        if(core == null)
+        {
+            Debug.Log("참조가 없습니다.");
+            return;
+        }
+
+        if (facingDirection.sqrMagnitude > 0.0001f)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(facingDirection, Vector3.up);
+            core.transform.rotation = Quaternion.Slerp(core.transform.rotation, targetRot, rotationLerpSpeed * Time.fixedDeltaTime);
+        }
+    }
 }
