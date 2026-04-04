@@ -1451,6 +1451,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2084274438}
     - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: _stateVariables._dodgeVariable._frontDodgeTime
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: _stateVariables._dodgeVariable._frontDodgeRotateSpeed
       value: 6
       objectReference: {fileID: 0}
