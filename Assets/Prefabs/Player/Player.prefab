@@ -2104,6 +2104,14 @@ MonoBehaviour:
       _frontDodgeDistance: 2
       _frontDodgeRotateSpeed: 0
       _backDodgeDistance: 2
+      _offset: {x: 0, y: 0, z: 0}
+      _height: 2
+      _radius: 1
+      _detectLayer:
+        serializedVersion: 2
+        m_Bits: 0
+      _debugDodgeField: 1
+      IsPerfactDodge: 0
 --- !u!114 &5921264619617047054
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -8,21 +8,35 @@ public class DodgeState : StateBase
     private bool _isFront = false;
     private int _animHash;
     private Vector3 _lookDir;
+    private Collider[] _dodgeFieldColliders;
 
     // 정면 회피
     private float _frontDodgeCurrentTime;
     private float _frontDodgeEndTime;
     private float _frontDodgeTargetEndSpeed; // 정면 회피 목표 종료 속도
 
-    public DodgeState(PlayerCore core) : base(core) { }
+    private StateVariableDodge _dodgeVariable;
+
+    public DodgeState(PlayerCore core) : base(core) 
+    {
+        _dodgeFieldColliders = new Collider[10];
+        _dodgeVariable = core.StateVariables.DodgeVariable;
+    }
 
     public override void Enter()
     {
+        Debug.Log("Dodge State");
+
+        // 퍼펙트 회피인지 확인
+        _dodgeVariable.IsPerfactDodge = CheckPerfactDodge();
+        if (_dodgeVariable.IsPerfactDodge)
+            Debug.Log("퍼펙트 회피!!");
+
         // 정면 회피, 후면 회피 결정
         _isFront = (_core.InputController.MoveInput.sqrMagnitude >= 0.01f);
 
         // 바라볼 방향 결정
-        _lookDir = PlayerStateUtil.GetCameraRelativeFacingDirection(_core);
+        _lookDir = PlayerStateUtil.GetCameraRelativeFacingDirection(_core.transform, _core.PlayerCamera, _core.InputController.MoveInput);
 
         // 애니메이션 해쉬 결정
         _animHash = (_isFront) ? PlayerAnimationHash.Katana_Dodge_Front : PlayerAnimationHash.Katana_Dodge_Back;
@@ -78,12 +92,33 @@ public class DodgeState : StateBase
 
     private void FrontDodgeFixedTick()
     {
-        PlayerStateUtil.RotateTowardsDirection(_core, _lookDir, _core.StateVariables.DodgeVariable.FrontDodgeRotateSpeed);
+        PlayerStateUtil.RotateTowardsDirection(_core.transform, _lookDir, _core.StateVariables.DodgeVariable.FrontDodgeRotateSpeed);
         _core.Mover.Move(_lookDir.normalized * _core.CurrentSpeed);
     }
 
     private void BackDodgeFixedTick()
     {
         _core.Mover.Move(_lookDir.normalized * _core.CurrentSpeed);
+    }
+
+    private bool CheckPerfactDodge()
+    {
+        if (_dodgeVariable == null)
+            return false;
+
+        Vector3 top;
+        Vector3 botton;
+        _dodgeVariable.GetDodgeFieldCapsulePoints(_core.transform, out top, out botton);
+        int enemyAttackCount = Physics.OverlapCapsuleNonAlloc(
+            top,
+            botton,
+            _dodgeVariable.Radius,
+            _dodgeFieldColliders,
+            _dodgeVariable.DetectLayer);
+
+        if (enemyAttackCount > 0)
+            return true;
+
+        return false;
     }
 }

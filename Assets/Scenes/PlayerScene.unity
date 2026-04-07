@@ -1442,6 +1442,10 @@ PrefabInstance:
       propertyPath: m_Center.y
       value: 1.165
       objectReference: {fileID: 0}
+    - target: {fileID: 6014087233011396540, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: _height
+      value: 1.82
+      objectReference: {fileID: 0}
     - target: {fileID: 6538668474974009422, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1451,8 +1455,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2084274438}
     - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: _stateVariables._dodgeVariable._height
+      value: 5.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: _stateVariables._dodgeVariable._radius
+      value: 2.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: _stateVariables._dodgeVariable._offset.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: _stateVariables._dodgeVariable._frontDodgeTime
       value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: _stateVariables._dodgeVariable._detectLayer.m_Bits
+      value: 2048
       objectReference: {fileID: 0}
     - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: _stateVariables._dodgeVariable._frontDodgeRotateSpeed
