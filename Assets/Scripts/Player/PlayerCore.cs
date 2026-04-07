@@ -98,10 +98,17 @@ namespace Player
         private void Update()
         {
             // 완벽 회피가 아니면 언제든 데미지를 받을 수 있음
-            if (DamageFlag && StateVariables.DodgeVariable.IsPerfactDodge)
+            if (DamageFlag)
             {
-                _fsm.Transition(_fsm.DamagedState);
-                return;
+                if (StateVariables.DodgeVariable.IsPerfactDodge)
+                {
+                    DamageFlag = false;
+                }
+                else
+                {
+                    _fsm.Transition(_fsm.DamagedState);
+                    return;
+                }
             }
 
             _fsm.Tick();

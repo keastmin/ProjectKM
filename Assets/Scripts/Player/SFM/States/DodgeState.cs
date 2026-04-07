@@ -68,6 +68,11 @@ public class DodgeState : StateBase
             BackDodgeFixedTick();
     }
 
+    public override void Exit()
+    {
+        _dodgeVariable.IsPerfactDodge = false;
+    }
+
     private void FrontDodgeTick()
     {
         _frontDodgeCurrentTime += Time.deltaTime;
