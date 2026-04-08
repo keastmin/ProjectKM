@@ -1464,7 +1464,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: _stateVariables._dodgeVariable._offset.y
-      value: 1
+      value: 1.04
       objectReference: {fileID: 0}
     - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: _stateVariables._dodgeVariable._frontDodgeTime

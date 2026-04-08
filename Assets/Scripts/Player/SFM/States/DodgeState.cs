@@ -27,11 +27,6 @@ public class DodgeState : StateBase
     {
         Debug.Log("Dodge State");
 
-        // 퍼펙트 회피인지 확인
-        _dodgeVariable.IsPerfactDodge = CheckPerfactDodge();
-        if (_dodgeVariable.IsPerfactDodge)
-            Debug.Log("퍼펙트 회피!!");
-
         // 정면 회피, 후면 회피 결정
         _isFront = (_core.InputController.MoveInput.sqrMagnitude >= 0.01f);
 
@@ -104,26 +99,5 @@ public class DodgeState : StateBase
     private void BackDodgeFixedTick()
     {
         _core.Mover.Move(_lookDir.normalized * _core.CurrentSpeed);
-    }
-
-    private bool CheckPerfactDodge()
-    {
-        if (_dodgeVariable == null)
-            return false;
-
-        Vector3 top;
-        Vector3 botton;
-        _dodgeVariable.GetDodgeFieldCapsulePoints(_core.transform, out top, out botton);
-        int enemyAttackCount = Physics.OverlapCapsuleNonAlloc(
-            top,
-            botton,
-            _dodgeVariable.Radius,
-            _dodgeFieldColliders,
-            _dodgeVariable.DetectLayer);
-
-        if (enemyAttackCount > 0)
-            return true;
-
-        return false;
     }
 }

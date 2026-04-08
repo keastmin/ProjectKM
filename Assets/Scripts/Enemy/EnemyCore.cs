@@ -4,7 +4,9 @@ using UnityEngine;
 public class EnemyCore : MonoBehaviour, IDamageable
 {
     [Header("공격")]
-    [SerializeField] private List<EnemyAttackColliderName> _enemyAttackColliders;
+    [SerializeField] private List<EnemyMeleeAttackData> _meleeAttackDatas;
+    [SerializeField] private List<EnemyAttackColliderName> _attackObjects;
+    [SerializeField] private List<EnemyAttackColliderName> _dodgeWindowObjects;
 
     [Header("슈퍼아머")]
     [SerializeField] private bool _enableSuperArmour = true;
@@ -28,22 +30,15 @@ public class EnemyCore : MonoBehaviour, IDamageable
 
     // 공격 데이터
     public Dictionary<string, GameObject> AttackObjectDic;
+    public Dictionary<string, GameObject> DodgeWindowObjectDic;
 
     protected virtual void Awake()
     {
         // 적 공격 이름과 콜라이더 딕셔너리 초기화
-        if(_enemyAttackColliders != null)
-        {
-            AttackObjectDic = new Dictionary<string, GameObject>();
-            foreach(var ac in _enemyAttackColliders)
-            {
-                if (ac.AttackObject != null)
-                {
-                    AttackObjectDic.Add(ac.Name, ac.AttackObject);
-                    ac.AttackObject.SetActive(false);
-                }
-            }
-        }
+        InitializeDic(_attackObjects, AttackObjectDic);
+
+        // 적 회피 윈도우 이름과 콜라이더 딕셔너리 초기화
+        InitializeDic(_dodgeWindowObjects, DodgeWindowObjectDic);
     }
 
     protected virtual void Update()
@@ -126,5 +121,22 @@ public class EnemyCore : MonoBehaviour, IDamageable
     {
         _continuousDamageAmount = 0f;
         _lastDamageTime = float.MinValue;
+    }
+
+    // 오브젝트와 이름을 연결하는 딕셔너리를 초기화 하는 함수
+    private void InitializeDic(List<EnemyAttackColliderName> colList, Dictionary<string, GameObject> dataDic)
+    {
+        if (colList != null)
+        {
+            dataDic = new Dictionary<string, GameObject>();
+            foreach (var cl in colList)
+            {
+                if (cl.AttackObject != null)
+                {
+                    dataDic.Add(cl.Name, cl.AttackObject);
+                    cl.AttackObject.SetActive(false);
+                }
+            }
+        }
     }
 }
