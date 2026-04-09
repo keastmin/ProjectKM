@@ -16,3 +16,5 @@ MonoBehaviour:
   AnimName: Basic Attack
   TimingWindows:
   - {fileID: 11400000, guid: 2eb5b2f13565c974383630f51fb1f25a, type: 2}
+  AttackColliderTimingWindows:
+  - {fileID: 11400000, guid: 9d9bd823041dd4d4c9ea2a60105bc7c8, type: 2}

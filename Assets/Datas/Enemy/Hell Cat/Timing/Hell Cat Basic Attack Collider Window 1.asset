@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88fdc55994ce1d04ca1ac3bd855a7545, type: 3}
-  m_Name: Hell Cat Basic Attack Timing 1
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyMeleeAttackTimingWindow
+  m_Script: {fileID: 11500000, guid: 42dde62723bf0af498fe669315e571ed, type: 3}
+  m_Name: Hell Cat Basic Attack Collider Window 1
+  m_EditorClassIdentifier: Assembly-CSharp::AttackColliderTimingWindow
   PreviewAnimationClip: {fileID: 1827226128182048838, guid: 885515ef78e8ae7498fd635b46d5ff65, type: 3}
-  DodgeDetectColliderID:
+  AttackColliderID:
   - Basic Attack
-  OpenDodgeNormalizedTime: 0.47
-  CloseDodgeNormalizedTime: 0.619
+  OpenAttackColliderNormalizedTime: 0.539
+  CloseAttackColliderNormalizedTime: 0.613
