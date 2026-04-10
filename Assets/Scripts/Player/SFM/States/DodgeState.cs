@@ -8,7 +8,6 @@ public class DodgeState : StateBase
     private bool _isFront = false;
     private int _animHash;
     private Vector3 _lookDir;
-    private Collider[] _dodgeFieldColliders;
 
     // 정면 회피
     private float _frontDodgeCurrentTime;
@@ -19,13 +18,13 @@ public class DodgeState : StateBase
 
     public DodgeState(PlayerCore core) : base(core) 
     {
-        _dodgeFieldColliders = new Collider[10];
         _dodgeVariable = core.StateVariables.DodgeVariable;
     }
 
     public override void Enter()
     {
         Debug.Log("Dodge State");
+        _dodgeVariable.IsPerfactDodge = _dodgeVariable.CanPerfectDodge;
 
         // 정면 회피, 후면 회피 결정
         _isFront = (_core.InputController.MoveInput.sqrMagnitude >= 0.01f);

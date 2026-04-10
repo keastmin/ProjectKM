@@ -1,4 +1,5 @@
 using NoiRC.SRMove;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Player
@@ -9,7 +10,7 @@ namespace Player
     [RequireComponent(typeof(TargetingController))]
     [RequireComponent(typeof(AttackEffectController))]
     [RequireComponent(typeof(Animator))]
-    public class PlayerCore : MonoBehaviour, IDamageable
+    public class PlayerCore : MonoBehaviour, IDamageable, IDodgeTimingReceiver
     {
         [Header("무기")]
         [SerializeField] private GameObject _katana;
@@ -39,6 +40,7 @@ namespace Player
         private TargetingController _targetingController;
         private AttackEffectController _attackEffectController;
         private Animator _animator;
+        private readonly HashSet<Component> _activeDodgeTimingSources = new();
 
         // 속도
         private float _targetSpeed;
@@ -140,6 +142,25 @@ namespace Player
         public void TakeDamage(float damage)
         {
             DamageFlag = true;
+        }
+
+        public void SetDodgeTimingActive(Component source, bool isActive)
+        {
+            if (source == null)
+            {
+                return;
+            }
+
+            if (isActive)
+            {
+                _activeDodgeTimingSources.Add(source);
+            }
+            else
+            {
+                _activeDodgeTimingSources.Remove(source);
+            }
+
+            StateVariables.DodgeVariable.CanPerfectDodge = _activeDodgeTimingSources.Count > 0;
         }
     }
 }

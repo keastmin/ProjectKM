@@ -17,5 +17,6 @@ public class StateVariableDodge
     public float FrontDodgeRotateSpeed => _frontDodgeRotateSpeed;
     public float BackDodgeDistance => _backDodgeDistance;
 
+    public bool CanPerfectDodge = false;
     public bool IsPerfactDodge = false;
 }
