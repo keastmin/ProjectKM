@@ -2104,7 +2104,12 @@ MonoBehaviour:
       _frontDodgeDistance: 2
       _frontDodgeRotateSpeed: 0
       _backDodgeDistance: 2
+      CanPerfectDodge: 0
       IsPerfactDodge: 0
+  _perfectDodgeSlowTimeScale: 0.15
+  _perfectDodgeSlowDownDuration: 0.08
+  _perfectDodgeSlowHoldDuration: 2
+  _perfectDodgeRecoverDuration: 0.35
 --- !u!114 &5921264619617047054
 MonoBehaviour:
   m_ObjectHideFlags: 0

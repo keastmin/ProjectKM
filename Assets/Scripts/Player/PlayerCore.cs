@@ -1,4 +1,5 @@
 using NoiRC.SRMove;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,6 +33,12 @@ namespace Player
         [Header("상태")]
         [SerializeField] private StateVariableContainter _stateVariables;
 
+        [Header("Perfect Dodge")]
+        [SerializeField] private float _perfectDodgeSlowTimeScale = 0.15f;
+        [SerializeField] private float _perfectDodgeSlowDownDuration = 0.08f;
+        [SerializeField] private float _perfectDodgeSlowHoldDuration = 2f;
+        [SerializeField] private float _perfectDodgeRecoverDuration = 0.35f;
+
         // 컴포넌트
         private InputController _inputController;
         //private CharacterMover _characterMover;
@@ -41,6 +48,7 @@ namespace Player
         private AttackEffectController _attackEffectController;
         private Animator _animator;
         private readonly HashSet<Component> _activeDodgeTimingSources = new();
+        private Coroutine _perfectDodgeTimeScaleCoroutine;
 
         // 속도
         private float _targetSpeed;
@@ -105,6 +113,7 @@ namespace Player
                 if (StateVariables.DodgeVariable.IsPerfactDodge)
                 {
                     DamageFlag = false;
+                    TriggerPerfectDodgeTimeScale();
                 }
                 else
                 {
@@ -161,6 +170,53 @@ namespace Player
             }
 
             StateVariables.DodgeVariable.CanPerfectDodge = _activeDodgeTimingSources.Count > 0;
+        }
+
+        private void TriggerPerfectDodgeTimeScale()
+        {
+            if (_perfectDodgeTimeScaleCoroutine != null)
+            {
+                StopCoroutine(_perfectDodgeTimeScaleCoroutine);
+            }
+
+            _perfectDodgeTimeScaleCoroutine = StartCoroutine(PerfectDodgeTimeScaleRoutine());
+        }
+
+        private IEnumerator PerfectDodgeTimeScaleRoutine()
+        {
+            const float normalTimeScale = 1f;
+            float targetTimeScale = Mathf.Clamp(_perfectDodgeSlowTimeScale, 0.01f, normalTimeScale);
+
+            yield return LerpTimeScale(Time.timeScale, targetTimeScale, _perfectDodgeSlowDownDuration);
+
+            Time.timeScale = targetTimeScale;
+            yield return new WaitForSecondsRealtime(_perfectDodgeSlowHoldDuration);
+
+            yield return LerpTimeScale(Time.timeScale, normalTimeScale, _perfectDodgeRecoverDuration);
+
+            Time.timeScale = normalTimeScale;
+            _perfectDodgeTimeScaleCoroutine = null;
+        }
+
+        private IEnumerator LerpTimeScale(float start, float end, float duration)
+        {
+            if (duration <= 0f)
+            {
+                Time.timeScale = end;
+                yield break;
+            }
+
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+                Time.timeScale = Mathf.Lerp(start, end, t);
+                yield return null;
+            }
+
+            Time.timeScale = end;
         }
     }
 }
