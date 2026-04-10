@@ -1408,14 +1408,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af80121a216d20a4a8745ac602d9b2af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HellCatCore
-  _meleeAttackDatas:
-  - {fileID: 11400000, guid: 5e2e67edb28f5cc41843446a881f69f2, type: 2}
-  _attackObjects:
-  - Name: Basic Attack
-    AttackObject: {fileID: 4766917041527692021}
-  _dodgeWindowObjects:
-  - Name: Basic Attack
-    AttackObject: {fileID: 4087871775004477064}
+  _meleeAttacks:
+  - MeleeAttackData: {fileID: 11400000, guid: 5e2e67edb28f5cc41843446a881f69f2, type: 2}
+    AttackObjects:
+    - Name: Basic Attack
+      AttackObject: {fileID: 4766917041527692021}
+    DodgeWindowObjects:
+    - Name: Basic Attack
+      AttackObject: {fileID: 4087871775004477064}
   _enableSuperArmour: 1
   _superArmourDuration: 3
   _superArmourDamage: 80
@@ -2476,8 +2476,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.42, y: 1.64, z: 3.6}
-  m_Center: {x: 0.25, y: 1.32, z: 1.73}
+  m_Size: {x: 2.95, y: 1.64, z: 3.3}
+  m_Center: {x: 0.52, y: 1.32, z: 1.73}
 --- !u!1 &4110179265624043893
 GameObject:
   m_ObjectHideFlags: 0
@@ -3673,6 +3673,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2450435474205185084}
+  - component: {fileID: 132512699626696652}
   - component: {fileID: 3016605095793640302}
   m_Layer: 12
   m_Name: Dodge Fields
@@ -3697,6 +3698,18 @@ Transform:
   - {fileID: 2540685506056159649}
   m_Father: {fileID: 452543645356406848}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &132512699626696652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6817031026925067164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eddc046f32e00f54188435c8ff9ddd5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyNoticeDodgeTiming
 --- !u!54 &3016605095793640302
 Rigidbody:
   m_ObjectHideFlags: 0

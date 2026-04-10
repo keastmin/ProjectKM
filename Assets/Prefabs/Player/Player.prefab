@@ -2102,7 +2102,7 @@ MonoBehaviour:
     _dodgeVariable:
       _frontDodgeTime: 0.4
       _frontDodgeDistance: 2
-      _frontDodgeRotateSpeed: 0
+      _frontDodgeRotateSpeed: 6
       _backDodgeDistance: 2
       CanPerfectDodge: 0
       IsPerfactDodge: 0
