@@ -16,6 +16,8 @@ public class DodgeState : StateBase
 
     private StateVariableDodge _dodgeVariable;
 
+    private float _currentStateTime = 0f;
+
     public DodgeState(PlayerCore core) : base(core) 
     {
         _dodgeVariable = core.StateVariables.DodgeVariable;
@@ -25,6 +27,9 @@ public class DodgeState : StateBase
     {
         Debug.Log("Dodge State");
         _dodgeVariable.IsPerfactDodge = _dodgeVariable.CanPerfectDodge;
+        if (_dodgeVariable.IsPerfactDodge)
+            _core.TriggerPerfectDodgeTimeScale();
+        _currentStateTime = 0f;
 
         // 정면 회피, 후면 회피 결정
         _isFront = (_core.InputController.MoveInput.sqrMagnitude >= 0.01f);
@@ -48,6 +53,18 @@ public class DodgeState : StateBase
 
     public override void Tick()
     {
+        if (_dodgeVariable.IsPerfactDodge && _core.InputController.BasicComboAttackInput)
+        {
+            _core.FSM.Transition(_core.FSM.DodgeCounterState);
+            return;
+        }
+
+        _currentStateTime += Time.deltaTime;
+        if(_dodgeVariable.IsPerfactDodge && _core.DodgeCounterDuration <= _currentStateTime)
+        {
+            _dodgeVariable.IsPerfactDodge = false;
+        }
+
         if (_isFront)
             FrontDodgeTick();
         else

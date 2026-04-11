@@ -77,6 +77,7 @@ namespace Player
             get { return _currentSpeed; }
             set { _currentSpeed = value; }
         }
+        public float DodgeCounterDuration => _perfectDodgeSlowDownDuration + _perfectDodgeSlowHoldDuration;
         public float BasicComboAttackMotionWarpSpeed => _basicComboAttackMotionWarpSpeed;
         public Camera PlayerCamera => _playerCamera;
         public MotionWarpProfile RunTurnMotionInfo => _runTurnMotionInfo;
@@ -113,7 +114,6 @@ namespace Player
                 if (StateVariables.DodgeVariable.IsPerfactDodge)
                 {
                     DamageFlag = false;
-                    TriggerPerfectDodgeTimeScale();
                 }
                 else
                 {
@@ -172,7 +172,7 @@ namespace Player
             StateVariables.DodgeVariable.CanPerfectDodge = _activeDodgeTimingSources.Count > 0;
         }
 
-        private void TriggerPerfectDodgeTimeScale()
+        public void TriggerPerfectDodgeTimeScale()
         {
             if (_perfectDodgeTimeScaleCoroutine != null)
             {

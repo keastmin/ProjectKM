@@ -14,6 +14,8 @@ public class HellCatBasicAttackState : IState
     private int _animationHash;
     private readonly HashSet<string> _allAttackColliderIds = new();
     private readonly HashSet<string> _allDodgeWindowIds = new();
+    private readonly HashSet<string> _activeAttackColliderIds = new();
+    private readonly HashSet<string> _activeDodgeWindowIds = new();
 
     public HellCatBasicAttackState(HellCatCore core)
     {
@@ -30,6 +32,8 @@ public class HellCatBasicAttackState : IState
 
     public void Enter()
     {
+        _activeAttackColliderIds.Clear();
+        _activeDodgeWindowIds.Clear();
         SetAllWindowsInactive();
         _core.Animator.CrossFade(_animationHash, 0.08f, 0, 0f);
         UpdateColliderWindows(0f);
@@ -101,17 +105,33 @@ public class HellCatBasicAttackState : IState
         CollectActiveAttackColliderIds(normalizedTime, activeAttackColliderIds);
         CollectActiveDodgeWindowIds(normalizedTime, activeDodgeWindowIds);
 
-        _core.SetAttackObjectsActive(_allAttackColliderIds, false);
-        _core.SetDodgeWindowObjectsActive(_allDodgeWindowIds, false);
-
-        _core.SetAttackObjectsActive(activeAttackColliderIds, true);
-        _core.SetDodgeWindowObjectsActive(activeDodgeWindowIds, true);
+        SyncActiveObjects(_core.SetAttackObjectsActive, _activeAttackColliderIds, activeAttackColliderIds);
+        SyncActiveObjects(_core.SetDodgeWindowObjectsActive, _activeDodgeWindowIds, activeDodgeWindowIds);
     }
 
     private void SetAllWindowsInactive()
     {
         _core.SetAttackObjectsActive(_allAttackColliderIds, false);
         _core.SetDodgeWindowObjectsActive(_allDodgeWindowIds, false);
+        _activeAttackColliderIds.Clear();
+        _activeDodgeWindowIds.Clear();
+    }
+    private void SyncActiveObjects(System.Action<IEnumerable<string>, bool> setObjectsActive, HashSet<string> currentIds, HashSet<string> nextIds)
+    {
+        HashSet<string> idsToDisable = new(currentIds);
+        idsToDisable.ExceptWith(nextIds);
+        if (idsToDisable.Count > 0)
+        {
+            setObjectsActive(idsToDisable, false);
+        }
+        HashSet<string> idsToEnable = new(nextIds);
+        idsToEnable.ExceptWith(currentIds);
+        if (idsToEnable.Count > 0)
+        {
+            setObjectsActive(idsToEnable, true);
+        }
+        currentIds.Clear();
+        currentIds.UnionWith(nextIds);
     }
 
     private void CollectActiveAttackColliderIds(float normalizedTime, HashSet<string> results)
