@@ -2105,7 +2105,7 @@ MonoBehaviour:
       _frontDodgeRotateSpeed: 6
       _backDodgeDistance: 2
       CanPerfectDodge: 0
-      IsPerfactDodge: 0
+      IsPerfectDodge: 0
   _perfectDodgeSlowTimeScale: 0.15
   _perfectDodgeSlowDownDuration: 0.08
   _perfectDodgeSlowHoldDuration: 2

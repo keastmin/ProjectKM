@@ -17,6 +17,7 @@ public class StateMachine
     private StateBase _prevState;
 
     public StateBase PrevState => _prevState;
+    public bool CanReceiveDamage => _currentState?.CanReceiveDamage ?? true;
 
     public StateMachine(PlayerCore core)
     {

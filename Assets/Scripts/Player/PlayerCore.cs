@@ -86,6 +86,7 @@ namespace Player
         public StateVariableContainter StateVariables => _stateVariables;
 
         public bool DamageFlag { get; set; } = false;
+        public bool CanReceiveDamage => _fsm?.CanReceiveDamage ?? true;
 
         private void Awake()
         {
@@ -108,20 +109,6 @@ namespace Player
 
         private void Update()
         {
-            // 완벽 회피가 아니면 언제든 데미지를 받을 수 있음
-            if (DamageFlag)
-            {
-                if (StateVariables.DodgeVariable.IsPerfactDodge)
-                {
-                    DamageFlag = false;
-                }
-                else
-                {
-                    _fsm.Transition(_fsm.DamagedState);
-                    return;
-                }
-            }
-
             _fsm.Tick();
         }
 
@@ -150,6 +137,11 @@ namespace Player
 
         public void TakeDamage(float damage)
         {
+            if (!CanReceiveDamage)
+            {
+                return;
+            }
+
             DamageFlag = true;
         }
 

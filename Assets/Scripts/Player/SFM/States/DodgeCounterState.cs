@@ -7,9 +7,13 @@ public class DodgeCounterState : StateBase
     private Vector3 _animDeltaPos;
 
     public DodgeCounterState(PlayerCore core) : base(core) { }
+    public override bool CanReceiveDamage => false;
 
     public override void Enter()
     {
+        // 속도 초기화
+        _core.TargetSpeed = 0f;
+        _core.CurrentSpeed = 0f;
         _animDeltaPos = Vector3.zero;
         _core.Animator.CrossFade(PlayerAnimationHash.Katana_Dodge_Counter, 0.03f, 0, 0f);
     }

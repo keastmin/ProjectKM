@@ -23,12 +23,17 @@ public class DodgeState : StateBase
         _dodgeVariable = core.StateVariables.DodgeVariable;
     }
 
+    public override bool CanReceiveDamage => !_dodgeVariable.IsPerfectDodge;
+
     public override void Enter()
     {
         Debug.Log("Dodge State");
-        _dodgeVariable.IsPerfactDodge = _dodgeVariable.CanPerfectDodge;
-        if (_dodgeVariable.IsPerfactDodge)
+        _dodgeVariable.IsPerfectDodge = _dodgeVariable.CanPerfectDodge;
+        if (_dodgeVariable.IsPerfectDodge)
+        {
+            _core.DamageFlag = false;
             _core.TriggerPerfectDodgeTimeScale();
+        }
         _currentStateTime = 0f;
 
         // 정면 회피, 후면 회피 결정
@@ -53,16 +58,23 @@ public class DodgeState : StateBase
 
     public override void Tick()
     {
-        if (_dodgeVariable.IsPerfactDodge && _core.InputController.BasicComboAttackInput)
+        // 데미지를 입으면 데미지 상태로 전환
+        if (_core.DamageFlag && !_dodgeVariable.IsPerfectDodge)
+        {
+            _core.FSM.Transition(_core.FSM.DamagedState);
+            return;
+        }
+
+        if (_dodgeVariable.IsPerfectDodge && _core.InputController.BasicComboAttackInput)
         {
             _core.FSM.Transition(_core.FSM.DodgeCounterState);
             return;
         }
 
         _currentStateTime += Time.deltaTime;
-        if(_dodgeVariable.IsPerfactDodge && _core.DodgeCounterDuration <= _currentStateTime)
+        if(_dodgeVariable.IsPerfectDodge && _core.DodgeCounterDuration <= _currentStateTime)
         {
-            _dodgeVariable.IsPerfactDodge = false;
+            _dodgeVariable.IsPerfectDodge = false;
         }
 
         if (_isFront)
@@ -81,7 +93,7 @@ public class DodgeState : StateBase
 
     public override void Exit()
     {
-        _dodgeVariable.IsPerfactDodge = false;
+        _dodgeVariable.IsPerfectDodge = false;
     }
 
     private void FrontDodgeTick()

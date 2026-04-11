@@ -58,6 +58,13 @@ public class RunTurnState : StateBase
             _core.transform.rotation = _turnTargetRotation;
         }
 
+        // 데미지를 입으면 데미지 상태로 전환
+        if (_core.DamageFlag)
+        {
+            _core.FSM.Transition(_core.FSM.DamagedState);
+            return;
+        }
+
         if (isFinishTurn && _core.InputController.MoveInput.sqrMagnitude < 0.01f)
         {
             _core.FSM.Transition(_core.FSM.IdleState);

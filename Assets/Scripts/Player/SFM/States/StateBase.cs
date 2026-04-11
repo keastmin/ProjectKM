@@ -4,6 +4,7 @@ using UnityEngine;
 public class StateBase
 {
     protected PlayerCore _core;
+    public virtual bool CanReceiveDamage => true;
 
     public StateBase(PlayerCore core)
     {

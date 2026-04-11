@@ -27,7 +27,14 @@ public class DamagedState : StateBase
     {
         _hasInfo = AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, PlayerAnimationHash.Katana_Damaged_Front, out _info);
 
-        if(_info.normalizedTime >= _endNormalizedTime)
+        // 데미지를 입으면 데미지 상태로 전환
+        if (_core.DamageFlag)
+        {
+            _core.FSM.Transition(_core.FSM.DamagedState);
+            return;
+        }
+
+        if (_info.normalizedTime >= _endNormalizedTime)
         {
             _core.FSM.Transition(_core.FSM.IdleState);
             return;

@@ -71,6 +71,13 @@ public class BasicComboAttackState : StateBase
             return;
         }
 
+        // 데미지를 입으면 데미지 상태로 전환
+        if (_core.DamageFlag)
+        {
+            _core.FSM.Transition(_core.FSM.DamagedState);
+            return;
+        }
+
         if (_datas[_index].Timing.ComboInputEndNormalizedTime <= _aniNormalizedTime)
         {
             _core.FSM.Transition(_core.FSM.IdleState);
