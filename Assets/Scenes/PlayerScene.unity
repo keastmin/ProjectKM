@@ -1524,9 +1524,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2084274438}
     - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: _katanaComboDatas.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: _perfectDodgeSlowHoldDuration
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: '_katanaComboDatas.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f82b00c2b0a09b442971e2e5bb5f214c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
