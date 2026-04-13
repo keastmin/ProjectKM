@@ -35,7 +35,7 @@ public class AttackEffectTimingDefinition
 }
 
 [CreateAssetMenu(fileName = "ComboAttackData", menuName = "Player/Combat/Combo Attack Data")]
-public class ComboAttackData : ScriptableObject
+public class ComboAttackData : AttackTimingProfile
 {
     [Header("Link")]
     [SerializeField] private string _basicComboAttackId;
@@ -57,8 +57,8 @@ public class ComboAttackData : ScriptableObject
     public GameObject PreviewModelPrefab => _previewModelPrefab;
     public float ComboInputStartNormalizedTime => _comboInputStartNormalizedTime;
     public float ComboInputEndNormalizedTime => _comboInputEndNormalizedTime;
-    public AttackTimingDefinition[] AttackTimings => _attackTimings;
-    public AttackEffectTimingDefinition[] AttackEffectTimings => _attackEffectTimings;
+    public override AttackTimingDefinition[] AttackTimings => _attackTimings;
+    public override AttackEffectTimingDefinition[] AttackEffectTimings => _attackEffectTimings;
 
     private void OnValidate()
     {

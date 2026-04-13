@@ -1008,7 +1008,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3540976463141701855}
   m_Layer: 6
-  m_Name: Katana Basic Combo Attack VFX
+  m_Name: Katana Attack VFX Postions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1031,6 +1031,7 @@ Transform:
   - {fileID: 2076219026418302351}
   - {fileID: 4793298195213899530}
   - {fileID: 7267716536505729209}
+  - {fileID: 5077667787455680034}
   m_Father: {fileID: 2610213198064457521}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2769608156371670454
@@ -1485,6 +1486,37 @@ Transform:
   - {fileID: 2279150981177366421}
   m_Father: {fileID: 3542131094236238669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4526597548503441833
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5077667787455680034}
+  m_Layer: 6
+  m_Name: Dodge Counter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5077667787455680034
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4526597548503441833}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.09037685, y: -0.38514394, z: 0.054031823, w: 0.9168297}
+  m_LocalPosition: {x: 0.44, y: 1.065, z: 0.99}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3540976463141701855}
+  m_LocalEulerAnglesHint: {x: -7.129, y: -46.184, z: 9.788}
 --- !u!1 &4574114140633328088
 GameObject:
   m_ObjectHideFlags: 0
@@ -2087,7 +2119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f12bf26599bf885489f9847b69cd3e18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCore
-  _katana: {fileID: 8379501271240644594}
+  _katanaObject: {fileID: 8379501271240644594}
   _jogSpeed: 5
   _runSpeed: 8
   _katanaComboDatas:
@@ -2095,6 +2127,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dc54ab3f31ae5064fb38fd8c1b699723, type: 2}
   - {fileID: 11400000, guid: fe62a4e5d17c87a41918150997596737, type: 2}
   - {fileID: 11400000, guid: ca79c7b54a7e4f44e821fa6b2f908d2a, type: 2}
+  _dodgeCounterData: {fileID: 11400000, guid: f82b00c2b0a09b442971e2e5bb5f214c, type: 2}
   _basicComboAttackMotionWarpSpeed: 20
   _runTurnMotionInfo: {fileID: 11400000, guid: a27add68369979c41b9aeb2299ed638b, type: 2}
   _playerCamera: {fileID: 0}
@@ -2108,7 +2141,7 @@ MonoBehaviour:
       IsPerfectDodge: 0
   _perfectDodgeSlowTimeScale: 0.15
   _perfectDodgeSlowDownDuration: 0.08
-  _perfectDodgeSlowHoldDuration: 2
+  _perfectDodgeSlowHoldDuration: 1.5
   _perfectDodgeRecoverDuration: 0.35
 --- !u!114 &5921264619617047054
 MonoBehaviour:
@@ -2135,6 +2168,9 @@ MonoBehaviour:
   - EffectName: KatanaBasicComboAttack4
     AttackEffect: {fileID: 5123993082347529029, guid: 2ab6120951470b44e9f526680019fbe3, type: 3}
     SpawnTransform: {fileID: 7267716536505729209}
+  - EffectName: KatanaDodgeCounter
+    AttackEffect: {fileID: 7212742308784055358, guid: f2308f09fe722c54cb5cd7c8932feb22, type: 3}
+    SpawnTransform: {fileID: 5077667787455680034}
 --- !u!114 &7721814424278941818
 MonoBehaviour:
   m_ObjectHideFlags: 0

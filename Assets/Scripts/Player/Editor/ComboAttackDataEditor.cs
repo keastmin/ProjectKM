@@ -65,16 +65,6 @@ public class ComboAttackDataEditor : Editor
 
         _currentNormalizedTime = Mathf.Clamp01(_comboInputStartNormalizedTimeProperty.floatValue);
         _lastEditorTime = (float)EditorApplication.timeSinceStartup;
-        _timelineCenterLabelStyle = new GUIStyle(EditorStyles.centeredGreyMiniLabel);
-        _timelineRightLabelStyle = new GUIStyle(EditorStyles.miniLabel);
-        _timelineRightLabelStyle.alignment = TextAnchor.MiddleRight;
-        _timelineRightLabelStyle.normal.textColor = EditorStyles.centeredGreyMiniLabel.normal.textColor;
-        _attackMarkerLabelStyle = new GUIStyle(EditorStyles.miniLabel);
-        _attackMarkerLabelStyle.alignment = TextAnchor.MiddleCenter;
-        _attackMarkerLabelStyle.normal.textColor = new Color(1f, 0.7f, 0.45f);
-        _effectMarkerLabelStyle = new GUIStyle(EditorStyles.miniLabel);
-        _effectMarkerLabelStyle.alignment = TextAnchor.MiddleCenter;
-        _effectMarkerLabelStyle.normal.textColor = new Color(0.45f, 0.85f, 1f);
         EditorApplication.update += OnEditorUpdate;
     }
 
@@ -86,6 +76,8 @@ public class ComboAttackDataEditor : Editor
 
     public override void OnInspectorGUI()
     {
+        EnsureTimelineStyles();
+
         serializedObject.Update();
 
         DrawBasicComboAttackLinkField();
@@ -120,27 +112,56 @@ public class ComboAttackDataEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 
+    private void EnsureTimelineStyles()
+    {
+        if (_timelineCenterLabelStyle == null)
+        {
+            _timelineCenterLabelStyle = new GUIStyle(EditorStyles.centeredGreyMiniLabel);
+        }
+
+        if (_timelineRightLabelStyle == null)
+        {
+            _timelineRightLabelStyle = new GUIStyle(EditorStyles.miniLabel);
+            _timelineRightLabelStyle.alignment = TextAnchor.MiddleRight;
+            _timelineRightLabelStyle.normal.textColor = EditorStyles.centeredGreyMiniLabel.normal.textColor;
+        }
+
+        if (_attackMarkerLabelStyle == null)
+        {
+            _attackMarkerLabelStyle = new GUIStyle(EditorStyles.miniLabel);
+            _attackMarkerLabelStyle.alignment = TextAnchor.MiddleCenter;
+            _attackMarkerLabelStyle.normal.textColor = new Color(1f, 0.7f, 0.45f);
+        }
+
+        if (_effectMarkerLabelStyle == null)
+        {
+            _effectMarkerLabelStyle = new GUIStyle(EditorStyles.miniLabel);
+            _effectMarkerLabelStyle.alignment = TextAnchor.MiddleCenter;
+            _effectMarkerLabelStyle.normal.textColor = new Color(0.45f, 0.85f, 1f);
+        }
+    }
+
     private void DrawBasicComboAttackLinkField()
     {
         EditorGUILayout.LabelField("Basic Combo Attack Link", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(_basicComboAttackIdProperty, new GUIContent("Basic Combo Attack ID"));
 
-        BasicComboAttackData linkedAttackData = FindBasicComboAttackDataById(_basicComboAttackIdProperty.stringValue);
+        AttackData linkedAttackData = FindAttackDataById(_basicComboAttackIdProperty.stringValue);
 
         using (new EditorGUI.DisabledScope(true))
         {
-            EditorGUILayout.ObjectField("Resolved Data", linkedAttackData, typeof(BasicComboAttackData), false);
+            EditorGUILayout.ObjectField("Resolved Data", linkedAttackData, typeof(AttackData), false);
         }
 
         if (string.IsNullOrWhiteSpace(_basicComboAttackIdProperty.stringValue))
         {
-            EditorGUILayout.HelpBox("Enter the ID of an existing BasicComboAttackData asset.", MessageType.Info);
+            EditorGUILayout.HelpBox("Enter the ID of an existing AttackData asset.", MessageType.Info);
             return;
         }
 
         if (linkedAttackData == null)
         {
-            EditorGUILayout.HelpBox("Could not find a BasicComboAttackData asset with the given ID.", MessageType.Warning);
+            EditorGUILayout.HelpBox("Could not find an AttackData asset with the given ID.", MessageType.Warning);
         }
     }
 
@@ -881,18 +902,29 @@ public class ComboAttackDataEditor : Editor
         }
     }
 
-    private static BasicComboAttackData FindBasicComboAttackDataById(string comboAttackId)
+    private static AttackData FindAttackDataById(string comboAttackId)
     {
         if (string.IsNullOrWhiteSpace(comboAttackId))
         {
             return null;
         }
 
-        string[] guids = AssetDatabase.FindAssets("t:BasicComboAttackData");
-        for (int i = 0; i < guids.Length; i++)
+        string[] legacyGuids = AssetDatabase.FindAssets("t:BasicComboAttackData");
+        for (int i = 0; i < legacyGuids.Length; i++)
         {
-            string path = AssetDatabase.GUIDToAssetPath(guids[i]);
-            BasicComboAttackData attackData = AssetDatabase.LoadAssetAtPath<BasicComboAttackData>(path);
+            string path = AssetDatabase.GUIDToAssetPath(legacyGuids[i]);
+            AttackData attackData = AssetDatabase.LoadAssetAtPath<AttackData>(path);
+            if (attackData != null && attackData.Id == comboAttackId)
+            {
+                return attackData;
+            }
+        }
+
+        string[] generalGuids = AssetDatabase.FindAssets("t:GeneralAttackData");
+        for (int i = 0; i < generalGuids.Length; i++)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(generalGuids[i]);
+            AttackData attackData = AssetDatabase.LoadAssetAtPath<AttackData>(path);
             if (attackData != null && attackData.Id == comboAttackId)
             {
                 return attackData;

@@ -1,21 +1,21 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 
-[CreateAssetMenu(fileName = "BasicComboAttackData", menuName = "Scriptable Objects/BasicComboAttackData")]
-public class BasicComboAttackData : AttackData
+[CreateAssetMenu(fileName = "GeneralAttackData", menuName = "Player/Combat/General Attack Data")]
+public class GeneralAttackData : AttackData
 {
     [SerializeField] private string _id;
     [FormerlySerializedAs("AnimationName")]
     [SerializeField] private string _animationName;
     [FormerlySerializedAs("Damage")]
     [SerializeField] private float _damage = 10f;
-    [FormerlySerializedAs("Timing")]
-    [SerializeField] private AttackTimingProfile _timing;
+    [FormerlySerializedAs("_timing")]
+    [SerializeField] private AttackTimingProfile _timingProfile;
 
     public override string Id => _id;
     public override string AnimationName => _animationName;
     public override float Damage => _damage;
-    public override AttackTimingProfile TimingProfile => _timing;
+    public override AttackTimingProfile TimingProfile => _timingProfile;
 
     private void OnValidate()
     {

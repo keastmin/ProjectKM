@@ -18,7 +18,7 @@ MonoBehaviour:
   _comboInputStartNormalizedTime: 0.5208333
   _comboInputEndNormalizedTime: 0.7
   _attackTimings:
-  - _id: KatanaDodgeCounter
+  - _id: KatanaBasicAttackHitbox
     _normalizedTime: 0.33502537
   _attackEffectTimings:
   - _id: KatanaDodgeCounter

@@ -3,26 +3,38 @@ using UnityEngine;
 
 public class DodgeCounterState : StateBase
 {
+    private readonly AttackExecutionRuntime _attackRuntime;
+
     private AnimatorStateInfo _animInfo;
     private Vector3 _animDeltaPos;
+    private AttackData _attackData;
+    private int _animHash;
 
-    public DodgeCounterState(PlayerCore core) : base(core) { }
+    public DodgeCounterState(PlayerCore core) : base(core)
+    {
+        _attackRuntime = new AttackExecutionRuntime(core);
+    }
+
     public override bool CanReceiveDamage => false;
 
     public override void Enter()
     {
-        // 속도 초기화
+        _attackData = _core.DodgeCounterData;
+
         _core.TargetSpeed = 0f;
         _core.CurrentSpeed = 0f;
         _animDeltaPos = Vector3.zero;
-        _core.Animator.CrossFade(PlayerAnimationHash.Katana_Dodge_Counter, 0.03f, 0, 0f);
+        _animHash = ResolveAnimationHash(_attackData);
+        _attackRuntime.Reset(_attackData != null ? _attackData.TimingProfile : null);
+        _core.Animator.CrossFade(_attackData != null ? _attackData.AnimationName : "Katana_Dodge_Counter", 0.03f, 0, 0f);
 
         _core.Katana.SetActive(true);
     }
 
     public override void Tick()
     {
-        AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, PlayerAnimationHash.Katana_Dodge_Counter, out _animInfo);
+        AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animHash, out _animInfo);
+        _attackRuntime.Process(_attackData, _animInfo.normalizedTime);
 
         if (_animInfo.normalizedTime >= 0.97f)
         {
@@ -42,5 +54,25 @@ public class DodgeCounterState : StateBase
     public override void AnimationTick()
     {
         _animDeltaPos += _core.Animator.deltaPosition;
+    }
+
+    public override void Exit()
+    {
+        _attackRuntime.Clear();
+        _attackData = null;
+    }
+
+    private static int ResolveAnimationHash(AttackData attackData)
+    {
+        string animationName = attackData != null && !string.IsNullOrWhiteSpace(attackData.AnimationName)
+            ? attackData.AnimationName
+            : "Katana_Dodge_Counter";
+
+        if (PlayerAnimationHash.TryGetHash(animationName, out int animationHash))
+        {
+            return animationHash;
+        }
+
+        return Animator.StringToHash($"Base Layer.{animationName}");
     }
 }

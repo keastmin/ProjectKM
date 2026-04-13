@@ -2,6 +2,7 @@ using NoiRC.SRMove;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Player
 {
@@ -14,14 +15,15 @@ namespace Player
     public class PlayerCore : MonoBehaviour, IDamageable, IDodgeTimingReceiver
     {
         [Header("무기")]
-        [SerializeField] private GameObject _katana;
+        [FormerlySerializedAs("Katana"), SerializeField] private GameObject _katanaObject;
 
         [Header("움직임")]
         [SerializeField] private float _jogSpeed = 5f;
         [SerializeField] private float _runSpeed = 8f;
 
-        [Header("콤보 공격")]
-        [SerializeField] private BasicComboAttackData[] _katanaComboDatas;
+        [Header("공격")]
+        [SerializeField] private AttackData[] _katanaComboDatas; // 콤보 공격
+        [SerializeField] private AttackData _dodgeCounterData; // 회피 반격
 
         [Header("모션 워핑 데이터")]
         [SerializeField] private float _basicComboAttackMotionWarpSpeed = 20f;
@@ -81,8 +83,9 @@ namespace Player
         public float BasicComboAttackMotionWarpSpeed => _basicComboAttackMotionWarpSpeed;
         public Camera PlayerCamera => _playerCamera;
         public MotionWarpProfile RunTurnMotionInfo => _runTurnMotionInfo;
-        public GameObject Katana => _katana;
-        public BasicComboAttackData[] KatanaComboDatas => _katanaComboDatas;
+        public GameObject Katana => _katanaObject;
+        public AttackData[] KatanaComboDatas => _katanaComboDatas;
+        public AttackData DodgeCounterData => _dodgeCounterData;
         public StateVariableContainter StateVariables => _stateVariables;
 
         public bool DamageFlag { get; set; } = false;
@@ -90,7 +93,7 @@ namespace Player
 
         private void Awake()
         {
-            _katana.SetActive(false);
+            _katanaObject.SetActive(false);
 
             TryGetComponent(out _inputController);
             //TryGetComponent(out _characterMover);
