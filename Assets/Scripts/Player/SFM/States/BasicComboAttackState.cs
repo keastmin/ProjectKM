@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class BasicComboAttackState : StateBase
 {
+    private const float ATTACK_MOVE_STOP_BUFFER = 0.02f;
+
     private readonly AttackExecutionRuntime _attackRuntime;
 
     private int _index = -1;
@@ -123,7 +125,7 @@ public class BasicComboAttackState : StateBase
     private void RootMotionMove()
     {
         _aniMoveDelta.y = 0f;
-        Vector3 vel = _aniMoveDelta / Time.fixedDeltaTime;
+        Vector3 vel = GetBlockedAttackVelocity(_aniMoveDelta / Time.fixedDeltaTime);
         _core.Mover.Move(vel);
         _aniMoveDelta = Vector3.zero;
     }
@@ -153,7 +155,8 @@ public class BasicComboAttackState : StateBase
         float frameSpeed = Vector3.Distance(_core.transform.position, _warpPos) / Time.fixedDeltaTime;
         float warpSpeed = Mathf.Min(_core.BasicComboAttackMotionWarpSpeed, frameSpeed);
         Vector3 dir = _warpPos - _core.transform.position;
-        _core.Mover.Move(dir.normalized * warpSpeed);
+        Vector3 vel = GetBlockedAttackVelocity(dir.normalized * warpSpeed);
+        _core.Mover.Move(vel);
     }
 
     private void DeterminingMotionWarp()
@@ -202,5 +205,64 @@ public class BasicComboAttackState : StateBase
         {
             _isMotionWarp = false;
         }
+    }
+
+    private Vector3 GetBlockedAttackVelocity(Vector3 velocity)
+    {
+        velocity.y = 0f;
+
+        Vector3 displacement = velocity * Time.fixedDeltaTime;
+        displacement.y = 0f;
+
+        if (displacement.sqrMagnitude <= 0.000001f)
+        {
+            return Vector3.zero;
+        }
+
+        if (!TryGetPlayerCapsule(out CapsuleCollider capsule))
+        {
+            return velocity;
+        }
+
+        Vector3 moveDir = displacement.normalized;
+        float moveDistance = displacement.magnitude;
+
+        GetCapsuleWorldPoints(capsule, _core.transform.position, _core.transform.rotation, out Vector3 point1, out Vector3 point2, out float radius);
+
+        if (Physics.CapsuleCast(point1, point2, radius, moveDir, out RaycastHit hit, moveDistance + ATTACK_MOVE_STOP_BUFFER, _core.TargetingController.TargetingLayer, QueryTriggerInteraction.Ignore))
+        {
+            float allowedDistance = Mathf.Max(0f, hit.distance - ATTACK_MOVE_STOP_BUFFER);
+            return moveDir * (allowedDistance / Time.fixedDeltaTime);
+        }
+
+        Vector3 nextPosition = _core.transform.position + displacement;
+        GetCapsuleWorldPoints(capsule, nextPosition, _core.transform.rotation, out point1, out point2, out radius);
+
+        if (Physics.CheckCapsule(point1, point2, radius, _core.TargetingController.TargetingLayer, QueryTriggerInteraction.Ignore))
+        {
+            return Vector3.zero;
+        }
+
+        return velocity;
+    }
+
+    private bool TryGetPlayerCapsule(out CapsuleCollider capsule)
+    {
+        return _core.TryGetComponent(out capsule);
+    }
+
+    private void GetCapsuleWorldPoints(CapsuleCollider capsule, Vector3 position, Quaternion rotation, out Vector3 point1, out Vector3 point2, out float radius)
+    {
+        Vector3 lossyScale = _core.transform.lossyScale;
+        Vector3 scaledCenter = Vector3.Scale(capsule.center, lossyScale);
+        Vector3 center = position + rotation * scaledCenter;
+
+        radius = capsule.radius * Mathf.Max(Mathf.Abs(lossyScale.x), Mathf.Abs(lossyScale.z));
+        float height = Mathf.Max(capsule.height * Mathf.Abs(lossyScale.y), radius * 2f);
+        float halfSegment = Mathf.Max(0f, (height * 0.5f) - radius);
+        Vector3 up = rotation * Vector3.up;
+
+        point1 = center + up * halfSegment;
+        point2 = center - up * halfSegment;
     }
 }

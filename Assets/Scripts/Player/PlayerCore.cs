@@ -46,6 +46,7 @@ namespace Player
         private AttackEffectController _attackEffectController;
         private Animator _animator;
         private readonly HashSet<Component> _activeDodgeTimingSources = new();
+        private Transform _perfectDodgeTarget;
         private Coroutine _perfectDodgeTimeScaleCoroutine;
 
         // 속도
@@ -81,6 +82,7 @@ namespace Player
         public AttackData[] KatanaComboDatas => _katanaComboDatas;
         public AttackData DodgeCounterData => _dodgeCounterData;
         public StateVariableContainter StateVariables => _stateVariables;
+        public Transform PerfectDodgeTarget => _perfectDodgeTarget;
 
         public bool DamageFlag { get; set; } = false;
         public bool CanReceiveDamage => _fsm?.CanReceiveDamage ?? true;
@@ -159,6 +161,16 @@ namespace Player
             StateVariables.DodgeVariable.CanPerfectDodge = _activeDodgeTimingSources.Count > 0;
         }
 
+        public void ResolvePerfectDodgeTarget()
+        {
+            _perfectDodgeTarget = ResolveClosestDodgeTimingTarget();
+        }
+
+        public void ClearPerfectDodgeTarget()
+        {
+            _perfectDodgeTarget = null;
+        }
+
         public void TriggerPerfectDodgeTimeScale()
         {
             if (_perfectDodgeTimeScaleCoroutine != null)
@@ -167,6 +179,17 @@ namespace Player
             }
 
             _perfectDodgeTimeScaleCoroutine = StartCoroutine(PerfectDodgeTimeScaleRoutine());
+        }
+
+        public void StopPerfectDodgeTimeScaleImmediate()
+        {
+            if (_perfectDodgeTimeScaleCoroutine != null)
+            {
+                StopCoroutine(_perfectDodgeTimeScaleCoroutine);
+                _perfectDodgeTimeScaleCoroutine = null;
+            }
+
+            Time.timeScale = 1f;
         }
 
         private IEnumerator PerfectDodgeTimeScaleRoutine()
@@ -204,6 +227,36 @@ namespace Player
             }
 
             Time.timeScale = end;
+        }
+
+        private Transform ResolveClosestDodgeTimingTarget()
+        {
+            Transform closestTarget = null;
+            float closestSqrDistance = float.MaxValue;
+            Vector3 playerPos = transform.position;
+
+            foreach (Component source in _activeDodgeTimingSources)
+            {
+                if (source == null)
+                {
+                    continue;
+                }
+
+                Transform sourceTransform = source.transform;
+                EnemyCore enemyCore = sourceTransform.GetComponentInParent<EnemyCore>();
+                Transform targetTransform = enemyCore != null ? enemyCore.transform : sourceTransform.root;
+                Vector3 targetPos = targetTransform.position;
+                targetPos.y = playerPos.y;
+
+                float sqrDistance = (targetPos - playerPos).sqrMagnitude;
+                if (sqrDistance < closestSqrDistance)
+                {
+                    closestSqrDistance = sqrDistance;
+                    closestTarget = targetTransform;
+                }
+            }
+
+            return closestTarget;
         }
     }
 }

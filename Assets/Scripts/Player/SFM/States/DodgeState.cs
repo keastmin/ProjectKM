@@ -31,8 +31,13 @@ public class DodgeState : StateBase
         _dodgeVariable.IsPerfectDodge = _dodgeVariable.CanPerfectDodge;
         if (_dodgeVariable.IsPerfectDodge)
         {
+            _core.ResolvePerfectDodgeTarget();
             _core.DamageFlag = false;
             _core.TriggerPerfectDodgeTimeScale();
+        }
+        else
+        {
+            _core.ClearPerfectDodgeTarget();
         }
         _currentStateTime = 0f;
 

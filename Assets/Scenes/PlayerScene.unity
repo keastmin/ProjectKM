@@ -793,23 +793,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!1 &1370926921 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4087871775004477064, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
-  m_PrefabInstance: {fileID: 4124165965128785361}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1370926924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1370926921}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eddc046f32e00f54188435c8ff9ddd5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyNoticeDodgeTiming
 --- !u!1 &1956899873
 GameObject:
   m_ObjectHideFlags: 0
@@ -1488,10 +1471,6 @@ PrefabInstance:
       propertyPath: _mainCameraTransform
       value: 
       objectReference: {fileID: 2084274439}
-    - target: {fileID: 132512699626696652, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 452543645356406848, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.67
@@ -1540,15 +1519,10 @@ PrefabInstance:
       propertyPath: _targetCamera
       value: 
       objectReference: {fileID: 2084274438}
-    m_RemovedComponents:
-    - {fileID: 132512699626696652, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
-    - {fileID: 3016605095793640302, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4087871775004477064, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
-      insertIndex: 1
-      addedObject: {fileID: 1370926924}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
 --- !u!1 &6007133749412785146
 GameObject:

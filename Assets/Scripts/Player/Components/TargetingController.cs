@@ -14,6 +14,7 @@ public class TargetingController : MonoBehaviour
     private CapsuleCollider _playerCapsuleCollider;
 
     public Collider Target => _target;
+    public LayerMask TargetingLayer => _targetingLayer;
 
     private void Awake()
     {
