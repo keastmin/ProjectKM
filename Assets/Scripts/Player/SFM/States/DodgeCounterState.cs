@@ -27,8 +27,6 @@ public class DodgeCounterState : StateBase
         _animHash = ResolveAnimationHash(_attackData);
         _attackRuntime.Reset(_attackData != null ? _attackData.TimingProfile : null);
         _core.Animator.CrossFade(_attackData != null ? _attackData.AnimationName : "Katana_Dodge_Counter", 0.03f, 0, 0f);
-
-        _core.Katana.SetActive(true);
     }
 
     public override void Tick()

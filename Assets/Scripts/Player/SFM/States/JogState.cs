@@ -9,9 +9,9 @@ public class JogState : StateBase
     {
         Debug.Log("Jog State");
         _core.TargetSpeed = _core.JogSpeed;
-        if (_core.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash != PlayerAnimationHash.No_Weapon_Move)
+        if (_core.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash != PlayerAnimationHash.Katana_Move)
         {
-            _core.Animator.CrossFade(PlayerAnimationHash.No_Weapon_Move, 0.08f);
+            _core.Animator.CrossFade(PlayerAnimationHash.Katana_Move, 0.08f);
         }
     }
 

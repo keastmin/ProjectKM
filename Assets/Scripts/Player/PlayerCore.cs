@@ -14,9 +14,6 @@ namespace Player
     [RequireComponent(typeof(Animator))]
     public class PlayerCore : MonoBehaviour, IDamageable, IDodgeTimingReceiver
     {
-        [Header("무기")]
-        [FormerlySerializedAs("Katana"), SerializeField] private GameObject _katanaObject;
-
         [Header("움직임")]
         [SerializeField] private float _jogSpeed = 5f;
         [SerializeField] private float _runSpeed = 8f;
@@ -83,7 +80,6 @@ namespace Player
         public float BasicComboAttackMotionWarpSpeed => _basicComboAttackMotionWarpSpeed;
         public Camera PlayerCamera => _playerCamera;
         public MotionWarpProfile RunTurnMotionInfo => _runTurnMotionInfo;
-        public GameObject Katana => _katanaObject;
         public AttackData[] KatanaComboDatas => _katanaComboDatas;
         public AttackData DodgeCounterData => _dodgeCounterData;
         public StateVariableContainter StateVariables => _stateVariables;
@@ -93,8 +89,6 @@ namespace Player
 
         private void Awake()
         {
-            _katanaObject.SetActive(false);
-
             TryGetComponent(out _inputController);
             //TryGetComponent(out _characterMover);
             TryGetComponent(out _avatarMover);

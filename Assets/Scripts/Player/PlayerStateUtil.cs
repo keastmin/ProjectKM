@@ -29,7 +29,27 @@ public static class PlayerStateUtil
     /// </summary>
     public static void RotateTowardsDirection(Transform coreTransform, Vector3 facingDirection, float rotationLerpSpeed)
     {
-        if(coreTransform == null)
+        if (coreTransform == null)
+        {
+            Debug.Log("참조가 없습니다.");
+            return;
+        }
+
+        if (facingDirection.sqrMagnitude > 0.0001f)
+        {
+
+            Quaternion targetRot = Quaternion.LookRotation(facingDirection, Vector3.up);
+            coreTransform.rotation = Quaternion.Slerp(coreTransform.rotation, targetRot, rotationLerpSpeed * Time.fixedDeltaTime);
+
+        }
+    }
+
+    /// <summary>
+    /// 플레이어를 원하는 방향으로 즉시 회전시키는 함수
+    /// </summary>
+    public static void RotateImmediatelyTowardsDirection(Transform coreTransform, Vector3 facingDirection)
+    {
+        if (coreTransform == null)
         {
             Debug.Log("참조가 없습니다.");
             return;
@@ -38,7 +58,7 @@ public static class PlayerStateUtil
         if (facingDirection.sqrMagnitude > 0.0001f)
         {
             Quaternion targetRot = Quaternion.LookRotation(facingDirection, Vector3.up);
-            coreTransform.rotation = Quaternion.Slerp(coreTransform.rotation, targetRot, rotationLerpSpeed * Time.fixedDeltaTime);
+            coreTransform.rotation = targetRot;
         }
     }
 }

@@ -11,7 +11,7 @@ public class IdleState : StateBase
     {
         _isWaitingComboAttackAni = false;
 
-        Debug.Log("IdleState");
+        Debug.Log("Idle State");
         _core.TargetSpeed = 0f;
 
         // 이전 상태 애니메이션을 기다려야 하는 경우 구분
@@ -19,9 +19,9 @@ public class IdleState : StateBase
         {
             _isWaitingComboAttackAni = true;
         }
-        else if (_core.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash != PlayerAnimationHash.No_Weapon_Move)
+        else if (_core.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash != PlayerAnimationHash.Katana_Move)
         {
-            _core.Animator.CrossFade(PlayerAnimationHash.No_Weapon_Move, 0.08f);
+            _core.Animator.CrossFade(PlayerAnimationHash.Katana_Move, 0.08f);
         }
     }
 
@@ -34,7 +34,7 @@ public class IdleState : StateBase
             if (stateInfo.normalizedTime > 0.98f)
             {
                 _isWaitingComboAttackAni = false;
-                _core.Animator.CrossFade(PlayerAnimationHash.No_Weapon_Move, 0.08f);
+                _core.Animator.CrossFade(PlayerAnimationHash.Katana_Move, 0.08f);
             }
         }
 

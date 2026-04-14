@@ -10,6 +10,8 @@ public static class PlayerAnimationHash
     private const string NO_WEAPON_RUN = "No_Weapon_Run";
     private const string NO_WEAPON_MOVE = "No_Weapon_Move";
     private const string NO_WEAPON_RUN_TURN = "No_Weapon_Run_Turn";
+    private const string KATANA_MOVE = "Katana_Move";
+    private const string KATANA_RUN_TURN = "Katana_Run_Turn";
     private const string KATANA_BASIC_COMBO_1 = "Katana_Basic_Combo_1";
     private const string KATANA_BASIC_COMBO_2 = "Katana_Basic_Combo_2";
     private const string KATANA_BASIC_COMBO_3 = "Katana_Basic_Combo_3";
@@ -25,6 +27,8 @@ public static class PlayerAnimationHash
     private const string FULL_NO_WEAPON_RUN = LAYER + NO_WEAPON_RUN;
     private const string FULL_NO_WEAPON_MOVE = LAYER + NO_WEAPON_MOVE;
     private const string FULL_NO_WEAPON_RUN_TURN = LAYER + NO_WEAPON_RUN_TURN;
+    private const string FULL_KATANA_MOVE = LAYER + KATANA_MOVE;
+    private const string FULL_KATANA_RUN_TURN = LAYER + KATANA_RUN_TURN;
     private const string FULL_KATANA_BASIC_COMBO_1 = LAYER + KATANA_BASIC_COMBO_1;
     private const string FULL_KATANA_BASIC_COMBO_2 = LAYER + KATANA_BASIC_COMBO_2;
     private const string FULL_KATANA_BASIC_COMBO_3 = LAYER + KATANA_BASIC_COMBO_3;
@@ -40,6 +44,8 @@ public static class PlayerAnimationHash
     public static readonly int No_Weapon_Run = Animator.StringToHash(FULL_NO_WEAPON_RUN);
     public static readonly int No_Weapon_Move = Animator.StringToHash(FULL_NO_WEAPON_MOVE);
     public static readonly int No_Weapon_Run_Turn = Animator.StringToHash(FULL_NO_WEAPON_RUN_TURN);
+    public static readonly int Katana_Move = Animator.StringToHash(FULL_KATANA_MOVE);
+    public static readonly int Katana_Run_Turn = Animator.StringToHash(FULL_KATANA_RUN_TURN);
     public static readonly int Katana_Basic_Combo_1 = Animator.StringToHash(FULL_KATANA_BASIC_COMBO_1);
     public static readonly int Katana_Basic_Combo_2 = Animator.StringToHash(FULL_KATANA_BASIC_COMBO_2);
     public static readonly int Katana_Basic_Combo_3 = Animator.StringToHash(FULL_KATANA_BASIC_COMBO_3);
@@ -57,6 +63,8 @@ public static class PlayerAnimationHash
         { NO_WEAPON_RUN, No_Weapon_Run },
         { NO_WEAPON_MOVE, No_Weapon_Move },
         { NO_WEAPON_RUN_TURN, No_Weapon_Run_Turn },
+        { KATANA_MOVE, Katana_Move },
+        { KATANA_RUN_TURN, Katana_Run_Turn },
         { KATANA_BASIC_COMBO_1, Katana_Basic_Combo_1 },
         { KATANA_BASIC_COMBO_2, Katana_Basic_Combo_2 },
         { KATANA_BASIC_COMBO_3, Katana_Basic_Combo_3 },

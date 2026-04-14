@@ -27,7 +27,6 @@ public class BasicComboAttackState : StateBase
 
         _core.TargetSpeed = 0f;
         _core.CurrentSpeed = 0f;
-        _core.Katana.SetActive(true);
 
         _datas = _core.KatanaComboDatas;
 
@@ -117,7 +116,6 @@ public class BasicComboAttackState : StateBase
     public override void Exit()
     {
         _index = -1;
-        _core.Katana.SetActive(false);
         _aniMoveDelta = Vector3.zero;
         _attackRuntime.Clear();
     }
