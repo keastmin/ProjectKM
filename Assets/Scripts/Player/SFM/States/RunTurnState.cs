@@ -6,10 +6,7 @@ public class RunTurnState : StateBase
     private AnimatorStateInfo _animInfo;
     private Vector3 _animDeltaPos;
 
-    public RunTurnState(PlayerCore core) : base(core)
-    {
-        
-    }
+    public RunTurnState(PlayerCore core) : base(core) { }
 
     public override void Enter()
     {

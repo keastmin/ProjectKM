@@ -24,7 +24,6 @@ namespace Player
 
         [Header("모션 워핑 데이터")]
         [SerializeField] private float _basicComboAttackMotionWarpSpeed = 20f;
-        [SerializeField] private MotionWarpProfile _runTurnMotionInfo;
 
         [Header("카메라")]
         [SerializeField] private Camera _playerCamera;
@@ -79,7 +78,6 @@ namespace Player
         public float DodgeCounterDuration => _perfectDodgeSlowDownDuration + _perfectDodgeSlowHoldDuration;
         public float BasicComboAttackMotionWarpSpeed => _basicComboAttackMotionWarpSpeed;
         public Camera PlayerCamera => _playerCamera;
-        public MotionWarpProfile RunTurnMotionInfo => _runTurnMotionInfo;
         public AttackData[] KatanaComboDatas => _katanaComboDatas;
         public AttackData DodgeCounterData => _dodgeCounterData;
         public StateVariableContainter StateVariables => _stateVariables;
