@@ -41,6 +41,7 @@ public class DodgeState : StateBase
 
         // 바라볼 방향 결정
         _lookDir = PlayerStateUtil.GetCameraRelativeFacingDirection(_core.transform, _core.PlayerCamera, _core.InputController.MoveInput);
+        PlayerStateUtil.RotateImmediatelyTowardsDirection(_core.transform, _lookDir);
 
         // 애니메이션 해쉬 결정
         _animHash = (_isFront) ? PlayerAnimationHash.Katana_Dodge_Front : PlayerAnimationHash.Katana_Dodge_Back;
@@ -120,7 +121,6 @@ public class DodgeState : StateBase
 
     private void FrontDodgeFixedTick()
     {
-        PlayerStateUtil.RotateTowardsDirection(_core.transform, _lookDir, _core.StateVariables.DodgeVariable.FrontDodgeRotateSpeed);
         _core.Mover.Move(_lookDir.normalized * _core.CurrentSpeed);
     }
 
