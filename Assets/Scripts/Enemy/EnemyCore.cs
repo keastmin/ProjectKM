@@ -15,6 +15,9 @@ public class EnemyCore : MonoBehaviour, IDamageable
     [Header("컴포넌트")]
     [SerializeField] private Animator _animator;
 
+    [Header("피격 콜라이더")]
+    [SerializeField] private Collider[] _hurtColliders;
+
     [Header("테스트")]
     [SerializeField] private DamageStatus _damageStatus;
 
@@ -25,6 +28,7 @@ public class EnemyCore : MonoBehaviour, IDamageable
     public Animator Animator => _animator;
     public bool DamagedFlag { get; set; }
     public bool IsSuperArmour => _enableSuperArmour && _superArmourRemainTime > 0f;
+    public Collider[] HurtColliders => _hurtColliders;
 
     // 공격 데이터
     public Dictionary<string, GameObject> AttackObjectDic;

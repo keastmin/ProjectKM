@@ -46,6 +46,8 @@ public class BasicComboAttackState : StateBase
 
     public override void Tick()
     {
+        PlayerRotation();
+
         PlayerAnimationHash.TryGetHash(_datas[_index].AnimationName, out _aniHash);
         if (_aniHash == 0)
         {
@@ -98,7 +100,6 @@ public class BasicComboAttackState : StateBase
 
     public override void FixedTick()
     {
-        PlayerRotation();
         MotionWarpPositionEndCheck();
         if (_isMotionWarp)
         {

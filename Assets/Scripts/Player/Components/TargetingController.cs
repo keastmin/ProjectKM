@@ -62,6 +62,37 @@ public class TargetingController : MonoBehaviour
         return warpPos;
     }
 
+    /// <summary>
+    /// 워프할 위치를 구하는 함수
+    /// </summary>
+    public Vector3 GetWarpPos(Collider target)
+    {
+        if (target == null)
+            return transform.position;
+
+        Vector3 playerPos = transform.position;
+
+        // 타겟 콜라이더에서 플레이어에게 가장 가까운 점
+        Vector3 targetClosestPoint = target.ClosestPoint(playerPos);
+
+        // 수평 방향만 쓰고 싶다면 y 제거
+        Vector3 dir = targetClosestPoint - playerPos;
+        dir.y = 0f;
+
+        if (dir.sqrMagnitude < 0.0001f)
+            return transform.position;
+
+        dir.Normalize();
+
+        float playerRadius = _playerCapsuleCollider.radius;
+
+        // 플레이어 캡슐 반지름만큼 떨어진 위치까지 워프
+        Vector3 warpPos = targetClosestPoint - dir * playerRadius;
+        warpPos.y = transform.position.y;
+
+        return warpPos;
+    }
+
     #endregion
 
     // 감지 가능한 범위 내에서 가장 가까운 적을 타겟으로 지정

@@ -213,6 +213,11 @@ Transform:
   - {fileID: 2054062399}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &408727345 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 8158674036653238942, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
+  m_PrefabInstance: {fileID: 4124165965128785361}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &496711305
 GameObject:
   m_ObjectHideFlags: 0
@@ -1432,15 +1437,15 @@ PrefabInstance:
       objectReference: {fileID: 2084274438}
     - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Height
-      value: 1.3100001
+      value: 1.4300001
       objectReference: {fileID: 0}
     - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Radius
-      value: 0.56
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Center.y
-      value: 1.165
+      value: 1.155
       objectReference: {fileID: 0}
     - target: {fileID: 6538668474974009422, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Name
@@ -1511,6 +1516,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1790323282932646699, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
+      propertyPath: _hurtColliders.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1790323282932646699, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
+      propertyPath: '_hurtColliders.Array.data[0]'
+      value: 
+      objectReference: {fileID: 408727345}
     - target: {fileID: 2427026571794712103, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
       propertyPath: m_Name
       value: Hell Cat

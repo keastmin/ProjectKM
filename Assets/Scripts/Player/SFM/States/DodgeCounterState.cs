@@ -30,6 +30,13 @@ public class DodgeCounterState : StateBase
         _attackRuntime.Reset(_attackData != null ? _attackData.TimingProfile : null);
         _core.Animator.CrossFade(_attackData != null ? _attackData.AnimationName : "Katana_Dodge_Counter", 0.03f, 0, 0f);
 
+        if(_core.DodgeCounterTarget != null)
+        {
+            Vector3 enemyHurtColPos = _core.DodgeCounterTarget.transform.position;
+            enemyHurtColPos.y = _core.transform.position.y;
+            PlayerStateUtil.RotateImmediatelyTowardsDirection(_core.transform, (enemyHurtColPos - _core.transform.position).normalized);
+        }
+
         _core.StopPerfectDodgeTimeScaleImmediate();
     }
 

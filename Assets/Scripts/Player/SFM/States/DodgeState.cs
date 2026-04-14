@@ -29,15 +29,13 @@ public class DodgeState : StateBase
     {
         Debug.Log("Dodge State");
         _dodgeVariable.IsPerfectDodge = _dodgeVariable.CanPerfectDodge;
+
+        // 완벽 회피 트리거
         if (_dodgeVariable.IsPerfectDodge)
         {
-            _core.ResolvePerfectDodgeTarget();
             _core.DamageFlag = false;
             _core.TriggerPerfectDodgeTimeScale();
-        }
-        else
-        {
-            _core.ClearPerfectDodgeTarget();
+            _core.SetNearDodgeCounterTarget();
         }
         _currentStateTime = 0f;
 

@@ -46,7 +46,6 @@ namespace Player
         private AttackEffectController _attackEffectController;
         private Animator _animator;
         private readonly HashSet<Component> _activeDodgeTimingSources = new();
-        private Transform _perfectDodgeTarget;
         private Coroutine _perfectDodgeTimeScaleCoroutine;
 
         // 속도
@@ -55,6 +54,9 @@ namespace Player
 
         // 상태머신
         private StateMachine _fsm;
+
+        // 타겟
+        private Collider _dodgeCounterTarget;
 
         public StateMachine FSM => _fsm;
         public InputController InputController => _inputController;
@@ -82,8 +84,8 @@ namespace Player
         public AttackData[] KatanaComboDatas => _katanaComboDatas;
         public AttackData DodgeCounterData => _dodgeCounterData;
         public StateVariableContainter StateVariables => _stateVariables;
-        public Transform PerfectDodgeTarget => _perfectDodgeTarget;
-
+        public HashSet<Component> ActiveDodgeTimingSources => _activeDodgeTimingSources;
+        public Collider DodgeCounterTarget => _dodgeCounterTarget;
         public bool DamageFlag { get; set; } = false;
         public bool CanReceiveDamage => _fsm?.CanReceiveDamage ?? true;
 
@@ -161,16 +163,6 @@ namespace Player
             StateVariables.DodgeVariable.CanPerfectDodge = _activeDodgeTimingSources.Count > 0;
         }
 
-        public void ResolvePerfectDodgeTarget()
-        {
-            _perfectDodgeTarget = ResolveClosestDodgeTimingTarget();
-        }
-
-        public void ClearPerfectDodgeTarget()
-        {
-            _perfectDodgeTarget = null;
-        }
-
         public void TriggerPerfectDodgeTimeScale()
         {
             if (_perfectDodgeTimeScaleCoroutine != null)
@@ -229,34 +221,40 @@ namespace Player
             Time.timeScale = end;
         }
 
-        private Transform ResolveClosestDodgeTimingTarget()
+        /// <summary>
+        /// 회피 성공 후 카운터 공격을 할 수 있는 타겟 설정
+        /// </summary>
+        public void SetNearDodgeCounterTarget()
         {
-            Transform closestTarget = null;
-            float closestSqrDistance = float.MaxValue;
-            Vector3 playerPos = transform.position;
+            // 1. 현재 _activeDodgeTimingSources에 있는 타겟들이 가지고 있는 타격 가능한 콜라이더 중 가장 가까운 콜라이더를 찾음
+            // 2. 찾은 콜라이더를 _dodgeCounterTarget 타겟으로 등록함
 
-            foreach (Component source in _activeDodgeTimingSources)
+            _dodgeCounterTarget = null;
+            float minDistance = float.MaxValue;
+            
+            foreach(var source in _activeDodgeTimingSources)
             {
-                if (source == null)
-                {
+                EnemyCore enemy = source.GetComponentInParent<EnemyCore>();
+                if(enemy == null)
                     continue;
-                }
 
-                Transform sourceTransform = source.transform;
-                EnemyCore enemyCore = sourceTransform.GetComponentInParent<EnemyCore>();
-                Transform targetTransform = enemyCore != null ? enemyCore.transform : sourceTransform.root;
-                Vector3 targetPos = targetTransform.position;
-                targetPos.y = playerPos.y;
+                Collider[] hurtColliders = enemy.HurtColliders;
+                if (hurtColliders == null)
+                    continue;
 
-                float sqrDistance = (targetPos - playerPos).sqrMagnitude;
-                if (sqrDistance < closestSqrDistance)
+                foreach(var col in hurtColliders)
                 {
-                    closestSqrDistance = sqrDistance;
-                    closestTarget = targetTransform;
+                    if (col == null) continue;
+
+                    Vector3 targetPos = _targetingController.GetWarpPos(col);
+                    float dist = Vector3.Distance(transform.position, targetPos);
+                    if (dist < minDistance)
+                    {
+                        _dodgeCounterTarget = col;
+                        minDistance = dist;
+                    }
                 }
             }
-
-            return closestTarget;
         }
     }
 }
