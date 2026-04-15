@@ -1437,15 +1437,15 @@ PrefabInstance:
       objectReference: {fileID: 2084274438}
     - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Height
-      value: 1.4300001
+      value: 1.3100001
       objectReference: {fileID: 0}
     - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Radius
-      value: 0.5
+      value: 0.56
       objectReference: {fileID: 0}
     - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Center.y
-      value: 1.155
+      value: 1.165
       objectReference: {fileID: 0}
     - target: {fileID: 6538668474974009422, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Name
@@ -1455,10 +1455,6 @@ PrefabInstance:
       propertyPath: _playerCamera
       value: 
       objectReference: {fileID: 2084274438}
-    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
-      propertyPath: _stateVariables._dodgeVariable._frontDodgeRotateSpeed
-      value: 20
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1515,6 +1511,10 @@ PrefabInstance:
     - target: {fileID: 452543645356406848, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1187081353298233970, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1790323282932646699, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
       propertyPath: _hurtColliders.Array.size

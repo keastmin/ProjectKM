@@ -30,6 +30,13 @@ public class RunState : StateBase
             return;
         }
 
+        // 달리기 상태에서 공격을 입력시 대쉬 공격
+        if (_core.InputController.BasicComboAttackInput)
+        {
+            _core.FSM.Transition(_core.FSM.DashAttackState);
+            return;
+        }
+
         // 이전 상태가 달리기 였으며, 현재 속도가 조깅 속도보다 빠른 상태이고,
         // 지금 입력한 MoveInput을 통한 캐릭터가 회전하게 될 각도가 현재 각도에서 180도 +, -알파라면 턴 상태로 전환
         Vector2 moveInput = _core.InputController.MoveInput;

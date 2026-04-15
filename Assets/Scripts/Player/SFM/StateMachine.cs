@@ -12,6 +12,7 @@ public class StateMachine
     public DamagedState DamagedState;
     public DodgeState DodgeState;
     public DodgeCounterState DodgeCounterState;
+    public DashAttackState DashAttackState;
 
     private StateBase _currentState;
     private StateBase _prevState;
@@ -29,6 +30,7 @@ public class StateMachine
         DamagedState = new DamagedState(core);
         DodgeState = new DodgeState(core);
         DodgeCounterState = new DodgeCounterState(core);
+        DashAttackState = new DashAttackState(core);
     }
 
     public void InitStateMachine(StateBase initState)

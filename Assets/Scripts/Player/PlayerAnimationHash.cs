@@ -20,6 +20,7 @@ public static class PlayerAnimationHash
     private const string KATANA_DODGE_FRONT = "Katana_Dodge_Front";
     private const string KATANA_DODGE_BACK = "Katana_Dodge_Back";
     private const string KATANA_DODGE_COUNTER = "Katana_Dodge_Counter";
+    private const string KATANA_DASH_ATTACK = "Katana_Dash_Attack";
 
     // 전체 경로 문자열
     private const string FULL_NO_WEAPON_IDLE = LAYER + NO_WEAPON_IDLE;
@@ -37,6 +38,7 @@ public static class PlayerAnimationHash
     private const string FULL_KATANA_DODGE_FRONT = LAYER + KATANA_DODGE_FRONT;
     private const string FULL_KATANA_DODGE_BACKT = LAYER + KATANA_DODGE_BACK;
     private const string FULL_KATANA_DODGE_COUNTER = LAYER + KATANA_DODGE_COUNTER;
+    private const string FULL_KATANA_DASH_ATTACK = LAYER + KATANA_DASH_ATTACK;
 
     // 해시
     public static readonly int No_Weapon_Idle = Animator.StringToHash(FULL_NO_WEAPON_IDLE);
@@ -54,6 +56,7 @@ public static class PlayerAnimationHash
     public static readonly int Katana_Dodge_Front = Animator.StringToHash(FULL_KATANA_DODGE_FRONT);
     public static readonly int Katana_Dodge_Back = Animator.StringToHash(FULL_KATANA_DODGE_BACKT);
     public static readonly int Katana_Dodge_Counter = Animator.StringToHash(FULL_KATANA_DODGE_COUNTER);
+    public static readonly int Katana_Dash_Attack = Animator.StringToHash(FULL_KATANA_DASH_ATTACK);
 
     // 이름 -> 해시
     public static readonly Dictionary<string, int> NameToHash = new()
@@ -69,10 +72,11 @@ public static class PlayerAnimationHash
         { KATANA_BASIC_COMBO_2, Katana_Basic_Combo_2 },
         { KATANA_BASIC_COMBO_3, Katana_Basic_Combo_3 },
         { KATANA_BASIC_COMBO_4, Katana_Basic_Combo_4 },
-        {KATANA_DAMAGED_FRONT, Katana_Damaged_Front },
-        {KATANA_DODGE_FRONT, Katana_Dodge_Front },
-        {KATANA_DODGE_BACK, Katana_Dodge_Back },
-        {KATANA_DODGE_COUNTER, Katana_Dodge_Counter }
+        { KATANA_DAMAGED_FRONT, Katana_Damaged_Front },
+        { KATANA_DODGE_FRONT, Katana_Dodge_Front },
+        { KATANA_DODGE_BACK, Katana_Dodge_Back },
+        { KATANA_DODGE_COUNTER, Katana_Dodge_Counter },
+        { KATANA_DASH_ATTACK, Katana_Dash_Attack }
     };
 
     public static bool TryGetHash(string name, out int hash)

@@ -21,6 +21,7 @@ namespace Player
         [Header("공격")]
         [SerializeField] private AttackData[] _katanaComboDatas; // 콤보 공격
         [SerializeField] private AttackData _dodgeCounterData; // 회피 반격
+        [SerializeField] private AttackData _dashAttackData; // 대쉬 공격
 
         [Header("모션 워핑 데이터")]
         [SerializeField] private float _basicComboAttackMotionWarpSpeed = 20f;
@@ -83,6 +84,7 @@ namespace Player
         public Camera PlayerCamera => _playerCamera;
         public AttackData[] KatanaComboDatas => _katanaComboDatas;
         public AttackData DodgeCounterData => _dodgeCounterData;
+        public AttackData DashAttackData => _dashAttackData;
         public StateVariableContainter StateVariables => _stateVariables;
         public HashSet<Component> ActiveDodgeTimingSources => _activeDodgeTimingSources;
         public Collider DodgeCounterTarget => _dodgeCounterTarget;
