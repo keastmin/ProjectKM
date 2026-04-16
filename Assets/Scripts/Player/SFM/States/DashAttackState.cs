@@ -11,6 +11,8 @@ public class DashAttackState : StateBase
     private int _animationHash;
     private AnimatorStateInfo _stateInfo;
     private Vector3 _animDeltaPos;
+    private bool _hasNearTarget;
+    private Vector3 _targetPos;
 
     public DashAttackState(PlayerCore core) : base(core) 
     {
@@ -28,6 +30,13 @@ public class DashAttackState : StateBase
         _core.TargetSpeed = 0f;
         _core.CurrentSpeed = 0f;
 
+        // 타겟팅
+        _hasNearTarget = (_core.TargetingController.Target != null);
+        if (_hasNearTarget)
+        {
+            _targetPos = _core.TargetingController.GetWarpPos();
+        }
+
         _attackRuntime.Reset(_attackData != null ? _attackData.TimingProfile : null);
 
         // 애니메이션 재생
@@ -39,7 +48,27 @@ public class DashAttackState : StateBase
     {
         AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animationHash, out _stateInfo);
 
+        if (_hasNearTarget)
+        {
+            Vector3 dir = _targetPos - _core.transform.position;
+            PlayerStateUtil.RotateTowardsDirection(_core.transform, dir, 20f, true);
+        }
+
         _attackRuntime.Process(_attackData, _stateInfo.normalizedTime);
+
+        // 데미지를 입으면 데미지 상태로 전환
+        if (_core.DamageFlag)
+        {
+            _core.FSM.Transition(_core.FSM.DamagedState);
+            return;
+        }
+
+        // 회피 입력이 있으면 회피 상태로 전환
+        if (_core.InputController.DodgeInput)
+        {
+            _core.FSM.Transition(_core.FSM.DodgeState);
+            return;
+        }
 
         if (_stateInfo.normalizedTime >= 0.95f)
         {

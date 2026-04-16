@@ -75,6 +75,12 @@ public class DodgeState : StateBase
             return;
         }
 
+        if (_core.InputController.BasicComboAttackInput)
+        {
+            _core.FSM.Transition(_core.FSM.DashAttackState);
+            return;
+        }
+
         _currentStateTime += Time.deltaTime;
         if(_dodgeVariable.IsPerfectDodge && _core.DodgeCounterDuration <= _currentStateTime)
         {

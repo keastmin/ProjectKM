@@ -27,7 +27,7 @@ public static class PlayerStateUtil
     /// <summary>
     /// 플레이어를 원하는 방향으로 회전시키는 함수
     /// </summary>
-    public static void RotateTowardsDirection(Transform coreTransform, Vector3 facingDirection, float rotationLerpSpeed)
+    public static void RotateTowardsDirection(Transform coreTransform, Vector3 facingDirection, float rotationLerpSpeed, bool isUpdate = false)
     {
         if (coreTransform == null)
         {
@@ -37,10 +37,9 @@ public static class PlayerStateUtil
 
         if (facingDirection.sqrMagnitude > 0.0001f)
         {
-
             Quaternion targetRot = Quaternion.LookRotation(facingDirection, Vector3.up);
-            coreTransform.rotation = Quaternion.Slerp(coreTransform.rotation, targetRot, rotationLerpSpeed * Time.fixedDeltaTime);
-
+            rotationLerpSpeed *= (isUpdate) ? Time.deltaTime : Time.fixedDeltaTime;
+            coreTransform.rotation = Quaternion.Slerp(coreTransform.rotation, targetRot, rotationLerpSpeed);
         }
     }
 

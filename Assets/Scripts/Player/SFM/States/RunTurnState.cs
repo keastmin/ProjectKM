@@ -33,6 +33,20 @@ public class RunTurnState : StateBase
             return;
         }
 
+        // 회피 버튼 입력 시 회피 상태로 전환
+        if(_core.InputController.DodgeInput)
+        {
+            _core.FSM.Transition(_core.FSM.DodgeState);
+            return;
+        }
+
+        // 공격 버튼 입력 시 대쉬 공격으로 전환
+        if(_core.InputController.BasicComboAttackInput)
+        {
+            _core.FSM.Transition(_core.FSM.DashAttackState);
+            return;
+        }
+
         if (isFinishTurn && _core.InputController.MoveInput.sqrMagnitude < 0.01f)
         {
             _core.FSM.Transition(_core.FSM.IdleState);
