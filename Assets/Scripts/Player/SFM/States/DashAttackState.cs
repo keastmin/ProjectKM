@@ -54,7 +54,7 @@ public class DashAttackState : StateBase
             PlayerStateUtil.RotateTowardsDirection(_core.transform, dir, 20f, true);
         }
 
-        _attackRuntime.Process(_attackData, _stateInfo.normalizedTime);
+        _attackRuntime.Process(_attackData, _stateInfo.normalizedTime, _core.CameraShake, _core.StartHitStop);
 
         // 데미지를 입으면 데미지 상태로 전환
         if (_core.DamageFlag)

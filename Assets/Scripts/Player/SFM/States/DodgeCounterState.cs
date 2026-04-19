@@ -43,7 +43,7 @@ public class DodgeCounterState : StateBase
     public override void Tick()
     {
         AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animHash, out _animInfo);
-        _attackRuntime.Process(_attackData, _animInfo.normalizedTime);
+        _attackRuntime.Process(_attackData, _animInfo.normalizedTime, _core.CameraShake, _core.StartHitStop);
 
         if (_animInfo.normalizedTime >= 0.97f)
         {

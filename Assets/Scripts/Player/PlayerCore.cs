@@ -1,6 +1,7 @@
 using NoiRC.SRMove;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -22,12 +23,14 @@ namespace Player
         [SerializeField] private AttackData[] _katanaComboDatas; // 콤보 공격
         [SerializeField] private AttackData _dodgeCounterData; // 회피 반격
         [SerializeField] private AttackData _dashAttackData; // 대쉬 공격
+        [SerializeField] private float _hitStopDuration = 0.03f; // 히트스탑 지속 시간
 
         [Header("모션 워핑 데이터")]
         [SerializeField] private float _basicComboAttackMotionWarpSpeed = 20f;
 
         [Header("카메라")]
         [SerializeField] private Camera _playerCamera;
+        [SerializeField] private CinemachineImpulseSource _cinemachineImpulseSource;
 
         [Header("상태")]
         [SerializeField] private StateVariableContainter _stateVariables;
@@ -52,6 +55,7 @@ namespace Player
         private Animator _animator;
         private readonly HashSet<Component> _activeDodgeTimingSources = new();
         private Coroutine _perfectDodgeTimeScaleCoroutine;
+        private Coroutine _hitStopCoroutine;
 
         // 속도
         private float _targetSpeed;
@@ -105,6 +109,7 @@ namespace Player
             TryGetComponent(out _targetingController);
             TryGetComponent(out _attackEffectController);
             TryGetComponent(out _animator);
+            TryGetComponent(out _cinemachineImpulseSource);
             _fsm = new StateMachine(this);
 
             _dodgeAvailableCount = _maxDodgeAvailableCount;
@@ -279,5 +284,38 @@ namespace Player
 
         // 회피 카운트를 감소시킴
         public void ConsumeDodge() => _dodgeAvailableCount--;
+
+        // 카메라 흔들림 트리거
+        public void CameraShake()
+        {
+            if(_cinemachineImpulseSource != null)
+            {
+                _cinemachineImpulseSource.GenerateImpulse();
+                Debug.Log("카메라 흔들기");
+            }
+            else
+            {
+                Debug.Log("시네머신 임펄스 소스가 없습니다.");
+            }
+        }
+
+        // 히트스탑 트리거
+        public void StartHitStop()
+        {
+            if (_hitStopCoroutine != null)
+                return;
+
+            _hitStopCoroutine = StartCoroutine(HitStop());
+        }
+
+        // 히트스탑 적용
+        private IEnumerator HitStop()
+        {
+            float originalTimeScale = Time.timeScale;
+            Time.timeScale = 0f;
+            yield return new WaitForSecondsRealtime(_hitStopDuration);
+            Time.timeScale = originalTimeScale;
+            _hitStopCoroutine = null;
+        }
     }
 }

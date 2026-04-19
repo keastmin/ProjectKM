@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Player;
 using UnityEngine;
@@ -43,7 +44,7 @@ public sealed class AttackExecutionRuntime
         _damagedTargets.Clear();
     }
 
-    public void Process(AttackData attackData, float normalizedTime)
+    public void Process(AttackData attackData, float normalizedTime, Action cameraShake, Action hitStop)
     {
         if (attackData == null)
         {
@@ -51,7 +52,7 @@ public sealed class AttackExecutionRuntime
         }
 
         AttackTimingProfile timingProfile = attackData.TimingProfile;
-        ProcessHitTimings(attackData, timingProfile, normalizedTime);
+        ProcessHitTimings(attackData, timingProfile, normalizedTime, cameraShake, hitStop);
         ProcessEffectTimings(timingProfile, normalizedTime);
     }
 
@@ -66,7 +67,7 @@ public sealed class AttackExecutionRuntime
         return firstTiming != null ? firstTiming.NormalizedTime : -1f;
     }
 
-    private void ProcessHitTimings(AttackData attackData, AttackTimingProfile timingProfile, float normalizedTime)
+    private void ProcessHitTimings(AttackData attackData, AttackTimingProfile timingProfile, float normalizedTime, Action cameraShake, Action hitStop)
     {
         if (timingProfile == null || timingProfile.AttackTimings == null)
         {
@@ -86,7 +87,8 @@ public sealed class AttackExecutionRuntime
                 continue;
             }
 
-            ApplyHitTiming(attackData, attackTiming);
+            ApplyHitTiming(attackData, attackTiming, hitStop);
+            cameraShake?.Invoke(); // 카메라 흔들기 효과 적용
             _triggeredHitTimings[i] = true;
         }
     }
@@ -116,7 +118,7 @@ public sealed class AttackExecutionRuntime
         }
     }
 
-    private void ApplyHitTiming(AttackData attackData, AttackTimingDefinition attackTiming)
+    private void ApplyHitTiming(AttackData attackData, AttackTimingDefinition attackTiming, Action hitStop)
     {
         if (!_core.HitController.TryGetHitboxes(attackTiming.Id, out BoxCollider[] hitboxes) || hitboxes == null)
         {
@@ -149,6 +151,12 @@ public sealed class AttackExecutionRuntime
                 _core.HitController.HitLayer,
                 QueryTriggerInteraction.Collide);
 
+            // 히트스탑 효과 적용
+            if (hitCount > 0)
+            {
+                hitStop?.Invoke(); 
+            }
+
             for (int j = 0; j < hitCount; j++)
             {
                 Collider hitCollider = _hitResults[j];
@@ -180,11 +188,11 @@ public sealed class AttackExecutionRuntime
             return;
         }
 
-        ParticleSystem effectInstance = Object.Instantiate(
+        ParticleSystem effectInstance = UnityEngine.Object.Instantiate(
             effectData.AttackEffect,
             effectData.EffectSpawnTransform);
 
-        Object.Destroy(effectInstance.gameObject, GetEffectDestroyDelay(effectInstance));
+        UnityEngine.Object.Destroy(effectInstance.gameObject, GetEffectDestroyDelay(effectInstance));
     }
 
     private static float GetEffectDestroyDelay(ParticleSystem effectInstance)

@@ -57,7 +57,7 @@ public class BasicComboAttackState : StateBase
         AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _aniHash, out _stateInfo);
         _aniNormalizedTime = _stateInfo.normalizedTime;
 
-        _attackRuntime.Process(_datas[_index], _aniNormalizedTime);
+        _attackRuntime.Process(_datas[_index], _aniNormalizedTime, _core.CameraShake, _core.StartHitStop);
         MotionWarpTimeEndCheck(_aniNormalizedTime);
 
         if (_core.InputController.DodgeInput && _core.DodgeAvailableCount > 0)
