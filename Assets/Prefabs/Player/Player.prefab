@@ -610,13 +610,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1201040261842596565}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.35401714, w: 0.93523896}
+  m_LocalRotation: {x: 0.049857143, y: 0.018872526, z: -0.26113528, w: 0.96382904}
   m_LocalPosition: {x: 0, y: 1.129, z: -0.22}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3540976463141701855}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -41.466}
+  m_LocalEulerAnglesHint: {x: 6.083, y: 0.596, z: -30.287}
 --- !u!1 &1364162966772653368
 GameObject:
   m_ObjectHideFlags: 0
@@ -2238,11 +2238,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9da0197511766194e9adfd2bc5c8ef5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TargetingController
-  _targetingDistance: 3
+  _targetingDistance: 5
   _targetingLayer:
     serializedVersion: 2
     m_Bits: 128
-  _nearTargetingDistanceDebug: 0
+  _nearTargetingDistanceDebug: 1
   _nearTargetDetectCount: 10
 --- !u!114 &6014087233011396540
 MonoBehaviour:
