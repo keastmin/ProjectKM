@@ -32,11 +32,15 @@ namespace Player
         [Header("상태")]
         [SerializeField] private StateVariableContainter _stateVariables;
 
-        [Header("Perfect Dodge")]
+        [Header("회피")]
         [SerializeField] private float _perfectDodgeSlowTimeScale = 0.15f;
         [SerializeField] private float _perfectDodgeSlowDownDuration = 0.08f;
         [SerializeField] private float _perfectDodgeSlowHoldDuration = 2f;
         [SerializeField] private float _perfectDodgeRecoverDuration = 0.35f;
+        [SerializeField] private int _maxDodgeAvailableCount = 2; // 최대 연속 회피 가능 횟수
+        [SerializeField] private float _dodgeCooldown = 2f; // 회피 쿨타임
+        private int _dodgeAvailableCount; // 현재 남은 연속 회피 가능 횟수
+        private float _currentDodgeCooldownTimer; // 현재 회피 쿨타임 타이머
 
         // 컴포넌트
         private InputController _inputController;
@@ -90,6 +94,7 @@ namespace Player
         public Collider DodgeCounterTarget => _dodgeCounterTarget;
         public bool DamageFlag { get; set; } = false;
         public bool CanReceiveDamage => _fsm?.CanReceiveDamage ?? true;
+        public int DodgeAvailableCount => _dodgeAvailableCount;
 
         private void Awake()
         {
@@ -101,6 +106,9 @@ namespace Player
             TryGetComponent(out _attackEffectController);
             TryGetComponent(out _animator);
             _fsm = new StateMachine(this);
+
+            _dodgeAvailableCount = _maxDodgeAvailableCount;
+            _currentDodgeCooldownTimer = 0f;
         }
 
         private void Start()
@@ -110,6 +118,16 @@ namespace Player
 
         private void Update()
         {
+            if(_dodgeAvailableCount < _maxDodgeAvailableCount)
+            {
+                _currentDodgeCooldownTimer += Time.deltaTime;
+                if(_currentDodgeCooldownTimer >= _dodgeCooldown)
+                {
+                    _dodgeAvailableCount++;
+                    _currentDodgeCooldownTimer = 0f;
+                }
+            }
+
             _fsm.Tick();
         }
 
@@ -258,5 +276,8 @@ namespace Player
                 }
             }
         }
+
+        // 회피 카운트를 감소시킴
+        public void ConsumeDodge() => _dodgeAvailableCount--;
     }
 }

@@ -60,7 +60,7 @@ public class BasicComboAttackState : StateBase
         _attackRuntime.Process(_datas[_index], _aniNormalizedTime);
         MotionWarpTimeEndCheck(_aniNormalizedTime);
 
-        if (_core.InputController.DodgeInput)
+        if (_core.InputController.DodgeInput && _core.DodgeAvailableCount > 0)
         {
             _core.FSM.Transition(_core.FSM.DodgeState);
             return;

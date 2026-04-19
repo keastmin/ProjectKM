@@ -34,7 +34,7 @@ public class RunTurnState : StateBase
         }
 
         // 회피 버튼 입력 시 회피 상태로 전환
-        if(_core.InputController.DodgeInput)
+        if(_core.InputController.DodgeInput && _core.DodgeAvailableCount > 0)
         {
             _core.FSM.Transition(_core.FSM.DodgeState);
             return;

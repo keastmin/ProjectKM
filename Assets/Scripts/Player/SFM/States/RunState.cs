@@ -17,7 +17,7 @@ public class RunState : StateBase
 
     public override void Tick()
     {
-        if (_core.InputController.DodgeInput)
+        if (_core.InputController.DodgeInput && _core.DodgeAvailableCount > 0)
         {
             _core.FSM.Transition(_core.FSM.DodgeState);
             return;

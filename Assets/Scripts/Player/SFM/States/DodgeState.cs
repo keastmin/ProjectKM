@@ -28,6 +28,7 @@ public class DodgeState : StateBase
     public override void Enter()
     {
         Debug.Log("Dodge State");
+        _core.ConsumeDodge(); // 회피 횟수 감소
         _dodgeVariable.IsPerfectDodge = _dodgeVariable.CanPerfectDodge;
 
         // 완벽 회피 트리거

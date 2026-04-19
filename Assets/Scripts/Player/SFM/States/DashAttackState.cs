@@ -64,7 +64,7 @@ public class DashAttackState : StateBase
         }
 
         // 회피 입력이 있으면 회피 상태로 전환
-        if (_core.InputController.DodgeInput)
+        if (_core.InputController.DodgeInput && _core.DodgeAvailableCount > 0)
         {
             _core.FSM.Transition(_core.FSM.DodgeState);
             return;

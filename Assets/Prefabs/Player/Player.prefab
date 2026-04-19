@@ -2174,6 +2174,8 @@ MonoBehaviour:
   _perfectDodgeSlowDownDuration: 0.08
   _perfectDodgeSlowHoldDuration: 1.5
   _perfectDodgeRecoverDuration: 0.35
+  _maxDodgeAvailableCount: 2
+  _dodgeCooldown: 2
 --- !u!114 &5921264619617047054
 MonoBehaviour:
   m_ObjectHideFlags: 0

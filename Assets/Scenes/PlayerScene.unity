@@ -1553,6 +1553,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1790323282932646699, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
+      propertyPath: _playerLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 1790323282932646699, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
       propertyPath: _hurtColliders.Array.size
       value: 1
       objectReference: {fileID: 0}
