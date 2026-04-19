@@ -21,6 +21,9 @@ public class DamagedState : StateBase
         _core.Animator.CrossFade(PlayerAnimationHash.Katana_Damaged_Front, 0.03f, 0, 0f);
         _hasInfo = false;
         _aniDelta = Vector3.zero;
+
+        _core.TargetSpeed = 0f;
+        _core.CurrentSpeed = 0f;
     }
 
     public override void Tick()
