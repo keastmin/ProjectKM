@@ -11,14 +11,14 @@ public class VolumeEffect : MonoBehaviour
     private AnimationCurve _dodgeVignette =
         new AnimationCurve(
             new Keyframe(0f, 0f),
-            new Keyframe(0.5f, 0.25f),
+            new Keyframe(0.5f, 0.3f),
             new Keyframe(1f, 0f)); // 비네팅 intensity용
 
     [SerializeField]
     private AnimationCurve _dodgeColorAdjustments =
         new AnimationCurve(
             new Keyframe(0f, 0f),
-            new Keyframe(0.5f, -20f),
+            new Keyframe(0.5f, -25f),
             new Keyframe(1f, 0f)); // saturation용
 
     private Coroutine _dodgeEffectCoroutine;
