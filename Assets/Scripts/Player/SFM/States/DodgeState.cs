@@ -37,6 +37,7 @@ public class DodgeState : StateBase
             _core.DamageFlag = false;
             _core.TriggerPerfectDodgeTimeScale();
             _core.SetNearDodgeCounterTarget();
+            _core.VolumeEffect.PerfectDodgeEffectOn(_core.DodgeCounterDuration);
         }
         _currentStateTime = 0f;
 

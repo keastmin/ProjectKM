@@ -31,6 +31,7 @@ namespace Player
         [Header("카메라")]
         [SerializeField] private Camera _playerCamera;
         [SerializeField] private CinemachineImpulseSource _cinemachineImpulseSource;
+        [SerializeField] private VolumeEffect _volumeEffect;
 
         [Header("상태")]
         [SerializeField] private StateVariableContainter _stateVariables;
@@ -42,6 +43,12 @@ namespace Player
         [SerializeField] private float _perfectDodgeRecoverDuration = 0.35f;
         [SerializeField] private int _maxDodgeAvailableCount = 2; // 최대 연속 회피 가능 횟수
         [SerializeField] private float _dodgeCooldown = 2f; // 회피 쿨타임
+        [SerializeField]
+        private AnimationCurve _vignetteCurve =
+            new AnimationCurve(
+                new Keyframe(0f, 0f),
+                new Keyframe(0.3f, 0.35f),
+                new Keyframe(1f, 0f)); // 완벽 회피 시 화면을 흑백으로 만드는 효과를 위한 커브
         private int _dodgeAvailableCount; // 현재 남은 연속 회피 가능 횟수
         private float _currentDodgeCooldownTimer; // 현재 회피 쿨타임 타이머
 
@@ -75,6 +82,7 @@ namespace Player
         public TargetingController TargetingController => _targetingController;
         public AttackEffectController AttackEffectController => _attackEffectController;
         public Animator Animator => _animator;
+        public VolumeEffect VolumeEffect => _volumeEffect;
         public float JogSpeed => _jogSpeed;
         public float RunSpeed => _runSpeed;
         public float TargetSpeed
