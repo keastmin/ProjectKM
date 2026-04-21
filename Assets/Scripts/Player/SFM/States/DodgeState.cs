@@ -64,6 +64,8 @@ public class DodgeState : StateBase
 
     public override void Tick()
     {
+        PlayerStateUtil.RotateImmediatelyTowardsDirection(_core.transform, _lookDir);
+
         // 데미지를 입으면 데미지 상태로 전환
         if (_core.DamageFlag && !_dodgeVariable.IsPerfectDodge)
         {
