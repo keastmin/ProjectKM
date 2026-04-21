@@ -11,7 +11,9 @@ public class DashAttackState : StateBase
     private int _animationHash;
     private AnimatorStateInfo _stateInfo;
     private Vector3 _animDeltaPos;
+    private Quaternion _targetRot;
     private bool _hasNearTarget;
+    private bool _isMotionWarp;
     private Vector3 _targetPos;
 
     public DashAttackState(PlayerCore core) : base(core) 
@@ -29,15 +31,18 @@ public class DashAttackState : StateBase
         // 속도 초기화
         _core.TargetSpeed = 0f;
         _core.CurrentSpeed = 0f;
+        _isMotionWarp = false;
 
         // 타겟팅
         _hasNearTarget = (_core.TargetingController.Target != null);
         if (_hasNearTarget)
         {
             _targetPos = _core.TargetingController.GetWarpPos();
+            _isMotionWarp = true;
         }
 
         _attackRuntime.Reset(_attackData != null ? _attackData.TimingProfile : null);
+        SetTargetRotation();
 
         // 애니메이션 재생
         _core.Animator.CrossFade(_animationHash, 0.03f, 0, _comboAttackData.ComboInputStartNormalizedTime);
@@ -47,14 +52,10 @@ public class DashAttackState : StateBase
     public override void Tick()
     {
         AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animationHash, out _stateInfo);
-
-        if (_hasNearTarget)
-        {
-            Vector3 dir = _targetPos - _core.transform.position;
-            PlayerStateUtil.RotateTowardsDirection(_core.transform, dir, 20f, true);
-        }
+        PlayerRotation();
 
         _attackRuntime.Process(_attackData, _stateInfo.normalizedTime, _core.CameraShake, _core.StartHitStop);
+        MotionWarpTimeEndCheck(_stateInfo.normalizedTime);
 
         // 데미지를 입으면 데미지 상태로 전환
         if (_core.DamageFlag)
@@ -86,10 +87,15 @@ public class DashAttackState : StateBase
 
     public override void FixedTick()
     {
-        _animDeltaPos.y = 0f;
-        Vector3 vel = GetBlockedAttackVelocity(_animDeltaPos / Time.fixedDeltaTime);
-        _core.Mover.Move(vel);
-        _animDeltaPos = Vector3.zero;
+        MotionWarpPositionEndCheck();
+        if (_isMotionWarp)
+        {
+            MotionWarp();
+        }
+        else
+        {
+            RootMotionMove();
+        }
     }
 
     public override void AnimationTick()
@@ -100,6 +106,78 @@ public class DashAttackState : StateBase
     public override void Exit()
     {
         _attackRuntime.Clear();
+    }
+
+    private void PlayerRotation()
+    {
+        _core.transform.rotation = Quaternion.Slerp(_core.transform.rotation, _targetRot, 15f * Time.fixedDeltaTime);
+    }
+
+    private void SetTargetRotation()
+    {
+        if (_hasNearTarget)
+        {
+            Vector3 dir = _targetPos - _core.transform.position;
+            dir.y = 0f;
+            if (dir.sqrMagnitude >= 0.0001f)
+            {
+                _targetRot = Quaternion.LookRotation(dir.normalized, Vector3.up);
+                return;
+            }
+        }
+
+        _targetRot = Quaternion.LookRotation(_core.transform.forward, Vector3.up);
+    }
+
+    private void RootMotionMove()
+    {
+        _animDeltaPos.y = 0f;
+        Vector3 vel = GetBlockedAttackVelocity(_animDeltaPos / Time.fixedDeltaTime);
+        _core.Mover.Move(vel);
+        _animDeltaPos = Vector3.zero;
+    }
+
+    private void MotionWarp()
+    {
+        Vector3 dir = _targetPos - _core.transform.position;
+        dir.y = 0f;
+
+        if (dir.sqrMagnitude <= 0.0001f)
+        {
+            _isMotionWarp = false;
+            RootMotionMove();
+            return;
+        }
+
+        float frameSpeed = dir.magnitude / Time.fixedDeltaTime;
+        float warpSpeed = Mathf.Min(_core.BasicComboAttackMotionWarpSpeed, frameSpeed);
+        Vector3 vel = GetBlockedAttackVelocity(dir.normalized * warpSpeed);
+        _core.Mover.Move(vel);
+        _animDeltaPos = Vector3.zero;
+    }
+
+    private void MotionWarpTimeEndCheck(float aniDelta)
+    {
+        float firstHitTiming = AttackExecutionRuntime.GetFirstHitNormalizedTime(_attackData != null ? _attackData.TimingProfile : null);
+        if (firstHitTiming >= 0f && aniDelta >= firstHitTiming)
+        {
+            _isMotionWarp = false;
+        }
+    }
+
+    private void MotionWarpPositionEndCheck()
+    {
+        if (!_isMotionWarp)
+        {
+            return;
+        }
+
+        Vector3 planarDelta = _targetPos - _core.transform.position;
+        planarDelta.y = 0f;
+        if (planarDelta.sqrMagnitude <= 0.01f)
+        {
+            _isMotionWarp = false;
+        }
     }
 
     private Vector3 GetBlockedAttackVelocity(Vector3 velocity)
