@@ -6,13 +6,12 @@ public class BasicComboAttackState : StateBase
     private const float ATTACK_MOVE_STOP_BUFFER = 0.02f;
 
     private readonly AttackExecutionRuntime _attackRuntime;
+    private readonly AdditionalRootmotionRuntime _additionalRootmotionRuntime;
 
     private int _index = -1;
     private AttackData[] _datas;
     private Vector3 _aniMoveDelta;
     private Quaternion _targetRot;
-    private bool _isMotionWarp;
-    private Vector3 _warpPos = Vector3.zero;
     private AnimatorStateInfo _stateInfo;
     private float _aniNormalizedTime;
     private int _aniHash;
@@ -20,24 +19,23 @@ public class BasicComboAttackState : StateBase
     public BasicComboAttackState(PlayerCore core) : base(core)
     {
         _attackRuntime = new AttackExecutionRuntime(core);
+        _additionalRootmotionRuntime = new AdditionalRootmotionRuntime();
     }
 
     public override void Enter()
     {
         InitStateValue();
-        DeterminingMotionWarp();
+        _datas = _core.KatanaComboDatas;
+        _index++;
+        _index %= _datas.Length;
 
         _core.TargetSpeed = 0f;
         _core.CurrentSpeed = 0f;
 
-        _datas = _core.KatanaComboDatas;
-
-        _index++;
-        _index %= _datas.Length;
-
         _aniMoveDelta = Vector3.zero;
         _attackRuntime.Reset(_datas[_index].TimingProfile);
         SetTargetRotation();
+        ConfigureAdditionalRootmotion();
 
         Debug.Log("BasicComboAttackState" + ", Combo: " + (_index + 1));
 
@@ -58,7 +56,6 @@ public class BasicComboAttackState : StateBase
         _aniNormalizedTime = _stateInfo.normalizedTime;
 
         _attackRuntime.Process(_datas[_index], _aniNormalizedTime, _core.CameraShake, _core.StartHitStop);
-        MotionWarpTimeEndCheck(_aniNormalizedTime);
 
         if (_core.InputController.DodgeInput && _core.DodgeAvailableCount > 0)
         {
@@ -100,15 +97,7 @@ public class BasicComboAttackState : StateBase
 
     public override void FixedTick()
     {
-        MotionWarpPositionEndCheck();
-        if (_isMotionWarp)
-        {
-            MotionWarp();
-        }
-        else
-        {
-            RootMotionMove();
-        }
+        RootMotionMove();
     }
 
     public override void AnimationTick()
@@ -121,10 +110,12 @@ public class BasicComboAttackState : StateBase
         _index = -1;
         _aniMoveDelta = Vector3.zero;
         _attackRuntime.Clear();
+        _additionalRootmotionRuntime.Clear();
     }
 
     private void RootMotionMove()
     {
+        _aniMoveDelta += _additionalRootmotionRuntime.ConsumeDelta(_aniNormalizedTime);
         _aniMoveDelta.y = 0f;
         Vector3 vel = GetBlockedAttackVelocity(_aniMoveDelta / Time.fixedDeltaTime);
         _core.Mover.Move(vel);
@@ -147,40 +138,34 @@ public class BasicComboAttackState : StateBase
 
     private void InitStateValue()
     {
-        _isMotionWarp = false;
         _aniNormalizedTime = 0f;
+        _additionalRootmotionRuntime.Clear();
     }
 
-    private void MotionWarp()
+    private void ConfigureAdditionalRootmotion()
     {
-        float frameSpeed = Vector3.Distance(_core.transform.position, _warpPos) / Time.fixedDeltaTime;
-        float warpSpeed = Mathf.Min(_core.BasicComboAttackMotionWarpSpeed, frameSpeed);
-        Vector3 dir = _warpPos - _core.transform.position;
-        Vector3 vel = GetBlockedAttackVelocity(dir.normalized * warpSpeed);
-        _core.Mover.Move(vel);
-    }
-
-    private void DeterminingMotionWarp()
-    {
-        if (_core.TargetingController.Target != null)
-        {
-            _isMotionWarp = true;
-            _warpPos = _core.TargetingController.GetWarpPos();
-        }
+        AttackData currentAttackData = _datas != null && _index >= 0 && _index < _datas.Length ? _datas[_index] : null;
+        _additionalRootmotionRuntime.Reset(currentAttackData != null ? currentAttackData.AdditionalRootmotion : null, _targetRot);
     }
 
     private void SetTargetRotation()
     {
-        if (_isMotionWarp)
-        {
-            Vector3 dir = _warpPos - _core.transform.position;
-            _targetRot = Quaternion.LookRotation(dir, Vector3.up);
-            return;
-        }
+        Vector3 lookDir = _core.transform.forward;
 
-        if (_core.InputController.MoveInput.sqrMagnitude > 0.01f)
+        if(_core.TargetingController.Target != null)
         {
-            Vector3 lookDir = GetLookDirectionFromCamera();
+            Vector3 targetPos = _core.TargetingController.Target.transform.position; targetPos.y = 0f;
+            Vector3 playerPos = _core.transform.position; playerPos.y = 0f;
+            lookDir = targetPos - playerPos;
+            if(lookDir.sqrMagnitude >= 0.001f)
+            {
+                _targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
+                return;
+            }
+        }
+        else if (_core.InputController.MoveInput.sqrMagnitude > 0.01f)
+        {
+            lookDir = GetLookDirectionFromCamera();
             if (lookDir.sqrMagnitude >= 0.001f)
             {
                 _targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
@@ -188,24 +173,7 @@ public class BasicComboAttackState : StateBase
             }
         }
 
-        _targetRot = Quaternion.LookRotation(_core.transform.forward, Vector3.up);
-    }
-
-    private void MotionWarpTimeEndCheck(float aniDelta)
-    {
-        float firstHitTiming = AttackExecutionRuntime.GetFirstHitNormalizedTime(_datas[_index].TimingProfile);
-        if (firstHitTiming >= 0f && aniDelta >= firstHitTiming)
-        {
-            _isMotionWarp = false;
-        }
-    }
-
-    private void MotionWarpPositionEndCheck()
-    {
-        if (Vector3.Distance(_core.transform.position, _warpPos) <= 0.1f)
-        {
-            _isMotionWarp = false;
-        }
+        _targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
     }
 
     private Vector3 GetBlockedAttackVelocity(Vector3 velocity)

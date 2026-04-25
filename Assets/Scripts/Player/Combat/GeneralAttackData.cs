@@ -11,11 +11,14 @@ public class GeneralAttackData : AttackData
     [SerializeField] private float _damage = 10f;
     [FormerlySerializedAs("_timing")]
     [SerializeField] private AttackTimingProfile _timingProfile;
+    [FormerlySerializedAs("MotionWarp")]
+    [SerializeField] private AdditionalRootmotion _additionalRootmotion;
 
     public override string Id => _id;
     public override string AnimationName => _animationName;
     public override float Damage => _damage;
     public override AttackTimingProfile TimingProfile => _timingProfile;
+    public override AdditionalRootmotion AdditionalRootmotion => _additionalRootmotion;
 
     private void OnValidate()
     {

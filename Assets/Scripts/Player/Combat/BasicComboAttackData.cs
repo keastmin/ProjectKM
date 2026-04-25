@@ -11,11 +11,14 @@ public class BasicComboAttackData : AttackData
     [SerializeField] private float _damage = 10f;
     [FormerlySerializedAs("Timing")]
     [SerializeField] private AttackTimingProfile _timing;
+    [FormerlySerializedAs("MotionWarp")]
+    [SerializeField] private AdditionalRootmotion _additionalRootmotion;
 
     public override string Id => _id;
     public override string AnimationName => _animationName;
     public override float Damage => _damage;
     public override AttackTimingProfile TimingProfile => _timing;
+    public override AdditionalRootmotion AdditionalRootmotion => _additionalRootmotion;
 
     private void OnValidate()
     {

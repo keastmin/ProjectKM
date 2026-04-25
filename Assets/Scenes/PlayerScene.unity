@@ -1838,15 +1838,15 @@ PrefabInstance:
       objectReference: {fileID: 2084274438}
     - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Height
-      value: 1.4300001
+      value: 1.3100001
       objectReference: {fileID: 0}
     - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Radius
-      value: 0.5
+      value: 0.56
       objectReference: {fileID: 0}
     - target: {fileID: 2470472834754288877, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Center.y
-      value: 1.155
+      value: 1.165
       objectReference: {fileID: 0}
     - target: {fileID: 2569010458721148673, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2167,6 +2167,10 @@ PrefabInstance:
     - target: {fileID: 5386585554034666716, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0.00029671378
+      objectReference: {fileID: 0}
+    - target: {fileID: 5624757362877652811, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: _targetingDistance
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5741145045100071264, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_LocalRotation.w

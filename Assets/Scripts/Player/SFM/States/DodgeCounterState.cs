@@ -6,6 +6,7 @@ public class DodgeCounterState : StateBase
     private const float ATTACK_MOVE_STOP_BUFFER = 0.02f;
 
     private readonly AttackExecutionRuntime _attackRuntime;
+    private readonly AdditionalRootmotionRuntime _additionalRootmotionRuntime;
 
     private AnimatorStateInfo _animInfo;
     private Vector3 _animDeltaPos;
@@ -15,6 +16,7 @@ public class DodgeCounterState : StateBase
     public DodgeCounterState(PlayerCore core) : base(core)
     {
         _attackRuntime = new AttackExecutionRuntime(core);
+        _additionalRootmotionRuntime = new AdditionalRootmotionRuntime();
     }
 
     public override bool CanReceiveDamage => false;
@@ -37,6 +39,8 @@ public class DodgeCounterState : StateBase
             PlayerStateUtil.RotateImmediatelyTowardsDirection(_core.transform, (enemyHurtColPos - _core.transform.position).normalized);
         }
 
+        _additionalRootmotionRuntime.Reset(_attackData != null ? _attackData.AdditionalRootmotion : null, _core.transform.rotation);
+
         _core.StopPerfectDodgeTimeScaleImmediate();
     }
 
@@ -54,6 +58,7 @@ public class DodgeCounterState : StateBase
 
     public override void FixedTick()
     {
+        _animDeltaPos += _additionalRootmotionRuntime.ConsumeDelta(_animInfo.normalizedTime);
         _animDeltaPos.y = 0;
         Vector3 vel = GetBlockedAttackVelocity(_animDeltaPos / Time.fixedDeltaTime);
         _core.Mover.Move(vel);
@@ -69,6 +74,7 @@ public class DodgeCounterState : StateBase
     {
         _attackRuntime.Clear();
         _attackData = null;
+        _additionalRootmotionRuntime.Clear();
     }
 
     private static int ResolveAnimationHash(AttackData attackData)

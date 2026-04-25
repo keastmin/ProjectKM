@@ -6,6 +6,7 @@ public class DashAttackState : StateBase
     private const float ATTACK_MOVE_STOP_BUFFER = 0.02f;
 
     private readonly AttackExecutionRuntime _attackRuntime;
+    private readonly AdditionalRootmotionRuntime _additionalRootmotionRuntime;
     private AttackData _attackData;
     private ComboAttackData _comboAttackData;
     private int _animationHash;
@@ -22,6 +23,7 @@ public class DashAttackState : StateBase
         _comboAttackData = _attackData.TimingProfile as ComboAttackData;
         _animationHash = PlayerAnimationHash.Katana_Dash_Attack;
         _attackRuntime = new AttackExecutionRuntime(core);
+        _additionalRootmotionRuntime = new AdditionalRootmotionRuntime();
     }
 
     public override void Enter()
@@ -34,7 +36,7 @@ public class DashAttackState : StateBase
         _isMotionWarp = false;
 
         // 타겟팅
-        _hasNearTarget = (_core.TargetingController.Target != null);
+        _hasNearTarget = (_core.TargetingController.Target != null) && (_attackData == null || _attackData.AdditionalRootmotion == null);
         if (_hasNearTarget)
         {
             _targetPos = _core.TargetingController.GetWarpPos();
@@ -43,6 +45,7 @@ public class DashAttackState : StateBase
 
         _attackRuntime.Reset(_attackData != null ? _attackData.TimingProfile : null);
         SetTargetRotation();
+        _additionalRootmotionRuntime.Reset(_attackData != null ? _attackData.AdditionalRootmotion : null, _targetRot);
 
         // 애니메이션 재생
         _core.Animator.CrossFade(_animationHash, 0.03f, 0, _comboAttackData.ComboInputStartNormalizedTime);
@@ -90,6 +93,7 @@ public class DashAttackState : StateBase
         MotionWarpPositionEndCheck();
         if (_isMotionWarp)
         {
+            _additionalRootmotionRuntime.Sync(_stateInfo.normalizedTime);
             MotionWarp();
         }
         else
@@ -106,6 +110,7 @@ public class DashAttackState : StateBase
     public override void Exit()
     {
         _attackRuntime.Clear();
+        _additionalRootmotionRuntime.Clear();
     }
 
     private void PlayerRotation()
@@ -131,6 +136,7 @@ public class DashAttackState : StateBase
 
     private void RootMotionMove()
     {
+        _animDeltaPos += _additionalRootmotionRuntime.ConsumeDelta(_stateInfo.normalizedTime);
         _animDeltaPos.y = 0f;
         Vector3 vel = GetBlockedAttackVelocity(_animDeltaPos / Time.fixedDeltaTime);
         _core.Mover.Move(vel);

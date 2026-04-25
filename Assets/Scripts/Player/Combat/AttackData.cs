@@ -6,4 +6,5 @@ public abstract class AttackData : ScriptableObject
     public abstract string AnimationName { get; }
     public abstract float Damage { get; }
     public abstract AttackTimingProfile TimingProfile { get; }
+    public abstract AdditionalRootmotion AdditionalRootmotion { get; }
 }
