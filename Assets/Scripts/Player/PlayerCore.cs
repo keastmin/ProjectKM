@@ -106,7 +106,18 @@ namespace Player
         public Collider DodgeCounterTarget => _dodgeCounterTarget;
         public bool DamageFlag { get; set; } = false;
         public bool CanReceiveDamage => _fsm?.CanReceiveDamage ?? true;
-        public int DodgeAvailableCount => _dodgeAvailableCount;
+        public int DodgeAvailableCount
+        {
+            get
+            {
+                return _dodgeAvailableCount;
+            }
+            private set
+            {
+                _dodgeAvailableCount = value;
+                _currentDodgeCooldownTimer = 0f;
+            }
+        }
 
         private void Awake()
         {
@@ -131,13 +142,12 @@ namespace Player
 
         private void Update()
         {
-            if(_dodgeAvailableCount < _maxDodgeAvailableCount)
+            if(_currentDodgeCooldownTimer < _dodgeCooldown)
             {
                 _currentDodgeCooldownTimer += Time.deltaTime;
                 if(_currentDodgeCooldownTimer >= _dodgeCooldown)
                 {
-                    _dodgeAvailableCount++;
-                    _currentDodgeCooldownTimer = 0f;
+                    _dodgeAvailableCount = _maxDodgeAvailableCount;
                 }
             }
 
@@ -291,7 +301,7 @@ namespace Player
         }
 
         // 회피 카운트를 감소시킴
-        public void ConsumeDodge() => _dodgeAvailableCount--;
+        public void ConsumeDodge() => DodgeAvailableCount--;
 
         // 카메라 흔들림 트리거
         public void CameraShake()
