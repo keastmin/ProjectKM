@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81c46db9a7c881d46b1f7fa5ca72c908, type: 3}
+  m_Name: Katana Basic Attack1 Additional
+  m_EditorClassIdentifier: Assembly-CSharp::AdditionalRootmotion
+  TargetDeltaPosition: {x: 0, y: 0, z: 1.8}
+  TargetStartNormalTime: 0.1
+  TargetEndNormalTime: 0.2
+  AdditionalCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.0000008374918
+      value: 1.0000134
+      inSlope: -0.00025102223
+      outSlope: -0.00025102223
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.05081376
+    - serializedVersion: 3
+      time: 1.0000213
+      value: 0.0000008046627
+      inSlope: -1.7282885
+      outSlope: -1.7282885
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.042705722
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
