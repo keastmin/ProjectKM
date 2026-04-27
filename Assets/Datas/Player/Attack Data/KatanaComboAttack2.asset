@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BasicComboAttackData
   _id: 
   _animationName: Katana_Basic_Combo_2
-  _damage: 10
+  _damageMagnification: 1.2
   _timing: {fileID: 11400000, guid: 7f930ca62ce2e4f4da3e61e2bf7be2ee, type: 2}
   _additionalRootmotion: {fileID: 11400000, guid: 2fc711731ee1b6149908a628cc346b5d, type: 2}

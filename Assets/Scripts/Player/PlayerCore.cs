@@ -1,4 +1,5 @@
 using NoiRC.SRMove;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Cinemachine;
@@ -15,6 +16,11 @@ namespace Player
     [RequireComponent(typeof(Animator))]
     public class PlayerCore : MonoBehaviour, IDamageable, IDodgeTimingReceiver
     {
+        [Header("스탯")]
+        [SerializeField] private float _maxHealth = 100f;
+        [SerializeField] private float _attackPower = 10f;
+        [SerializeField] private float _defensePower = 5f;
+
         [Header("움직임")]
         [SerializeField] private float _jogSpeed = 5f;
         [SerializeField] private float _runSpeed = 8f;
@@ -74,6 +80,11 @@ namespace Player
         // 타겟
         private Collider _dodgeCounterTarget;
 
+        // 스탯
+        private float _hp;
+
+        public event Action<float, float> HealthChanged;
+
         public StateMachine FSM => _fsm;
         public InputController InputController => _inputController;
         //public CharacterMover CharacterMover => _characterMover;
@@ -118,6 +129,10 @@ namespace Player
                 _currentDodgeCooldownTimer = 0f;
             }
         }
+        public float HP => _hp;
+        public float MaxHealth => _maxHealth;
+        public float AttackPower => _attackPower;
+        public float DefensePower => _defensePower;
 
         private void Awake()
         {
@@ -130,9 +145,11 @@ namespace Player
             TryGetComponent(out _animator);
             TryGetComponent(out _cinemachineImpulseSource);
             _fsm = new StateMachine(this);
+            _hp = Mathf.Max(0f, _maxHealth);
 
             _dodgeAvailableCount = _maxDodgeAvailableCount;
             _currentDodgeCooldownTimer = 0f;
+            HealthChanged?.Invoke(_hp, _maxHealth);
         }
 
         private void Start()
@@ -185,6 +202,9 @@ namespace Player
             }
 
             DamageFlag = true;
+            _hp -= Mathf.Max(0f, damage - DefensePower);
+            _hp = Mathf.Max(0f, _hp);
+            HealthChanged?.Invoke(_hp, _maxHealth);
         }
 
         public void SetDodgeTimingActive(Component source, bool isActive)

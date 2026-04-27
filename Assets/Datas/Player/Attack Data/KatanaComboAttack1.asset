@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 607fad42e4f2aa74f85b45ee18a7716d, type: 3}
   m_Name: KatanaComboAttack1
   m_EditorClassIdentifier: Assembly-CSharp::BasicComboAttackData
-  AnimationName: Katana_Basic_Combo_1
-  MotionWarp: {fileID: 11400000, guid: 2fc711731ee1b6149908a628cc346b5d, type: 2}
-  Timing: {fileID: 11400000, guid: dbdf6e2476c298f419b1210431fde354, type: 2}
+  _id: 
+  _animationName: Katana_Basic_Combo_1
+  _damageMagnification: 1
+  _timing: {fileID: 11400000, guid: dbdf6e2476c298f419b1210431fde354, type: 2}
+  _additionalRootmotion: {fileID: 11400000, guid: 2fc711731ee1b6149908a628cc346b5d, type: 2}

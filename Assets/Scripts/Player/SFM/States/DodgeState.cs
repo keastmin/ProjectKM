@@ -34,7 +34,12 @@ public class DodgeState : StateBase
         // 완벽 회피 트리거
         if (_dodgeVariable.IsPerfectDodge)
         {
-            _core.DamageFlag = false;
+            if (_core.DamageFlag)
+            {
+                _core.DamageFlag = false;
+                // 잃은 HP 복원
+
+            }
             _core.TriggerPerfectDodgeTimeScale();
             _core.SetNearDodgeCounterTarget();
             _core.VolumeEffect.PerfectDodgeEffectOn(_core.DodgeCounterDuration);

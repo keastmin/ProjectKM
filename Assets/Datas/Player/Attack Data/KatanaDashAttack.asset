@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GeneralAttackData
   _id: 
   _animationName: Katana_Dash_Attack
-  _damage: 10
+  _damageMagnification: 1.21
   _timingProfile: {fileID: 11400000, guid: 0d3af5a0dca813d4eab05a9918ec6b0b, type: 2}
+  _additionalRootmotion: {fileID: 0}

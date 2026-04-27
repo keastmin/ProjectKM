@@ -8,7 +8,7 @@ public class GeneralAttackData : AttackData
     [FormerlySerializedAs("AnimationName")]
     [SerializeField] private string _animationName;
     [FormerlySerializedAs("Damage")]
-    [SerializeField] private float _damage = 10f;
+    [SerializeField] private float _damageMagnification = 10f;
     [FormerlySerializedAs("_timing")]
     [SerializeField] private AttackTimingProfile _timingProfile;
     [FormerlySerializedAs("MotionWarp")]
@@ -16,7 +16,7 @@ public class GeneralAttackData : AttackData
 
     public override string Id => _id;
     public override string AnimationName => _animationName;
-    public override float Damage => _damage;
+    public override float DamageMagnification => _damageMagnification;
     public override AttackTimingProfile TimingProfile => _timingProfile;
     public override AdditionalRootmotion AdditionalRootmotion => _additionalRootmotion;
 
@@ -24,6 +24,6 @@ public class GeneralAttackData : AttackData
     {
         _id = _id ?? string.Empty;
         _animationName = _animationName ?? string.Empty;
-        _damage = Mathf.Max(0f, _damage);
+        _damageMagnification = Mathf.Max(0f, _damageMagnification);
     }
 }

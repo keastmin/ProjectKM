@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BasicComboAttackData
   _id: 
   _animationName: Katana_Dodge_Counter
-  _damage: 10
+  _damageMagnification: 1.7
   _timing: {fileID: 11400000, guid: 2c586ffadd67e9044a42f4788c9bdca8, type: 2}
+  _additionalRootmotion: {fileID: 0}

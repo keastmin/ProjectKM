@@ -171,7 +171,7 @@ public sealed class AttackExecutionRuntime
                     continue;
                 }
 
-                damageable.TakeDamage(attackData.Damage);
+                damageable.TakeDamage(_core.AttackPower * attackData.DamageMagnification);
             }
         }
     }

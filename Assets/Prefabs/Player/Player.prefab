@@ -2152,6 +2152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f12bf26599bf885489f9847b69cd3e18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCore
+  _maxHealth: 100
+  _attackPower: 10
+  _defensePower: 5
   _jogSpeed: 5
   _runSpeed: 8
   _katanaComboDatas:
