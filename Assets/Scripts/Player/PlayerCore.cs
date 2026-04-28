@@ -66,6 +66,7 @@ namespace Player
         private TargetingController _targetingController;
         private AttackEffectController _attackEffectController;
         private Animator _animator;
+        private MeshTrailEffectController _trailEffector;
         private readonly HashSet<Component> _activeDodgeTimingSources = new();
         private Coroutine _perfectDodgeTimeScaleCoroutine;
         private Coroutine _hitStopCoroutine;
@@ -95,6 +96,7 @@ namespace Player
         public AttackEffectController AttackEffectController => _attackEffectController;
         public Animator Animator => _animator;
         public VolumeEffect VolumeEffect => _volumeEffect;
+        public MeshTrailEffectController TrailEffector => _trailEffector;
         public float JogSpeed => _jogSpeed;
         public float RunSpeed => _runSpeed;
         public float TargetSpeed
@@ -156,6 +158,7 @@ namespace Player
             TryGetComponent(out _attackEffectController);
             TryGetComponent(out _animator);
             TryGetComponent(out _cinemachineImpulseSource);
+            TryGetComponent(out _trailEffector);
             _fsm = new StateMachine(this);
             _hp = Mathf.Max(0f, _maxHealth);
 

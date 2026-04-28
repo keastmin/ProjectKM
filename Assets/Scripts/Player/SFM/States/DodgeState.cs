@@ -42,6 +42,7 @@ public class DodgeState : StateBase
             }
             _core.TriggerPerfectDodgeTimeScale();
             _core.SetNearDodgeCounterTarget();
+            _core.TrailEffector.PerfactDodgeMeshTrailEffectOn(_core.DodgeCounterDuration);
             _core.VolumeEffect.PerfectDodgeEffectOn(_core.DodgeCounterDuration);
         }
         _currentStateTime = 0f;
@@ -57,7 +58,7 @@ public class DodgeState : StateBase
         _animHash = (_isFront) ? PlayerAnimationHash.Katana_Dodge_Front : PlayerAnimationHash.Katana_Dodge_Back;
         
         // 애니메이션 재생
-        _core.Animator.CrossFade(_animHash, 0.03f, 0, 0f);
+        _core.Animator.CrossFade(_animHash, 0f, 0, 0f);
 
         // 정면 회피 변수 초기화
         _frontDodgeCurrentTime = 0f;
