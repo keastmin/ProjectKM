@@ -21,6 +21,7 @@ public static class PlayerAnimationHash
     private const string KATANA_DODGE_BACK = "Katana_Dodge_Back";
     private const string KATANA_DODGE_COUNTER = "Katana_Dodge_Counter";
     private const string KATANA_DASH_ATTACK = "Katana_Dash_Attack";
+    private const string KATANA_DIE = "Katana_Die";
 
     // 전체 경로 문자열
     private const string FULL_NO_WEAPON_IDLE = LAYER + NO_WEAPON_IDLE;
@@ -39,6 +40,7 @@ public static class PlayerAnimationHash
     private const string FULL_KATANA_DODGE_BACKT = LAYER + KATANA_DODGE_BACK;
     private const string FULL_KATANA_DODGE_COUNTER = LAYER + KATANA_DODGE_COUNTER;
     private const string FULL_KATANA_DASH_ATTACK = LAYER + KATANA_DASH_ATTACK;
+    private const string FULL_KATANA_DIE = LAYER + KATANA_DIE;
 
     // 해시
     public static readonly int No_Weapon_Idle = Animator.StringToHash(FULL_NO_WEAPON_IDLE);
@@ -57,6 +59,7 @@ public static class PlayerAnimationHash
     public static readonly int Katana_Dodge_Back = Animator.StringToHash(FULL_KATANA_DODGE_BACKT);
     public static readonly int Katana_Dodge_Counter = Animator.StringToHash(FULL_KATANA_DODGE_COUNTER);
     public static readonly int Katana_Dash_Attack = Animator.StringToHash(FULL_KATANA_DASH_ATTACK);
+    public static readonly int Katana_Die = Animator.StringToHash(FULL_KATANA_DIE);
 
     // 이름 -> 해시
     public static readonly Dictionary<string, int> NameToHash = new()
@@ -76,7 +79,8 @@ public static class PlayerAnimationHash
         { KATANA_DODGE_FRONT, Katana_Dodge_Front },
         { KATANA_DODGE_BACK, Katana_Dodge_Back },
         { KATANA_DODGE_COUNTER, Katana_Dodge_Counter },
-        { KATANA_DASH_ATTACK, Katana_Dash_Attack }
+        { KATANA_DASH_ATTACK, Katana_Dash_Attack },
+        { KATANA_DIE, Katana_Die }
     };
 
     public static bool TryGetHash(string name, out int hash)

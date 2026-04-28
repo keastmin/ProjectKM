@@ -13,6 +13,7 @@ public class StateMachine
     public DodgeState DodgeState;
     public DodgeCounterState DodgeCounterState;
     public DashAttackState DashAttackState;
+    public DeathState DeathState;
 
     private StateBase _currentState;
     private StateBase _prevState;
@@ -31,6 +32,7 @@ public class StateMachine
         DodgeState = new DodgeState(core);
         DodgeCounterState = new DodgeCounterState(core);
         DashAttackState = new DashAttackState(core);
+        DeathState = new DeathState(core);
     }
 
     public void InitStateMachine(StateBase initState)

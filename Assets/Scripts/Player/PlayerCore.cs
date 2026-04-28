@@ -82,6 +82,7 @@ namespace Player
 
         // 스탯
         private float _hp;
+        private bool _isDead = false;
 
         public event Action<float, float> HealthChanged;
 
@@ -133,6 +134,17 @@ namespace Player
         public float MaxHealth => _maxHealth;
         public float AttackPower => _attackPower;
         public float DefensePower => _defensePower;
+        public bool IsDead
+        {
+            get
+            {
+                return _isDead;
+            }
+            set
+            {
+                _isDead = value;
+            }
+        }
 
         private void Awake()
         {
@@ -149,6 +161,7 @@ namespace Player
 
             _dodgeAvailableCount = _maxDodgeAvailableCount;
             _currentDodgeCooldownTimer = 0f;
+            _isDead = false;
             HealthChanged?.Invoke(_hp, _maxHealth);
         }
 
@@ -159,6 +172,12 @@ namespace Player
 
         private void Update()
         {
+            if(HP <= 0f && !IsDead)
+            {
+                FSM.Transition(FSM.DeathState);
+                return;
+            }
+
             if(_currentDodgeCooldownTimer < _dodgeCooldown)
             {
                 _currentDodgeCooldownTimer += Time.deltaTime;
@@ -203,8 +222,20 @@ namespace Player
 
             DamageFlag = true;
             _hp -= Mathf.Max(0f, damage - DefensePower);
-            _hp = Mathf.Max(0f, _hp);
-            HealthChanged?.Invoke(_hp, _maxHealth);
+            _hp = Mathf.Max(0f, HP);
+            HealthChangeHandle(HP);
+        }
+
+        public void Heal(float amount)
+        {
+            _hp += amount;
+            _hp = Mathf.Min(MaxHealth, HP);
+            HealthChangeHandle(HP);
+        }
+
+        public void HealthChangeHandle(float hp)
+        {
+            HealthChanged?.Invoke(hp, MaxHealth);
         }
 
         public void SetDodgeTimingActive(Component source, bool isActive)

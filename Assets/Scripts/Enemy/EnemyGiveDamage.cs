@@ -32,7 +32,7 @@ public class EnemyGiveDamage : MonoBehaviour
         if(damageTarget != null && !_damageTarget.Contains(damageTarget))
         {
             Debug.Log("데미지 줌: " + other.name);
-            damageTarget.TakeDamage(10f);
+            damageTarget.TakeDamage(30f);
             _damageTarget.Add(damageTarget);
         }
     }
