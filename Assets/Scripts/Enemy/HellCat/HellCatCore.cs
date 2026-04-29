@@ -1,7 +1,10 @@
 using UnityEngine;
 using Player;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CapsuleCollider))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class HellCatCore : EnemyCore
 {
     [SerializeField] private float _basicAttackCoolDown = 4f;
@@ -27,12 +30,15 @@ public class HellCatCore : EnemyCore
     [SerializeField] private EnemyStateData _rightWalkStateData;
     [SerializeField] private EnemyStateData _forwardWalkStateData;
     [SerializeField] private EnemyStateData _backwardWalkStateData;
+    [SerializeField] private EnemyStateData _chaseStateData;
     [SerializeField] private EnemyStateData _damagedStateData;
 
     private Collider[] _detectedColliders;
+    private Collider _playerCollider;
 
     private Animator _animator;
     private Rigidbody _rigidbody;
+    private NavMeshAgent _agent;
 
     private HellCatFSM _fsm;
     public HellCatFSM FSM => _fsm;
@@ -46,12 +52,14 @@ public class HellCatCore : EnemyCore
     public float StrafeDirectionChangeInterval => _strafeDirectionChangeInterval;
     public float PreAttackStrafeTime => _preAttackStrafeTime;
     public float AttackFacingAngle => _attackFacingAngle;
+    public Collider PlayerCollider => _playerCollider;
 
     public EnemyStateData IdleStateData => _idleStateData;
     public EnemyStateData LeftWalkStateData => _leftWalkStateData;
     public EnemyStateData RightWalkStateData => _rightWalkStateData;
     public EnemyStateData ForwardWalkStateData => _forwardWalkStateData;
     public EnemyStateData BackwardWalkStateData => _backwardWalkStateData;
+    public EnemyStateData ChaseStateData => _chaseStateData;
     public EnemyStateData DamagedStateData => _damagedStateData;
 
     // cool down
@@ -60,12 +68,14 @@ public class HellCatCore : EnemyCore
     public bool IsBasicAttackEnable => (CurrentBasicAttackCoolTime >= _basicAttackCoolDown);
     public Animator Animator => _animator;
     public Rigidbody Rigidbody => _rigidbody;
+    public NavMeshAgent Agent => _agent;
 
     protected override void Awake()
     {
         base.Awake();
         _animator = GetComponentInChildren<Animator>();
         TryGetComponent(out _rigidbody);
+        TryGetComponent(out _agent);
 
         _fsm = new HellCatFSM(this);
         _detectedColliders = new Collider[3];
@@ -85,10 +95,9 @@ public class HellCatCore : EnemyCore
         //{
         //    CurrentBasicAttackCoolTime += Time.deltaTime;
         //}
-        if (CurrentBasicAttackCoolTime < _basicAttackCoolDown)
-        {
-            CurrentBasicAttackCoolTime += Time.deltaTime;
-        }
+
+        // 플레이어 감지
+        DetectPlayer();
 
         _fsm.Tick();
     }
@@ -109,45 +118,11 @@ public class HellCatCore : EnemyCore
         _fsm.AnimationTick();
     }
 
-    public bool IsPlayerInDetectRange(out Collider playerCollider)
+    private void DetectPlayer()
     {
-        playerCollider = null;
-        int detectedCount = _playerLayer.value != 0
-            ? Physics.OverlapSphereNonAlloc(transform.position, _detectRadius, _detectedColliders, _playerLayer)
-            : Physics.OverlapSphereNonAlloc(transform.position, _detectRadius, _detectedColliders);
-
-        for (int i = 0; i < detectedCount; i++)
-        {
-            Collider detectedCollider = _detectedColliders[i];
-
-            if (detectedCollider == null)
-            {
-                continue;
-            }
-
-            if (_playerLayer.value == 0 &&
-                !detectedCollider.CompareTag("Player") &&
-                detectedCollider.GetComponentInParent<PlayerCore>() == null)
-            {
-                continue;
-            }
-
-            playerCollider = detectedCollider;
-            return true;
-        }
-
-        if (_playerLayer.value == 0)
-        {
-            PlayerCore player = FindFirstObjectByType<PlayerCore>();
-
-            if (player != null &&
-                (player.transform.position - transform.position).sqrMagnitude <= _detectRadius * _detectRadius)
-            {
-                playerCollider = player.GetComponentInChildren<Collider>();
-                return playerCollider != null;
-            }
-        }
-
-        return false;
+        _playerCollider = null;
+        int detectedCount = Physics.OverlapSphereNonAlloc(transform.position, _detectRadius, _detectedColliders, _playerLayer);
+        if (detectedCount > 0)
+            _playerCollider = _detectedColliders[0];
     }
 }

@@ -1,19 +1,23 @@
 using UnityEngine;
 
-public class HellCatIdleState : IState
+public class HellCatChaseState : IState
 {
     private HellCatCore _core;
 
+    private EnemyStateData _stateData;
     private int _animHash;
 
-    public HellCatIdleState(HellCatCore core)
+    public HellCatChaseState(HellCatCore core)
     {
         _core = core;
-        _animHash = Animator.StringToHash("Base Layer." + core.IdleStateData.AnimationName);
+        _stateData = core.ChaseStateData;
+        _animHash = Animator.StringToHash("Base Layer." + _stateData.AnimationName);
     }
 
     public void Enter()
     {
+        _core.Agent.isStopped = false;
+
         _core.Animator.CrossFade(_animHash, 0.08f, 0, 0f);
     }
 
@@ -25,17 +29,7 @@ public class HellCatIdleState : IState
             return;
         }
 
-        if(_core.PlayerCollider != null)
-        {
-            _core.FSM.Transition(_core.FSM.ChaseState);
-            return;
-        }
-
-        //if (_core.IsBasicAttackEnable)
-        //{
-        //    _core.FSM.Transition(_core.FSM.BasicAttackState);
-        //    return;
-        //}
+        _core.Agent.SetDestination(_core.PlayerCollider.transform.position);
     }
 
     public void FixedTick()
@@ -50,11 +44,11 @@ public class HellCatIdleState : IState
 
     public void AnimationTick()
     {
-        
+
     }
 
     public void Exit()
     {
-        
+        _core.Agent.isStopped = true;
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 public class HellCatFSM
 {
     public HellCatIdleState IdleState;
-    public HellCatMoveState MoveState;
+    public HellCatChaseState ChaseState;
     public HellCatDamagedState DamagedState;
     public HellCatBasicAttackState BasicAttackState;
 
@@ -12,7 +12,7 @@ public class HellCatFSM
     public HellCatFSM(HellCatCore core)
     {
         IdleState = new HellCatIdleState(core);
-        MoveState = new HellCatMoveState(core);
+        ChaseState = new HellCatChaseState(core);
         DamagedState = new HellCatDamagedState(core);
         BasicAttackState = new HellCatBasicAttackState(core);
     }
