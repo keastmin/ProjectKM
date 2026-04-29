@@ -4,6 +4,7 @@ public class HellCatFSM
 {
     public HellCatIdleState IdleState;
     public HellCatChaseState ChaseState;
+    public HellCatStrafeState StrafeState;
     public HellCatDamagedState DamagedState;
     public HellCatBasicAttackState BasicAttackState;
 
@@ -13,6 +14,7 @@ public class HellCatFSM
     {
         IdleState = new HellCatIdleState(core);
         ChaseState = new HellCatChaseState(core);
+        StrafeState = new HellCatStrafeState(core);
         DamagedState = new HellCatDamagedState(core);
         BasicAttackState = new HellCatBasicAttackState(core);
     }

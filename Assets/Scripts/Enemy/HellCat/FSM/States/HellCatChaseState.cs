@@ -16,7 +16,10 @@ public class HellCatChaseState : IState
 
     public void Enter()
     {
+        _core.Agent.enabled = true;
         _core.Agent.isStopped = false;
+        _core.Agent.speed = _core.ChaseSpeed;
+        _core.Agent.stoppingDistance = _core.ChaseEndDistance;
 
         _core.Animator.CrossFade(_animHash, 0.08f, 0, 0f);
     }
@@ -26,6 +29,18 @@ public class HellCatChaseState : IState
         if (_core.DamagedFlag)
         {
             _core.FSM.Transition(_core.FSM.DamagedState);
+            return;
+        }
+
+        if (_core.PlayerCollider == null)
+        {
+            _core.FSM.Transition(_core.FSM.IdleState);
+            return;
+        }
+
+        if (_core.PlayerDistance <= _core.ChaseEndDistance)
+        {
+            _core.FSM.Transition(_core.FSM.StrafeState);
             return;
         }
 
@@ -50,5 +65,6 @@ public class HellCatChaseState : IState
     public void Exit()
     {
         _core.Agent.isStopped = true;
+        _core.Agent.enabled = false;
     }
 }
