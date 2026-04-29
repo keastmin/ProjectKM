@@ -1,28 +1,53 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class HellCatCore : EnemyCore
 {
     [SerializeField] private float _basicAttackCoolDown = 4f;
 
-    [Header("회전")]
-    [SerializeField] private float _rotationSpeed = 8f;
-    [SerializeField] private float _playerDetectRange = 7f;
+    [Header("이동")]
+    [SerializeField] private float _walkSpeed = 2.5f;
+
+    [Header("감지")]
     [SerializeField] private LayerMask _playerLayer;
+    [SerializeField] private float _detectRadius = 20f;
+
+    [Header("상태")]
+    [SerializeField] private EnemyStateData _idleStateData;
+    [SerializeField] private EnemyStateData _leftWalkStateData;
+    [SerializeField] private EnemyStateData _rightWalkStateData;
+    [SerializeField] private EnemyStateData _forwardWalkStateData;
+    [SerializeField] private EnemyStateData _backwardWalkStateData;
+    [SerializeField] private EnemyStateData _damagedStateData;
+
     private Collider[] _detectedColliders;
 
+    private Animator _animator;
     private Rigidbody _rigidbody;
 
     private HellCatFSM _fsm;
     public HellCatFSM FSM => _fsm;
 
+    public float WalkSpeed => _walkSpeed;
+
+    public EnemyStateData IdleStateData => _idleStateData;
+    public EnemyStateData LeftWalkStateData => _leftWalkStateData;
+    public EnemyStateData RightWalkStateData => _rightWalkStateData;
+    public EnemyStateData ForwardWalkStateData => _forwardWalkStateData;
+    public EnemyStateData BackwardWalkStateData => _backwardWalkStateData;
+    public EnemyStateData DamagedStateData => _damagedStateData;
+
     // cool down
     public float CurrentBasicAttackCoolTime { get; set; } = 0f;
 
     public bool IsBasicAttackEnable => (CurrentBasicAttackCoolTime >= _basicAttackCoolDown);
+    public Animator Animator => _animator;
+    public Rigidbody Rigidbody => _rigidbody;
 
     protected override void Awake()
     {
         base.Awake();
+        _animator = GetComponentInChildren<Animator>();
         TryGetComponent(out _rigidbody);
 
         _fsm = new HellCatFSM(this);
@@ -37,12 +62,12 @@ public class HellCatCore : EnemyCore
     protected override void Update()
     {
         base.Update();
-        TestRotate();
-        // Basic Attack 쿨타임 관리
-        if (CurrentBasicAttackCoolTime < _basicAttackCoolDown)
-        {
-            CurrentBasicAttackCoolTime += Time.deltaTime;
-        }
+
+        //// Basic Attack 쿨타임 관리
+        //if (CurrentBasicAttackCoolTime < _basicAttackCoolDown)
+        //{
+        //    CurrentBasicAttackCoolTime += Time.deltaTime;
+        //}
 
         _fsm.Tick();
     }
@@ -63,17 +88,15 @@ public class HellCatCore : EnemyCore
         _fsm.AnimationTick();
     }
 
-    private void TestRotate()
+    public bool IsPlayerInDetectRange(out Collider playerCollider)
     {
-        // 일정 반경 내의 플레이어를 감지하고 플레이어 방향으로 Lerp로 회전
-        int detectedCount = Physics.OverlapSphereNonAlloc(transform.position, _playerDetectRange, _detectedColliders, _playerLayer);
-        if (detectedCount > 0)
+        playerCollider = null;
+        int detectedCount = Physics.OverlapSphereNonAlloc(transform.position, _detectRadius, _detectedColliders, _playerLayer);
+        if(detectedCount > 0)
         {
-            Vector3 playerPos = _detectedColliders[0].transform.position;
-            Vector3 direction = (playerPos - transform.position).normalized;
-            direction.y = 0f;
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
+            playerCollider = _detectedColliders[0];
+            return true;
         }
+        return false;
     }
 }

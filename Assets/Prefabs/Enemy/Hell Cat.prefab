@@ -1421,8 +1421,15 @@ MonoBehaviour:
   _superArmourDamage: 80
   _superArmourHoldTime: 3
   _animator: {fileID: 6983833570609188103}
+  _hurtColliders:
+  - {fileID: 8158674036653238942}
   _damageStatus: {fileID: 13726469198907656}
   _basicAttackCoolDown: 4
+  _rotationSpeed: 8
+  _playerDetectRange: 7
+  _playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!136 &8158674036653238942
 CapsuleCollider:
   m_ObjectHideFlags: 0

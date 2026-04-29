@@ -4,26 +4,25 @@ public class HellCatDamagedState : IState
 {
     private HellCatCore _core;
 
-    private const string DAMAGED_NAME = "Damaged";
-    private int _damagedHash;
+    private int _animHash;
     private float _aniEndNormalizedTime = 0.92f;
     private AnimatorStateInfo _aniInfo;
 
     public HellCatDamagedState(HellCatCore core)
     {
-        _damagedHash = Animator.StringToHash("Base Layer." + DAMAGED_NAME);
         _core = core;
+        _animHash = Animator.StringToHash("Base Layer." + core.DamagedStateData.AnimationName);
     }
 
     public void Enter()
     {
-        _core.DamagedFlag = false;
-        _core.Animator.CrossFade(_damagedHash, 0.03f, 0, 0f);
+        _core.DamagedFlag = false; // 데미지 플래그 초기화
+        _core.Animator.CrossFade(_animHash, 0.03f, 0, 0f);
     }
 
     public void Tick()
     {
-        AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _damagedHash, out _aniInfo);
+        AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animHash, out _aniInfo);
 
         if (_core.DamagedFlag)
         {

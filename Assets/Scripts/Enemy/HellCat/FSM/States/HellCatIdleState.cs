@@ -4,18 +4,17 @@ public class HellCatIdleState : IState
 {
     private HellCatCore _core;
 
-    private const string IDLE_NAME = "Idle";
-    private int _idleHash;
+    private int _animHash;
 
     public HellCatIdleState(HellCatCore core)
     {
-        _idleHash = Animator.StringToHash("Base Layer." + IDLE_NAME);
         _core = core;
+        _animHash = Animator.StringToHash("Base Layer." + core.IdleStateData.AnimationName);
     }
 
     public void Enter()
     {
-        _core.Animator.CrossFade(_idleHash, 0.08f, 0, 0f);
+        _core.Animator.CrossFade(_animHash, 0.08f, 0, 0f);
     }
 
     public void Tick()
@@ -26,11 +25,11 @@ public class HellCatIdleState : IState
             return;
         }
 
-        if (_core.IsBasicAttackEnable)
-        {
-            _core.FSM.Transition(_core.FSM.BasicAttackState);
-            return;
-        }
+        //if (_core.IsBasicAttackEnable)
+        //{
+        //    _core.FSM.Transition(_core.FSM.BasicAttackState);
+        //    return;
+        //}
     }
 
     public void FixedTick()
