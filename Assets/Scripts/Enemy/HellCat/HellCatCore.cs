@@ -1,4 +1,5 @@
 using UnityEngine;
+using Player;
 
 [RequireComponent(typeof(Rigidbody))]
 public class HellCatCore : EnemyCore
@@ -7,6 +8,14 @@ public class HellCatCore : EnemyCore
 
     [Header("이동")]
     [SerializeField] private float _walkSpeed = 2.5f;
+    [SerializeField] private float _strafeSpeed = 1.8f;
+    [SerializeField] private float _retreatSpeed = 1.5f;
+    [SerializeField] private float _moveRotationSpeed = 540f;
+    [SerializeField] private float _attackRange = 2.4f;
+    [SerializeField] private float _combatDistance = 3.4f;
+    [SerializeField] private float _strafeDirectionChangeInterval = 1.4f;
+    [SerializeField] private float _preAttackStrafeTime = 1.2f;
+    [SerializeField] private float _attackFacingAngle = 20f;
 
     [Header("감지")]
     [SerializeField] private LayerMask _playerLayer;
@@ -29,6 +38,14 @@ public class HellCatCore : EnemyCore
     public HellCatFSM FSM => _fsm;
 
     public float WalkSpeed => _walkSpeed;
+    public float StrafeSpeed => _strafeSpeed;
+    public float RetreatSpeed => _retreatSpeed;
+    public float MoveRotationSpeed => _moveRotationSpeed;
+    public float AttackRange => _attackRange;
+    public float CombatDistance => _combatDistance;
+    public float StrafeDirectionChangeInterval => _strafeDirectionChangeInterval;
+    public float PreAttackStrafeTime => _preAttackStrafeTime;
+    public float AttackFacingAngle => _attackFacingAngle;
 
     public EnemyStateData IdleStateData => _idleStateData;
     public EnemyStateData LeftWalkStateData => _leftWalkStateData;
@@ -68,6 +85,10 @@ public class HellCatCore : EnemyCore
         //{
         //    CurrentBasicAttackCoolTime += Time.deltaTime;
         //}
+        if (CurrentBasicAttackCoolTime < _basicAttackCoolDown)
+        {
+            CurrentBasicAttackCoolTime += Time.deltaTime;
+        }
 
         _fsm.Tick();
     }
@@ -91,12 +112,42 @@ public class HellCatCore : EnemyCore
     public bool IsPlayerInDetectRange(out Collider playerCollider)
     {
         playerCollider = null;
-        int detectedCount = Physics.OverlapSphereNonAlloc(transform.position, _detectRadius, _detectedColliders, _playerLayer);
-        if(detectedCount > 0)
+        int detectedCount = _playerLayer.value != 0
+            ? Physics.OverlapSphereNonAlloc(transform.position, _detectRadius, _detectedColliders, _playerLayer)
+            : Physics.OverlapSphereNonAlloc(transform.position, _detectRadius, _detectedColliders);
+
+        for (int i = 0; i < detectedCount; i++)
         {
-            playerCollider = _detectedColliders[0];
+            Collider detectedCollider = _detectedColliders[i];
+
+            if (detectedCollider == null)
+            {
+                continue;
+            }
+
+            if (_playerLayer.value == 0 &&
+                !detectedCollider.CompareTag("Player") &&
+                detectedCollider.GetComponentInParent<PlayerCore>() == null)
+            {
+                continue;
+            }
+
+            playerCollider = detectedCollider;
             return true;
         }
+
+        if (_playerLayer.value == 0)
+        {
+            PlayerCore player = FindFirstObjectByType<PlayerCore>();
+
+            if (player != null &&
+                (player.transform.position - transform.position).sqrMagnitude <= _detectRadius * _detectRadius)
+            {
+                playerCollider = player.GetComponentInChildren<Collider>();
+                return playerCollider != null;
+            }
+        }
+
         return false;
     }
 }

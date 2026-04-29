@@ -360,17 +360,24 @@ MonoBehaviour:
   _damageStatus: {fileID: 0}
   _basicAttackCoolDown: 4
   _walkSpeed: 2
+  _strafeSpeed: 1.8
+  _retreatSpeed: 1.5
+  _moveRotationSpeed: 540
+  _attackRange: 2.4
+  _combatDistance: 3.4
+  _strafeDirectionChangeInterval: 1.4
+  _preAttackStrafeTime: 1.2
+  _attackFacingAngle: 20
+  _playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _detectRadius: 20
   _idleStateData: {fileID: 11400000, guid: 677f561722094574fb599b7873361a1e, type: 2}
   _leftWalkStateData: {fileID: 11400000, guid: f654cf0b31deadb40abfe5fc7a4fbcca, type: 2}
   _rightWalkStateData: {fileID: 11400000, guid: 925edad8eabf2bc49b8a34e66f1b479b, type: 2}
   _forwardWalkStateData: {fileID: 11400000, guid: 0cd88719e6e2ddc4d92232717a074e79, type: 2}
   _backwardWalkStateData: {fileID: 11400000, guid: 6562c948d268f1f43b09bcc6dd370e8a, type: 2}
   _damagedStateData: {fileID: 11400000, guid: 4675caba3e0ded447aede29731bc7350, type: 2}
-  _rotationSpeed: 8
-  _playerDetectRange: 7
-  _playerLayer:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!1 &985927904
 GameObject:
   m_ObjectHideFlags: 0

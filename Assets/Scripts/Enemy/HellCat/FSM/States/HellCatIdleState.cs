@@ -25,6 +25,12 @@ public class HellCatIdleState : IState
             return;
         }
 
+        if (_core.IsPlayerInDetectRange(out _))
+        {
+            _core.FSM.Transition(_core.FSM.MoveState);
+            return;
+        }
+
         //if (_core.IsBasicAttackEnable)
         //{
         //    _core.FSM.Transition(_core.FSM.BasicAttackState);
