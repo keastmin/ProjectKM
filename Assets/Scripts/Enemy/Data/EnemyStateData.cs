@@ -4,4 +4,5 @@ using UnityEngine;
 public class EnemyStateData : ScriptableObject
 {
     public string AnimationName;
+    public AdditionalRootmotion AdditionalRoot;
 }

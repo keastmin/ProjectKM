@@ -9,6 +9,9 @@ public class HellCatStrafeState : IState
     private int _forwardStrafeAnimHash;
     private int _backStrafeAnimHash;
 
+    private float _attackCooldown = 2.4f;
+    private float _currentAttackCooldown = 0f;
+
     public HellCatStrafeState(HellCatCore core)
     {
         _core = core;
@@ -25,9 +28,18 @@ public class HellCatStrafeState : IState
 
     public void Tick()
     {
+        _currentAttackCooldown += Time.deltaTime;
+
         if (_core.DamagedFlag)
         {
             _core.FSM.Transition(_core.FSM.DamagedState);
+            return;
+        }
+
+        if(_currentAttackCooldown >= _attackCooldown)
+        {
+            _currentAttackCooldown = 0f;
+            _core.FSM.Transition(_core.FSM.BiteAttackState);
             return;
         }
 
@@ -72,7 +84,6 @@ public class HellCatStrafeState : IState
 
     private void Strafe()
     {
-        Debug.Log(_core.transform.right * _core.StrafeSpeed);
         _core.Rigidbody.linearVelocity = _core.transform.right * _core.StrafeSpeed;
     }
 }

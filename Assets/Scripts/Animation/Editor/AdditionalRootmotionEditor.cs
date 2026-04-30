@@ -12,6 +12,8 @@ public class AdditionalRootmotionEditor : Editor
     private const float MaxZoomFactor = 8f;
     private const float MovementCanvasHeight = 240f;
     private const float SegmentHandleRadius = 7f;
+    private const float PreviewGridStep = 1f;
+    private const float PreviewGridMinimumExtent = 4f;
 
     private enum TimelineDragMode
     {
@@ -35,6 +37,7 @@ public class AdditionalRootmotionEditor : Editor
     private SerializedProperty _segmentsProperty;
 
     private PreviewRenderUtility _previewRenderUtility;
+    private Material _previewLineMaterial;
     private GameObject _previewInstance;
     private GameObject _previewSource;
     private Bounds _previewBounds;
@@ -167,6 +170,13 @@ public class AdditionalRootmotionEditor : Editor
         GUI.Label(
             new Rect(previewRect.x + 8f, previewRect.y + 8f, previewRect.width - 16f, 18f),
             "LMB: orbit  RMB: pan  Wheel: zoom  F: frame",
+            EditorStyles.whiteMiniLabel);
+
+        Vector3 currentOffset = EvaluatePreviewWorldDelta(_currentNormalizedTime);
+        Vector3 totalOffset = EvaluatePreviewWorldDelta(1f);
+        GUI.Label(
+            new Rect(previewRect.x + 8f, previewRect.yMax - 40f, previewRect.width - 16f, 34f),
+            $"3D preview applies Additional Offset. Current {FormatVector(currentOffset)} / Total {FormatVector(totalOffset)}\nLocal space uses the preview root rotation. Grid step: {PreviewGridStep:F0} unit",
             EditorStyles.whiteMiniLabel);
     }
 
@@ -313,6 +323,8 @@ public class AdditionalRootmotionEditor : Editor
             EditorGUILayout.PropertyField(deltaProperty, new GUIContent("Target Delta"));
             EditorGUILayout.PropertyField(colorProperty, new GUIContent("Editor Color"));
             EditorGUILayout.PropertyField(curveProperty, new GUIContent("Distribution Curve"));
+            DrawCurvePresetButtons(curveProperty);
+            DrawCurveMeaningHelp();
 
             if (clip != null)
             {
@@ -366,6 +378,41 @@ public class AdditionalRootmotionEditor : Editor
         GUI.Label(new Rect(timelineRect.xMin, timelineRect.yMax + 18f, 50f, 16f), "0.000", EditorStyles.miniLabel);
         GUI.Label(new Rect(timelineRect.center.x - 25f, timelineRect.yMax + 18f, 50f, 16f), "0.500", EditorStyles.centeredGreyMiniLabel);
         GUI.Label(new Rect(timelineRect.xMax - 50f, timelineRect.yMax + 18f, 50f, 16f), "1.000", EditorStyles.miniLabel);
+    }
+
+    private void DrawCurvePresetButtons(SerializedProperty curveProperty)
+    {
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Curve Presets", GUILayout.Width(EditorGUIUtility.labelWidth - 4f));
+
+        if (GUILayout.Button("Linear"))
+        {
+            curveProperty.animationCurveValue = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+        }
+
+        if (GUILayout.Button("Fast > Slow"))
+        {
+            curveProperty.animationCurveValue = CreateEaseOutCurve();
+        }
+
+        if (GUILayout.Button("Slow > Fast"))
+        {
+            curveProperty.animationCurveValue = CreateEaseInCurve();
+        }
+
+        if (GUILayout.Button("Soft In/Out"))
+        {
+            curveProperty.animationCurveValue = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+        }
+
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void DrawCurveMeaningHelp()
+    {
+        EditorGUILayout.HelpBox(
+            "The curve is cumulative movement progress from 0 to 1. A steep part moves faster; a flat part moves slower. Fast > Slow starts with a steep slope and eases near the end.",
+            MessageType.None);
     }
 
     private void DrawSegmentRangesOnTimeline(Rect timelineRect)
@@ -769,6 +816,32 @@ public class AdditionalRootmotionEditor : Editor
         return total;
     }
 
+    private Vector3 EvaluatePreviewWorldDelta(float normalizedTime)
+    {
+        return ConvertDeltaToPreviewWorld(EvaluateCumulativeDeltaAtTime(normalizedTime));
+    }
+
+    private Vector3[] BuildPreviewPathPoints()
+    {
+        Vector3[] points = BuildPathPoints();
+        for (int i = 0; i < points.Length; i++)
+        {
+            points[i] = ConvertDeltaToPreviewWorld(points[i]);
+        }
+
+        return points;
+    }
+
+    private Vector3 ConvertDeltaToPreviewWorld(Vector3 delta)
+    {
+        if (_spaceProperty.enumValueIndex == (int)AdditionalRootmotionSpace.Local && _previewInstance != null)
+        {
+            return _previewInstance.transform.rotation * delta;
+        }
+
+        return delta;
+    }
+
     private float EvaluateSegmentRatio(SerializedProperty segment, float normalizedTime)
     {
         float start = GetSegmentStartProperty(segment).floatValue;
@@ -873,18 +946,21 @@ public class AdditionalRootmotionEditor : Editor
         }
 
         _previewInstance.hideFlags = HideFlags.HideAndDontSave;
+        _previewInstance.transform.position = Vector3.zero;
         _previewRenderUtility.AddSingleGO(_previewInstance);
         _previewBounds = CalculateBounds(_previewInstance);
         ResetPreviewCamera();
     }
 
-    private void DrawPreview(Rect rect)
+    private new void DrawPreview(Rect rect)
     {
         _previewRenderUtility.BeginPreview(rect, GUIStyle.none);
 
         Camera camera = _previewRenderUtility.camera;
-        PositionCamera(camera, _previewBounds);
+        PositionCamera(camera, CalculatePreviewSceneBounds());
         camera.Render();
+        DrawPreviewGroundGrid(camera);
+        DrawPreviewAdditionalPath(camera);
 
         Texture texture = _previewRenderUtility.EndPreview();
         GUI.DrawTexture(rect, texture, ScaleMode.StretchToFill, false);
@@ -899,6 +975,7 @@ public class AdditionalRootmotionEditor : Editor
 
         float clipTime = clip.length <= 0f ? 0f : Mathf.Clamp01(normalizedTime) * clip.length;
         clip.SampleAnimation(_previewInstance, clipTime);
+        _previewInstance.transform.position = EvaluatePreviewWorldDelta(normalizedTime);
     }
 
     private static Bounds CalculateBounds(GameObject root)
@@ -916,6 +993,152 @@ public class AdditionalRootmotionEditor : Editor
         }
 
         return bounds;
+    }
+
+    private Bounds CalculatePreviewSceneBounds()
+    {
+        Bounds bounds = _previewBounds;
+        Vector3[] pathPoints = BuildPreviewPathPoints();
+
+        for (int i = 0; i < pathPoints.Length; i++)
+        {
+            bounds.Encapsulate(_previewBounds.center + pathPoints[i]);
+        }
+
+        bounds.Encapsulate(_previewBounds.center + EvaluatePreviewWorldDelta(_currentNormalizedTime));
+        return bounds;
+    }
+
+    private void DrawPreviewGroundGrid(Camera camera)
+    {
+        if (!EnsurePreviewLineMaterial())
+        {
+            return;
+        }
+
+        float extent = CalculatePreviewGridExtent();
+        int lineCount = Mathf.CeilToInt(extent / PreviewGridStep);
+
+        _previewLineMaterial.SetPass(0);
+        GL.PushMatrix();
+        GL.LoadProjectionMatrix(camera.projectionMatrix);
+        GL.modelview = camera.worldToCameraMatrix;
+        GL.Begin(GL.LINES);
+
+        for (int i = -lineCount; i <= lineCount; i++)
+        {
+            float value = i * PreviewGridStep;
+            bool major = i == 0 || i % 5 == 0;
+            GL.Color(major ? new Color(1f, 1f, 1f, 0.28f) : new Color(1f, 1f, 1f, 0.12f));
+            GL.Vertex(new Vector3(value, 0f, -extent));
+            GL.Vertex(new Vector3(value, 0f, extent));
+            GL.Vertex(new Vector3(-extent, 0f, value));
+            GL.Vertex(new Vector3(extent, 0f, value));
+        }
+
+        GL.Color(new Color(1f, 0.2f, 0.2f, 0.65f));
+        GL.Vertex(new Vector3(-extent, 0.01f, 0f));
+        GL.Vertex(new Vector3(extent, 0.01f, 0f));
+        GL.Color(new Color(0.2f, 1f, 0.2f, 0.65f));
+        GL.Vertex(new Vector3(0f, 0.01f, -extent));
+        GL.Vertex(new Vector3(0f, 0.01f, extent));
+
+        GL.End();
+        GL.PopMatrix();
+    }
+
+    private void DrawPreviewAdditionalPath(Camera camera)
+    {
+        if (!EnsurePreviewLineMaterial())
+        {
+            return;
+        }
+
+        Vector3[] points = BuildPreviewPathPoints();
+        if (points.Length == 0)
+        {
+            return;
+        }
+
+        _previewLineMaterial.SetPass(0);
+        GL.PushMatrix();
+        GL.LoadProjectionMatrix(camera.projectionMatrix);
+        GL.modelview = camera.worldToCameraMatrix;
+        GL.Begin(GL.LINES);
+
+        Vector3 previous = points[0];
+        DrawPreviewCross(previous, 0.16f, new Color(1f, 1f, 1f, 0.9f));
+
+        for (int i = 1; i < points.Length; i++)
+        {
+            SerializedProperty segment = _segmentsProperty.GetArrayElementAtIndex(i - 1);
+            Color color = GetSegmentEnabledProperty(segment).boolValue
+                ? GetSegmentColorProperty(segment).colorValue
+                : new Color(0.45f, 0.45f, 0.45f, 0.55f);
+            color.a = 0.95f;
+
+            GL.Color(color);
+            GL.Vertex(previous + Vector3.up * 0.04f);
+            GL.Vertex(points[i] + Vector3.up * 0.04f);
+            DrawPreviewCross(points[i], 0.14f, color);
+            previous = points[i];
+        }
+
+        Vector3 currentOffset = EvaluatePreviewWorldDelta(_currentNormalizedTime);
+        DrawPreviewCross(currentOffset, 0.22f, Color.white);
+        GL.Color(new Color(1f, 1f, 1f, 0.85f));
+        GL.Vertex(currentOffset + Vector3.up * 0.02f);
+        GL.Vertex(currentOffset + Vector3.up * Mathf.Max(_previewBounds.size.y, 0.5f));
+
+        GL.End();
+        GL.PopMatrix();
+    }
+
+    private float CalculatePreviewGridExtent()
+    {
+        Bounds bounds = CalculatePreviewSceneBounds();
+        float maxAbs = Mathf.Max(
+            PreviewGridMinimumExtent,
+            Mathf.Abs(bounds.min.x),
+            Mathf.Abs(bounds.max.x),
+            Mathf.Abs(bounds.min.z),
+            Mathf.Abs(bounds.max.z));
+
+        return Mathf.Ceil(maxAbs + 1f);
+    }
+
+    private void DrawPreviewCross(Vector3 center, float size, Color color)
+    {
+        center.y += 0.06f;
+        GL.Color(color);
+        GL.Vertex(center + new Vector3(-size, 0f, 0f));
+        GL.Vertex(center + new Vector3(size, 0f, 0f));
+        GL.Vertex(center + new Vector3(0f, 0f, -size));
+        GL.Vertex(center + new Vector3(0f, 0f, size));
+    }
+
+    private bool EnsurePreviewLineMaterial()
+    {
+        if (_previewLineMaterial != null)
+        {
+            return true;
+        }
+
+        Shader shader = Shader.Find("Hidden/Internal-Colored");
+        if (shader == null)
+        {
+            return false;
+        }
+
+        _previewLineMaterial = new Material(shader)
+        {
+            hideFlags = HideFlags.HideAndDontSave
+        };
+        _previewLineMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        _previewLineMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        _previewLineMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+        _previewLineMaterial.SetInt("_ZWrite", 0);
+        return true;
     }
 
     private void PositionCamera(Camera camera, Bounds bounds)
@@ -1071,6 +1294,12 @@ public class AdditionalRootmotionEditor : Editor
             _previewRenderUtility.Cleanup();
             _previewRenderUtility = null;
         }
+
+        if (_previewLineMaterial != null)
+        {
+            DestroyImmediate(_previewLineMaterial);
+            _previewLineMaterial = null;
+        }
     }
 
     private void DestroyPreviewInstance()
@@ -1099,6 +1328,20 @@ public class AdditionalRootmotionEditor : Editor
         };
 
         return palette[index % palette.Length];
+    }
+
+    private static AnimationCurve CreateEaseOutCurve()
+    {
+        return new AnimationCurve(
+            new Keyframe(0f, 0f, 2f, 2f),
+            new Keyframe(1f, 1f, 0f, 0f));
+    }
+
+    private static AnimationCurve CreateEaseInCurve()
+    {
+        return new AnimationCurve(
+            new Keyframe(0f, 0f, 0f, 0f),
+            new Keyframe(1f, 1f, 2f, 2f));
     }
 
     private static SerializedProperty GetSegmentNameProperty(SerializedProperty segment) => segment.FindPropertyRelative("_name");

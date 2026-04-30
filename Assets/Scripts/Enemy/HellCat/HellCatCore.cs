@@ -30,6 +30,7 @@ public class HellCatCore : EnemyCore
     [SerializeField] private EnemyStateData _backwardStrafeStateData;
     [SerializeField] private EnemyStateData _chaseStateData;
     [SerializeField] private EnemyStateData _damagedStateData;
+    [SerializeField] private EnemyStateData _biteAttackStateData;
 
     private Collider[] _detectedColliders;
     private Collider _playerCollider;
@@ -56,6 +57,7 @@ public class HellCatCore : EnemyCore
     public EnemyStateData BackwardStrafeStateData => _backwardStrafeStateData;
     public EnemyStateData ChaseStateData => _chaseStateData;
     public EnemyStateData DamagedStateData => _damagedStateData;
+    public EnemyStateData BiteAttackStateData => _biteAttackStateData;
 
     // cool down
     public float CurrentBasicAttackCoolTime { get; set; } = 0f;

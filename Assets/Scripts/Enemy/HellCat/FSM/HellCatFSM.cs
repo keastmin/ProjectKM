@@ -7,6 +7,7 @@ public class HellCatFSM
     public HellCatStrafeState StrafeState;
     public HellCatDamagedState DamagedState;
     public HellCatBasicAttackState BasicAttackState;
+    public HellCatBiteAttackState BiteAttackState;
 
     private IState _currentState;
 
@@ -17,6 +18,7 @@ public class HellCatFSM
         StrafeState = new HellCatStrafeState(core);
         DamagedState = new HellCatDamagedState(core);
         BasicAttackState = new HellCatBasicAttackState(core);
+        BiteAttackState = new HellCatBiteAttackState(core);
     }
 
     public void Initialize(IState initState)

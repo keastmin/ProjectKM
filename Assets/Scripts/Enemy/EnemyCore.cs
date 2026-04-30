@@ -18,9 +18,6 @@ public class EnemyCore : MonoBehaviour, IDamageable
     [Header("피격 콜라이더")]
     [SerializeField] private Collider[] _hurtColliders;
 
-    [Header("테스트")]
-    [SerializeField] private DamageStatus _damageStatus;
-
     private float _lastDamageTime = float.MinValue;
     private float _continuousDamageAmount = 0f;
     private float _superArmourRemainTime = 0f;
