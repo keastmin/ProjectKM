@@ -39,7 +39,8 @@ public class HellCatDamagedState : IState
 
     public void FixedTick()
     {
-        
+        // 밀림 방지 속도 고정
+        _core.Rigidbody.linearVelocity = Vector3.zero;
     }
 
     public void LateTick()

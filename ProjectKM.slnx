@@ -1,4 +1,7 @@
 ﻿<Solution>
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Jorjouto.AnimComposerSystem.Editor.csproj" />
+  <Project Path="Jorjouto.AnimComposerSystem.Sample.csproj" />
+  <Project Path="Jorjouto.AnimComposerSystem.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
 </Solution>
