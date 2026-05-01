@@ -1989,7 +1989,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2084274438}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1187081353298233970, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
@@ -2009,10 +2010,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy Hell Cat
       objectReference: {fileID: 0}
-    - target: {fileID: 4692940353805908275, guid: 87a7b334819c5974fb0d0dde7cb148d1, type: 3}
-      propertyPath: _biteAttackStateData
-      value: 
-      objectReference: {fileID: 11400000, guid: 3f1ff245f0240f54c909bd3eff2775f2, type: 2}
     - target: {fileID: 6074259771264933821, guid: 87a7b334819c5974fb0d0dde7cb148d1, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.96

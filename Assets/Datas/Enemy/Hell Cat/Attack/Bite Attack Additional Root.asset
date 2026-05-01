@@ -21,7 +21,7 @@ MonoBehaviour:
     _enabled: 1
     _startNormalizedTime: 0.4375
     _endNormalizedTime: 0.6086956
-    _targetDeltaPosition: {x: 0, y: 0, z: 2.5}
+    _targetDeltaPosition: {x: 0, y: 0, z: 6}
     _distributionCurve:
       serializedVersion: 2
       m_Curve:

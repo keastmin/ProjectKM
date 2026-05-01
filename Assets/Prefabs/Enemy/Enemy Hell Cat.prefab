@@ -2039,6 +2039,7 @@ MonoBehaviour:
   _backwardStrafeStateData: {fileID: 11400000, guid: 6562c948d268f1f43b09bcc6dd370e8a, type: 2}
   _chaseStateData: {fileID: 11400000, guid: 20fa7f601af43bd45879b9137a7016a2, type: 2}
   _damagedStateData: {fileID: 11400000, guid: 4675caba3e0ded447aede29731bc7350, type: 2}
+  _biteAttackStateData: {fileID: 11400000, guid: 3f1ff245f0240f54c909bd3eff2775f2, type: 2}
 --- !u!114 &5154556876286786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2137,9 +2138,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!136 &4703905574568540011
 CapsuleCollider:
   m_ObjectHideFlags: 0
