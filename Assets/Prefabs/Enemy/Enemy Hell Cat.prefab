@@ -1999,6 +1999,7 @@ Transform:
   m_Children:
   - {fileID: 4872675853106933868}
   - {fileID: 7683129504306876488}
+  - {fileID: 1578192917383983909}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4692940353805908275
@@ -2032,6 +2033,8 @@ MonoBehaviour:
     m_Bits: 64
   _detectRadius: 100
   _chaseEndDistance: 5
+  _reChaseDistance: 7
+  _strafingRange: {x: 4, y: 5}
   _idleStateData: {fileID: 11400000, guid: 677f561722094574fb599b7873361a1e, type: 2}
   _leftStrafeStateData: {fileID: 11400000, guid: f654cf0b31deadb40abfe5fc7a4fbcca, type: 2}
   _rightStrafeStateData: {fileID: 11400000, guid: 925edad8eabf2bc49b8a34e66f1b479b, type: 2}
@@ -4071,6 +4074,72 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2043173035216558174}
   m_LocalEulerAnglesHint: {x: 0, y: -8.6101675, z: 0}
+--- !u!1 &8903792294805179177
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1578192917383983909}
+  - component: {fileID: 4369911617039155080}
+  - component: {fileID: 2507844878731252806}
+  m_Layer: 12
+  m_Name: Dodge Window
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1578192917383983909
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8903792294805179177}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6074259771264933821}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4369911617039155080
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8903792294805179177}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 8119
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.2, y: 1, z: 1.96}
+  m_Center: {x: 0, y: 0.81, z: 1.98}
+--- !u!114 &2507844878731252806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8903792294805179177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eddc046f32e00f54188435c8ff9ddd5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyNoticeDodgeTiming
 --- !u!1 &8958381323796208065
 GameObject:
   m_ObjectHideFlags: 0
