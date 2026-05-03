@@ -8,6 +8,7 @@ public class HellCatBiteAttackState : IState
     private AdditionalRootmotionRuntime _additionalRuntime;
 
     private AnimatorStateInfo _stateInfo;
+    private bool _hasStateInfo;
 
     public HellCatBiteAttackState(HellCatCore core)
     {
@@ -18,6 +19,9 @@ public class HellCatBiteAttackState : IState
 
     public void Enter()
     {
+        _stateInfo = default;
+        _hasStateInfo = false;
+
         _core.Animator.CrossFade(_animHash, 0.03f, 0, 0f);
         _additionalRuntime.Clear();
 
@@ -29,9 +33,9 @@ public class HellCatBiteAttackState : IState
 
     public void Tick()
     {
-        AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animHash, out _stateInfo);
+        _hasStateInfo = AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animHash, out _stateInfo);
 
-        if(_stateInfo.normalizedTime > 0.92f)
+        if(_hasStateInfo && _stateInfo.normalizedTime > 0.92f)
         {
             _core.FSM.Transition(_core.FSM.IdleState);
         }
@@ -39,6 +43,12 @@ public class HellCatBiteAttackState : IState
 
     public void FixedTick()
     {
+        if (!_hasStateInfo)
+        {
+            _core.Rigidbody.linearVelocity = Vector3.zero;
+            return;
+        }
+
         Vector3 delta = _additionalRuntime.ConsumeDelta(_stateInfo.normalizedTime);
         delta.y = 0f;
         _core.Rigidbody.linearVelocity = delta / Time.fixedDeltaTime;
@@ -57,5 +67,6 @@ public class HellCatBiteAttackState : IState
     public void Exit()
     {
         _additionalRuntime.Clear();
+        _hasStateInfo = false;
     }
 }

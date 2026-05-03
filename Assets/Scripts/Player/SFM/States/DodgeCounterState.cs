@@ -38,6 +38,10 @@ public class DodgeCounterState : StateBase
             enemyHurtColPos.y = _core.transform.position.y;
             PlayerStateUtil.RotateImmediatelyTowardsDirection(_core.transform, (enemyHurtColPos - _core.transform.position).normalized);
         }
+        else
+        {
+            Debug.Log("회피 카운터 대상이 없습니다.");
+        }
 
         _additionalRootmotionRuntime.Reset(_attackData != null ? _attackData.AdditionalRootmotion : null, _core.transform.rotation);
 

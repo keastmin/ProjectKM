@@ -1,6 +1,7 @@
 using UnityEngine;
 using Player;
 using UnityEngine.AI;
+using System;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -21,6 +22,8 @@ public class HellCatCore : EnemyCore
     [SerializeField] private LayerMask _playerLayer;
     [SerializeField] private float _detectRadius = 100f;
     [SerializeField] private float _chaseEndDistance = 5f;
+    [SerializeField] private float _reChaseDistance = 7f;
+    [SerializeField] private Vector2 _strafingRange = new Vector2(4f, 5f);
 
     [Header("상태")]
     [SerializeField] private EnemyStateData _idleStateData;
@@ -48,6 +51,8 @@ public class HellCatCore : EnemyCore
     public float PlayerDistance => (PlayerCollider != null) ? Vector3.Distance(transform.position, PlayerCollider.transform.position) : _detectRadius;
     public float AttackRange => _attackRange;
     public float CombatDistance => _combatDistance;
+    public float ReChaseDistance => _reChaseDistance;
+    public Vector2 StrafingRange => _strafingRange;
     public Collider PlayerCollider => _playerCollider;
 
     public EnemyStateData IdleStateData => _idleStateData;

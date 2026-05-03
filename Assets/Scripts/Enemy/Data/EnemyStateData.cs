@@ -1,3 +1,4 @@
+using Jorjouto.AnimComposerSystem;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "EnemyStateData", menuName = "Data/EnemyStateData")]
