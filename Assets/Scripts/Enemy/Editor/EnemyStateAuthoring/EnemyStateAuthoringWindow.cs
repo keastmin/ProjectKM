@@ -73,6 +73,7 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
     private GameObject _gridObject;
     private Material _floorMaterial;
     private Material _gridMaterial;
+    private Material _previewLineMaterial;
     private Mesh _floorMesh;
     private Mesh _gridMesh;
     private Vector3 _previewRootPosition;
@@ -222,7 +223,7 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         _asset.EditorAnimationNormalizedTime = _animationNormalizedTime;
         _asset.EditorIsAnimationPlaying = _isAnimationPlaying;
         _asset.EditorSelectedActionBlockIndex = _selectedActionBlockIndex;
-        _asset.SyncAdditionalRootmotionBlocksFromEditor();
+        _asset.SyncActionBlocksFromEditor();
         EditorUtility.SetDirty(_asset);
     }
 
@@ -331,7 +332,12 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         }
 
         EnemyStateAuthoringActionBlockPreviewData block = _actionBlocks[_selectedActionBlockIndex];
-        float overlayHeight = block.Type == EnemyStateAuthoringActionBlockType.AdditionalRootmotion ? 394f : 254f;
+        float overlayHeight = block.Type switch
+        {
+            EnemyStateAuthoringActionBlockType.AdditionalRootmotion => 394f,
+            EnemyStateAuthoringActionBlockType.DodgeTiming => 390f,
+            _ => 254f
+        };
         Rect overlayRect = new(12f, 12f, 300f, overlayHeight);
 
         GUI.BeginGroup(previewRect);
@@ -386,19 +392,42 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
             return;
         }
 
+        if (type == EnemyStateAuthoringActionBlockType.DodgeTiming)
+        {
+            DrawDodgeTimingPreviewFields();
+            return;
+        }
+
         using (new EditorGUI.DisabledScope(true))
         {
-            if (type == EnemyStateAuthoringActionBlockType.AttackTiming)
+            EditorGUILayout.TextField("Attack ID", "Preview_Attack");
+            EditorGUILayout.Toggle("Enable Hitbox", true);
+        }
+    }
+
+    private void DrawDodgeTimingPreviewFields()
+    {
+        EnemyStateAuthoringActionBlockPreviewData block = _actionBlocks[_selectedActionBlockIndex];
+
+        block.PreviewDodgeArea = EditorGUILayout.Toggle("Show Area In Preview", block.PreviewDodgeArea);
+        block.DodgeAreaBindingMode = (EnemyStateAuthoringDodgeAreaBindingMode)EditorGUILayout.EnumPopup("Binding", block.DodgeAreaBindingMode);
+
+        if (block.DodgeAreaBindingMode == EnemyStateAuthoringDodgeAreaBindingMode.AttachToTransform)
+        {
+            using (new EditorGUILayout.HorizontalScope())
             {
-                EditorGUILayout.TextField("Attack ID", "Preview_Attack");
-                EditorGUILayout.Toggle("Enable Hitbox", true);
-            }
-            else
-            {
-                EditorGUILayout.TextField("Receiver", "Player Dodge Window");
-                EditorGUILayout.Toggle("Show Cue", true);
+                EditorGUILayout.PrefixLabel("Transform");
+                string label = string.IsNullOrEmpty(block.DodgeAttachTransformPath) ? "(Root)" : block.DodgeAttachTransformPath;
+                if (GUILayout.Button(label, EditorStyles.popup))
+                {
+                    ShowTransformSelectionMenu(block);
+                }
             }
         }
+
+        block.DodgeAreaPositionOffset = EditorGUILayout.Vector3Field("Position Offset", block.DodgeAreaPositionOffset);
+        block.DodgeAreaRotationEuler = EditorGUILayout.Vector3Field("Rotation", block.DodgeAreaRotationEuler);
+        block.DodgeAreaSize = ClampDodgeAreaSize(EditorGUILayout.Vector3Field("Size", block.DodgeAreaSize));
     }
 
     private void DrawAdditionalRootmotionPreviewFields()
@@ -411,6 +440,57 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         block.RootmotionDirection = EditorGUILayout.Vector3Field("Direction", block.RootmotionDirection);
         block.RootmotionDistance = Mathf.Max(0f, EditorGUILayout.FloatField("Distance", block.RootmotionDistance));
         block.RootmotionCurve = EditorGUILayout.CurveField("Speed Curve", block.RootmotionCurve);
+    }
+
+    private void ShowTransformSelectionMenu(EnemyStateAuthoringActionBlockPreviewData block)
+    {
+        GenericMenu menu = new();
+        menu.AddItem(new GUIContent("(Root)"), string.IsNullOrEmpty(block.DodgeAttachTransformPath), () =>
+        {
+            block.DodgeAttachTransformPath = string.Empty;
+            SaveAssetState();
+            Repaint();
+        });
+
+        if (_previewModel == null)
+        {
+            menu.AddDisabledItem(new GUIContent("No preview model"));
+            menu.ShowAsContext();
+            return;
+        }
+
+        Transform[] transforms = _previewModel.GetComponentsInChildren<Transform>(true);
+        for (int i = 0; i < transforms.Length; i++)
+        {
+            if (transforms[i] == _previewModel.transform)
+            {
+                continue;
+            }
+
+            string path = BuildTransformPath(_previewModel.transform, transforms[i]);
+            if (string.IsNullOrEmpty(path))
+            {
+                continue;
+            }
+
+            bool selected = block.DodgeAttachTransformPath == path;
+            menu.AddItem(new GUIContent(path), selected, () =>
+            {
+                block.DodgeAttachTransformPath = path;
+                SaveAssetState();
+                Repaint();
+            });
+        }
+
+        menu.ShowAsContext();
+    }
+
+    private static Vector3 ClampDodgeAreaSize(Vector3 size)
+    {
+        return new Vector3(
+            Mathf.Max(0.01f, size.x),
+            Mathf.Max(0.01f, size.y),
+            Mathf.Max(0.01f, size.z));
     }
 
     private string GetPreviewValueLabel(EnemyStateAuthoringActionBlockType type)
@@ -702,7 +782,13 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
             PreviewRootmotion = true,
             RootmotionDirection = Vector3.forward,
             RootmotionDistance = 1f,
-            RootmotionCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f)
+            RootmotionCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f),
+            PreviewDodgeArea = true,
+            DodgeAreaBindingMode = EnemyStateAuthoringDodgeAreaBindingMode.World,
+            DodgeAttachTransformPath = string.Empty,
+            DodgeAreaPositionOffset = new Vector3(0f, 1f, 1.5f),
+            DodgeAreaRotationEuler = Vector3.zero,
+            DodgeAreaSize = new Vector3(1.5f, 1f, 1.5f)
         });
 
         _selectedActionBlockIndex = _actionBlocks.Count - 1;
@@ -1257,7 +1343,128 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
 
         _previewUtility.BeginPreview(previewRect, GUIStyle.none);
         _previewUtility.camera.Render();
-        _previewUtility.EndAndDrawPreview(previewRect);
+        DrawDodgeTimingPreviewAreas(_previewUtility.camera);
+        Texture previewTexture = _previewUtility.EndPreview();
+        GUI.DrawTexture(previewRect, previewTexture, ScaleMode.StretchToFill, false);
+    }
+
+    private void DrawDodgeTimingPreviewAreas(Camera camera)
+    {
+        if (camera == null || _previewModel == null || _actionBlocks == null)
+        {
+            return;
+        }
+
+        EnsurePreviewLineMaterial();
+        if (_previewLineMaterial == null)
+        {
+            return;
+        }
+
+        _previewLineMaterial.SetPass(0);
+        GL.PushMatrix();
+        GL.LoadProjectionMatrix(camera.projectionMatrix);
+        GL.modelview = camera.worldToCameraMatrix;
+        GL.Begin(GL.LINES);
+
+        for (int i = 0; i < _actionBlocks.Count; i++)
+        {
+            EnemyStateAuthoringActionBlockPreviewData block = _actionBlocks[i];
+            if (block == null ||
+                block.Type != EnemyStateAuthoringActionBlockType.DodgeTiming ||
+                !block.PreviewDodgeArea)
+            {
+                continue;
+            }
+
+            bool isSelected = i == _selectedActionBlockIndex;
+            bool isActive = IsAnimationTimeInsideBlock(block);
+            if (!isSelected && !isActive)
+            {
+                continue;
+            }
+
+            Color color = isActive
+                ? new Color(0.2f, 0.72f, 1f, 1f)
+                : new Color(0.2f, 0.72f, 1f, 0.42f);
+            if (isSelected)
+            {
+                color = Color.Lerp(color, Color.white, 0.22f);
+            }
+
+            DrawDodgeAreaBox(block, color);
+        }
+
+        GL.End();
+        GL.PopMatrix();
+    }
+
+    private void DrawDodgeAreaBox(EnemyStateAuthoringActionBlockPreviewData block, Color color)
+    {
+        if (!TryGetDodgeAreaMatrix(block, out Matrix4x4 matrix))
+        {
+            return;
+        }
+
+        Vector3 half = ClampDodgeAreaSize(block.DodgeAreaSize) * 0.5f;
+        Vector3 p000 = matrix.MultiplyPoint3x4(new Vector3(-half.x, -half.y, -half.z));
+        Vector3 p001 = matrix.MultiplyPoint3x4(new Vector3(-half.x, -half.y, half.z));
+        Vector3 p010 = matrix.MultiplyPoint3x4(new Vector3(-half.x, half.y, -half.z));
+        Vector3 p011 = matrix.MultiplyPoint3x4(new Vector3(-half.x, half.y, half.z));
+        Vector3 p100 = matrix.MultiplyPoint3x4(new Vector3(half.x, -half.y, -half.z));
+        Vector3 p101 = matrix.MultiplyPoint3x4(new Vector3(half.x, -half.y, half.z));
+        Vector3 p110 = matrix.MultiplyPoint3x4(new Vector3(half.x, half.y, -half.z));
+        Vector3 p111 = matrix.MultiplyPoint3x4(new Vector3(half.x, half.y, half.z));
+
+        GL.Color(color);
+        DrawPreviewLine(p000, p001);
+        DrawPreviewLine(p001, p011);
+        DrawPreviewLine(p011, p010);
+        DrawPreviewLine(p010, p000);
+        DrawPreviewLine(p100, p101);
+        DrawPreviewLine(p101, p111);
+        DrawPreviewLine(p111, p110);
+        DrawPreviewLine(p110, p100);
+        DrawPreviewLine(p000, p100);
+        DrawPreviewLine(p001, p101);
+        DrawPreviewLine(p010, p110);
+        DrawPreviewLine(p011, p111);
+    }
+
+    private bool TryGetDodgeAreaMatrix(EnemyStateAuthoringActionBlockPreviewData block, out Matrix4x4 matrix)
+    {
+        matrix = Matrix4x4.identity;
+        Quaternion localRotation = Quaternion.Euler(block.DodgeAreaRotationEuler);
+
+        if (block.DodgeAreaBindingMode == EnemyStateAuthoringDodgeAreaBindingMode.AttachToTransform)
+        {
+            Transform attachTransform = FindTransformByPath(_previewModel.transform, block.DodgeAttachTransformPath);
+            if (attachTransform == null)
+            {
+                return false;
+            }
+
+            matrix = Matrix4x4.TRS(
+                attachTransform.TransformPoint(block.DodgeAreaPositionOffset),
+                attachTransform.rotation * localRotation,
+                Vector3.one);
+            return true;
+        }
+
+        matrix = Matrix4x4.TRS(block.DodgeAreaPositionOffset, localRotation, Vector3.one);
+        return true;
+    }
+
+    private bool IsAnimationTimeInsideBlock(EnemyStateAuthoringActionBlockPreviewData block)
+    {
+        float time = Mathf.Clamp01(_animationNormalizedTime);
+        return time >= block.StartTime && time <= block.EndTime;
+    }
+
+    private static void DrawPreviewLine(Vector3 from, Vector3 to)
+    {
+        GL.Vertex(from);
+        GL.Vertex(to);
     }
 
     private void SetPreviewWorldVisibility()
@@ -1603,6 +1810,35 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         indices.Add(index + 1);
     }
 
+    private void EnsurePreviewLineMaterial()
+    {
+        if (_previewLineMaterial != null)
+        {
+            return;
+        }
+
+        Shader shader = Shader.Find("Hidden/Internal-Colored");
+        if (shader == null)
+        {
+            shader = Shader.Find("Sprites/Default");
+        }
+
+        if (shader == null)
+        {
+            return;
+        }
+
+        _previewLineMaterial = new Material(shader)
+        {
+            hideFlags = HideFlags.HideAndDontSave
+        };
+
+        _previewLineMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        _previewLineMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        _previewLineMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+        _previewLineMaterial.SetInt("_ZWrite", 0);
+    }
+
     private static Material CreateColorMaterial(Color color)
     {
         Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
@@ -1634,6 +1870,65 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         return material;
     }
 
+    private static string BuildTransformPath(Transform root, Transform target)
+    {
+        if (root == null || target == null)
+        {
+            return string.Empty;
+        }
+
+        if (root == target)
+        {
+            return root.name;
+        }
+
+        List<string> names = new();
+        Transform current = target;
+        while (current != null && current != root)
+        {
+            names.Add(current.name);
+            current = current.parent;
+        }
+
+        if (current != root)
+        {
+            return target.name;
+        }
+
+        names.Reverse();
+        return string.Join("/", names);
+    }
+
+    private static Transform FindTransformByPath(Transform root, string path)
+    {
+        if (root == null)
+        {
+            return null;
+        }
+
+        if (string.IsNullOrEmpty(path) || path == root.name)
+        {
+            return root;
+        }
+
+        Transform found = root.Find(path);
+        if (found != null)
+        {
+            return found;
+        }
+
+        Transform[] transforms = root.GetComponentsInChildren<Transform>(true);
+        for (int i = 0; i < transforms.Length; i++)
+        {
+            if (BuildTransformPath(root, transforms[i]) == path)
+            {
+                return transforms[i];
+            }
+        }
+
+        return null;
+    }
+
     private void CleanupPreviewWorld()
     {
         CleanupAnimationGraph();
@@ -1645,6 +1940,7 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         DestroyPreviewObject(_gridMesh);
         DestroyPreviewObject(_floorMaterial);
         DestroyPreviewObject(_gridMaterial);
+        DestroyPreviewObject(_previewLineMaterial);
 
         _floorObject = null;
         _gridObject = null;
@@ -1652,6 +1948,7 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         _gridMesh = null;
         _floorMaterial = null;
         _gridMaterial = null;
+        _previewLineMaterial = null;
 
         _previewUtility?.Cleanup();
         _previewUtility = null;

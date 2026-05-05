@@ -9,6 +9,12 @@ public enum EnemyStateAuthoringRootmotionSpace
     World = 1
 }
 
+public enum EnemyStateAuthoringDodgeAreaBindingMode
+{
+    World = 0,
+    AttachToTransform = 1
+}
+
 [Serializable]
 public sealed class EnemyStateAuthoringRootmotionBlock
 {
@@ -152,6 +158,68 @@ public sealed class EnemyStateAuthoringRootmotionBlock
     }
 }
 
+[Serializable]
+public sealed class EnemyStateAuthoringDodgeTimingBlock
+{
+    [SerializeField, Range(0f, 1f)] private float _startNormalizedTime;
+    [SerializeField, Range(0f, 1f)] private float _endNormalizedTime = 0.2f;
+    [SerializeField] private EnemyStateAuthoringDodgeAreaBindingMode _bindingMode = EnemyStateAuthoringDodgeAreaBindingMode.World;
+    [SerializeField] private string _attachTransformPath = string.Empty;
+    [SerializeField] private Vector3 _positionOffset;
+    [SerializeField] private Vector3 _rotationEuler;
+    [SerializeField] private Vector3 _size = Vector3.one;
+
+    public float StartNormalizedTime => _startNormalizedTime;
+    public float EndNormalizedTime => _endNormalizedTime;
+    public EnemyStateAuthoringDodgeAreaBindingMode BindingMode => _bindingMode;
+    public string AttachTransformPath => _attachTransformPath;
+    public Vector3 PositionOffset => _positionOffset;
+    public Vector3 RotationEuler => _rotationEuler;
+    public Vector3 Size => _size;
+
+    public void SetData(
+        float startNormalizedTime,
+        float endNormalizedTime,
+        EnemyStateAuthoringDodgeAreaBindingMode bindingMode,
+        string attachTransformPath,
+        Vector3 positionOffset,
+        Vector3 rotationEuler,
+        Vector3 size)
+    {
+        _startNormalizedTime = startNormalizedTime;
+        _endNormalizedTime = endNormalizedTime;
+        _bindingMode = bindingMode;
+        _attachTransformPath = attachTransformPath ?? string.Empty;
+        _positionOffset = positionOffset;
+        _rotationEuler = rotationEuler;
+        _size = size;
+
+        Validate();
+    }
+
+    public bool IsOpen(float normalizedTime)
+    {
+        float clampedTime = Mathf.Clamp01(normalizedTime);
+        return clampedTime >= _startNormalizedTime && clampedTime <= _endNormalizedTime;
+    }
+
+    public void Validate()
+    {
+        _startNormalizedTime = Mathf.Clamp01(_startNormalizedTime);
+        _endNormalizedTime = Mathf.Clamp01(_endNormalizedTime);
+        if (_endNormalizedTime < _startNormalizedTime)
+        {
+            _endNormalizedTime = _startNormalizedTime;
+        }
+
+        _attachTransformPath ??= string.Empty;
+        _size = new Vector3(
+            Mathf.Max(0.01f, _size.x),
+            Mathf.Max(0.01f, _size.y),
+            Mathf.Max(0.01f, _size.z));
+    }
+}
+
 #if UNITY_EDITOR
 public enum EnemyStateAuthoringActionBlockType
 {
@@ -174,6 +242,12 @@ public sealed class EnemyStateAuthoringActionBlockPreviewData
     public Vector3 RootmotionDirection = Vector3.forward;
     public float RootmotionDistance = 1f;
     public AnimationCurve RootmotionCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+    public bool PreviewDodgeArea = true;
+    public EnemyStateAuthoringDodgeAreaBindingMode DodgeAreaBindingMode = EnemyStateAuthoringDodgeAreaBindingMode.World;
+    public string DodgeAttachTransformPath = string.Empty;
+    public Vector3 DodgeAreaPositionOffset;
+    public Vector3 DodgeAreaRotationEuler;
+    public Vector3 DodgeAreaSize = Vector3.one;
 }
 #endif
 
@@ -182,9 +256,11 @@ public sealed class EnemyStateAuthoringAsset : ScriptableObject
 {
     [SerializeField] private string _animatorStateName;
     [SerializeField] private EnemyStateAuthoringRootmotionBlock[] _additionalRootmotionBlocks = Array.Empty<EnemyStateAuthoringRootmotionBlock>();
+    [SerializeField] private EnemyStateAuthoringDodgeTimingBlock[] _dodgeTimingBlocks = Array.Empty<EnemyStateAuthoringDodgeTimingBlock>();
 
     public string AnimatorStateName => _animatorStateName;
     public EnemyStateAuthoringRootmotionBlock[] AdditionalRootmotionBlocks => _additionalRootmotionBlocks;
+    public EnemyStateAuthoringDodgeTimingBlock[] DodgeTimingBlocks => _dodgeTimingBlocks;
 
     public Vector3 EvaluateAdditionalRootmotionCumulativeDelta(float normalizedTime, Quaternion localBasisRotation)
     {
@@ -336,6 +412,12 @@ public sealed class EnemyStateAuthoringAsset : ScriptableObject
         set => _editorSelectedActionBlockIndex = value;
     }
 
+    public void SyncActionBlocksFromEditor()
+    {
+        SyncAdditionalRootmotionBlocksFromEditor();
+        SyncDodgeTimingBlocksFromEditor();
+    }
+
     public void SyncAdditionalRootmotionBlocksFromEditor()
     {
         if (_editorActionBlocks == null)
@@ -367,6 +449,38 @@ public sealed class EnemyStateAuthoringAsset : ScriptableObject
 
         _additionalRootmotionBlocks = rootmotionBlocks.ToArray();
     }
+
+    private void SyncDodgeTimingBlocksFromEditor()
+    {
+        if (_editorActionBlocks == null)
+        {
+            _dodgeTimingBlocks = Array.Empty<EnemyStateAuthoringDodgeTimingBlock>();
+            return;
+        }
+
+        List<EnemyStateAuthoringDodgeTimingBlock> dodgeTimingBlocks = new();
+        for (int i = 0; i < _editorActionBlocks.Count; i++)
+        {
+            EnemyStateAuthoringActionBlockPreviewData editorBlock = _editorActionBlocks[i];
+            if (editorBlock == null || editorBlock.Type != EnemyStateAuthoringActionBlockType.DodgeTiming)
+            {
+                continue;
+            }
+
+            EnemyStateAuthoringDodgeTimingBlock dodgeTimingBlock = new();
+            dodgeTimingBlock.SetData(
+                editorBlock.StartTime,
+                editorBlock.EndTime,
+                editorBlock.DodgeAreaBindingMode,
+                editorBlock.DodgeAttachTransformPath,
+                editorBlock.DodgeAreaPositionOffset,
+                editorBlock.DodgeAreaRotationEuler,
+                editorBlock.DodgeAreaSize);
+            dodgeTimingBlocks.Add(dodgeTimingBlock);
+        }
+
+        _dodgeTimingBlocks = dodgeTimingBlocks.ToArray();
+    }
 #endif
 
     private void OnValidate()
@@ -374,13 +488,23 @@ public sealed class EnemyStateAuthoringAsset : ScriptableObject
         if (_additionalRootmotionBlocks == null)
         {
             _additionalRootmotionBlocks = Array.Empty<EnemyStateAuthoringRootmotionBlock>();
-            return;
         }
 
         for (int i = 0; i < _additionalRootmotionBlocks.Length; i++)
         {
             _additionalRootmotionBlocks[i] ??= new EnemyStateAuthoringRootmotionBlock();
             _additionalRootmotionBlocks[i].Validate();
+        }
+
+        if (_dodgeTimingBlocks == null)
+        {
+            _dodgeTimingBlocks = Array.Empty<EnemyStateAuthoringDodgeTimingBlock>();
+        }
+
+        for (int i = 0; i < _dodgeTimingBlocks.Length; i++)
+        {
+            _dodgeTimingBlocks[i] ??= new EnemyStateAuthoringDodgeTimingBlock();
+            _dodgeTimingBlocks[i].Validate();
         }
     }
 }
