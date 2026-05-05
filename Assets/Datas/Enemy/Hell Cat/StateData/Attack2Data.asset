@@ -13,14 +13,135 @@ MonoBehaviour:
   m_Name: Attack2Data
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateAuthoringAsset
   _animatorStateName: Bite_Attack
+  _additionalRootmotionBlocks:
+  - _startNormalizedTime: 0.4466709
+    _endNormalizedTime: 0.6266713
+    _space: 0
+    _constrainToGroundPlane: 1
+    _direction: {x: 0, y: 0, z: 1}
+    _distance: 6
+    _speedCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 2.728585
+        outSlope: 2.728585
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.024529718
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  _dodgeTimingBlocks:
+  - _startNormalizedTime: 0.2750978
+    _endNormalizedTime: 0.6166884
+    _bindingMode: 1
+    _attachTransformPath: 
+    _positionOffset: {x: 0, y: 1, z: 1.85}
+    _rotationEuler: {x: 0, y: 0, z: 0}
+    _size: {x: 2.14, y: 1.64, z: 2.74}
   _editorModelAsset: {fileID: 919132149155446097, guid: 871007b980cd49248af464cee3d30c8e, type: 3}
   _editorAnimationClip: {fileID: 1827226128182048838, guid: 1f46e4ede87dd274198858842cd6222a, type: 3}
   _editorApplyRootMotion: 0
   _editorBackgroundColor: {r: 0.16, g: 0.17, b: 0.19, a: 1}
   _editorShowGrid: 1
-  _editorCameraTarget: {x: 0.000000059604645, y: 1.2272894, z: -1.3874545}
-  _editorCameraDistance: 8.278598
-  _editorCameraYaw: 180
-  _editorCameraPitch: 12
-  _editorAnimationNormalizedTime: 0.0052151238
+  _editorCameraTarget: {x: 0.5303066, y: 3.0380502, z: 6.881163}
+  _editorCameraDistance: 12.5907135
+  _editorCameraYaw: 204.42105
+  _editorCameraPitch: 11.560019
+  _editorAnimationNormalizedTime: 0
   _editorIsAnimationPlaying: 0
+  _editorActionBlocks:
+  - Type: 2
+    StartTime: 0.4466709
+    EndTime: 0.6266713
+    Memo: 
+    PreviewValue: 1
+    PreviewRootmotion: 1
+    RootmotionSpace: 0
+    ConstrainRootmotionToGroundPlane: 1
+    RootmotionDirection: {x: 0, y: 0, z: 1}
+    RootmotionDistance: 6
+    RootmotionCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 2.728585
+        outSlope: 2.728585
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.024529718
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    PreviewDodgeArea: 1
+    DodgeAreaBindingMode: 0
+    DodgeAttachTransformPath: 
+    DodgeAreaPositionOffset: {x: 0, y: 0, z: 0}
+    DodgeAreaRotationEuler: {x: 0, y: 0, z: 0}
+    DodgeAreaSize: {x: 1, y: 1, z: 1}
+  - Type: 1
+    StartTime: 0.2750978
+    EndTime: 0.6166884
+    Memo: 
+    PreviewValue: 1
+    PreviewRootmotion: 1
+    RootmotionSpace: 0
+    ConstrainRootmotionToGroundPlane: 1
+    RootmotionDirection: {x: 0, y: 0, z: 1}
+    RootmotionDistance: 1
+    RootmotionCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 1
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    PreviewDodgeArea: 1
+    DodgeAreaBindingMode: 1
+    DodgeAttachTransformPath: 
+    DodgeAreaPositionOffset: {x: 0, y: 1, z: 1.85}
+    DodgeAreaRotationEuler: {x: 0, y: 0, z: 0}
+    DodgeAreaSize: {x: 2.14, y: 1.64, z: 2.74}
+  _editorSelectedActionBlockIndex: 1
