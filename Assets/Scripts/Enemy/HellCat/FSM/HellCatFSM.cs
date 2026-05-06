@@ -6,7 +6,6 @@ public class HellCatFSM
     public HellCatChaseState ChaseState;
     public HellCatStrafeState StrafeState;
     public HellCatDamagedState DamagedState;
-    public HellCatBasicAttackState BasicAttackState;
     public HellCatBiteAttackState BiteAttackState;
 
     private IState _currentState;
@@ -17,7 +16,6 @@ public class HellCatFSM
         ChaseState = new HellCatChaseState(core);
         StrafeState = new HellCatStrafeState(core);
         DamagedState = new HellCatDamagedState(core);
-        BasicAttackState = new HellCatBasicAttackState(core);
         BiteAttackState = new HellCatBiteAttackState(core);
     }
 

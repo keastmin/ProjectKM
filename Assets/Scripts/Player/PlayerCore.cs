@@ -14,7 +14,7 @@ namespace Player
     [RequireComponent(typeof(TargetingController))]
     [RequireComponent(typeof(AttackEffectController))]
     [RequireComponent(typeof(Animator))]
-    public class PlayerCore : MonoBehaviour, IDamageable, IDodgeTimingReceiver
+    public class PlayerCore : MonoBehaviour, IDamageable
     {
         [Header("스탯")]
         [SerializeField] private float _maxHealth = 100f;
@@ -70,6 +70,7 @@ namespace Player
         private readonly HashSet<Component> _activeDodgeTimingSources = new();
         private Coroutine _perfectDodgeTimeScaleCoroutine;
         private Coroutine _hitStopCoroutine;
+        private bool _canPerfectDodge = false;
 
         // 속도
         private float _targetSpeed;
@@ -132,6 +133,7 @@ namespace Player
                 _currentDodgeCooldownTimer = 0f;
             }
         }
+        public bool CanPerfectDodge => _canPerfectDodge;
         public float HP => _hp;
         public float MaxHealth => _maxHealth;
         public float AttackPower => _attackPower;
@@ -191,6 +193,8 @@ namespace Player
             }
 
             _fsm.Tick();
+
+            SetPerfectDodgeEnable(false);
         }
 
         private void FixedUpdate()
@@ -239,25 +243,6 @@ namespace Player
         public void HealthChangeHandle(float hp)
         {
             HealthChanged?.Invoke(hp, MaxHealth);
-        }
-
-        public void SetDodgeTimingActive(Component source, bool isActive)
-        {
-            if (source == null)
-            {
-                return;
-            }
-
-            if (isActive)
-            {
-                _activeDodgeTimingSources.Add(source);
-            }
-            else
-            {
-                _activeDodgeTimingSources.Remove(source);
-            }
-
-            StateVariables.DodgeVariable.CanPerfectDodge = _activeDodgeTimingSources.Count > 0;
         }
 
         public void TriggerPerfectDodgeTimeScale()
@@ -388,6 +373,11 @@ namespace Player
             yield return new WaitForSecondsRealtime(_hitStopDuration);
             Time.timeScale = originalTimeScale;
             _hitStopCoroutine = null;
+        }
+
+        public void SetPerfectDodgeEnable(bool isPerfectDodgeTiming)
+        {
+            _canPerfectDodge = isPerfectDodgeTiming;
         }
     }
 }

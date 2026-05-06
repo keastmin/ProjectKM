@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6dcee50b532480141926cc3b442b2d0d, type: 3}
-  m_Name: Attack2Data
+  m_Name: BiteAttackData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateAuthoringAsset
   _animatorStateName: Bite_Attack
   _additionalRootmotionBlocks:
@@ -57,10 +57,10 @@ MonoBehaviour:
   _editorApplyRootMotion: 0
   _editorBackgroundColor: {r: 0.16, g: 0.17, b: 0.19, a: 1}
   _editorShowGrid: 1
-  _editorCameraTarget: {x: 0.5303066, y: 3.0380502, z: 6.881163}
-  _editorCameraDistance: 12.5907135
-  _editorCameraYaw: 204.42105
-  _editorCameraPitch: 11.560019
+  _editorCameraTarget: {x: 0.000000059604645, y: 1.2272894, z: -1.3874545}
+  _editorCameraDistance: 8.278598
+  _editorCameraYaw: 180
+  _editorCameraPitch: 12
   _editorAnimationNormalizedTime: 0
   _editorIsAnimationPlaying: 0
   _editorActionBlocks:

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class HellCatBiteAttackState : IState
@@ -5,40 +6,41 @@ public class HellCatBiteAttackState : IState
     private HellCatCore _core;
 
     private int _animHash;
-    private AdditionalRootmotionRuntime _additionalRuntime;
 
     private AnimatorStateInfo _stateInfo;
     private bool _hasStateInfo;
 
+    private EnemyDodgeTimingDataPlayer _dodgeTimingPlayer;
+    private EnemyAdditionalRootMotionPlayer _additionalRMPlayer;
+
     public HellCatBiteAttackState(HellCatCore core)
     {
         _core = core;
-        _animHash = Animator.StringToHash("Base Layer." + core.BiteAttackStateData.AnimationName);
-        _additionalRuntime = new AdditionalRootmotionRuntime();
+        _animHash = Animator.StringToHash("Base Layer." + core.BiteAttackData.AnimatorStateName);
+        _additionalRMPlayer = new EnemyAdditionalRootMotionPlayer(core, core.BiteAttackData.AdditionalRootmotionBlocks);
+        _dodgeTimingPlayer = new EnemyDodgeTimingDataPlayer(core, core.BiteAttackData.DodgeTimingBlocks);
     }
 
     public void Enter()
     {
+        _additionalRMPlayer.InitAdditionalRootMotion();
         _stateInfo = default;
         _hasStateInfo = false;
 
         _core.Animator.CrossFade(_animHash, 0.03f, 0, 0f);
-        _additionalRuntime.Clear();
-
-        Vector3 lookDir = _core.PlayerCollider.transform.position - _core.transform.position;
-        lookDir.y = 0f;
-        Quaternion targetRot = Quaternion.LookRotation(lookDir.normalized);
-        _additionalRuntime.Reset(_core.BiteAttackStateData.AdditionalRoot, targetRot);
     }
 
     public void Tick()
     {
         _hasStateInfo = AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animHash, out _stateInfo);
 
-        if(_hasStateInfo && _stateInfo.normalizedTime > 0.92f)
+        if (_hasStateInfo && _stateInfo.normalizedTime > 0.92f)
         {
             _core.FSM.Transition(_core.FSM.IdleState);
         }
+
+        // 플레이어에게 회피 타이밍을 알림
+        _dodgeTimingPlayer.NotifyReciever();
     }
 
     public void FixedTick()
@@ -49,9 +51,8 @@ public class HellCatBiteAttackState : IState
             return;
         }
 
-        Vector3 delta = _additionalRuntime.ConsumeDelta(_stateInfo.normalizedTime);
-        delta.y = 0f;
-        _core.Rigidbody.linearVelocity = delta / Time.fixedDeltaTime;
+        Vector3 deltaPos = _additionalRMPlayer.ConsumeDeltaPosition();
+        _core.Rigidbody.linearVelocity = deltaPos;
     }
 
     public void LateTick()
@@ -61,12 +62,14 @@ public class HellCatBiteAttackState : IState
 
     public void AnimationTick()
     {
+        if (!_hasStateInfo)
+            return;
 
+        _additionalRMPlayer.AccrueDeltaPosition(_stateInfo.normalizedTime);
     }
 
     public void Exit()
     {
-        _additionalRuntime.Clear();
-        _hasStateInfo = false;
+        _core.DamagedFlag = false;
     }
 }

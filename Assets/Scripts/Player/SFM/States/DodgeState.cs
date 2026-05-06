@@ -17,22 +17,24 @@ public class DodgeState : StateBase
     private StateVariableDodge _dodgeVariable;
 
     private float _currentStateTime = 0f;
+    private bool _isPerfectDodge = false;
 
     public DodgeState(PlayerCore core) : base(core) 
     {
         _dodgeVariable = core.StateVariables.DodgeVariable;
     }
 
-    public override bool CanReceiveDamage => !_dodgeVariable.IsPerfectDodge;
+    public override bool CanReceiveDamage => !_core.CanPerfectDodge;
 
     public override void Enter()
     {
         Debug.Log("Dodge State");
         _core.ConsumeDodge(); // 회피 횟수 감소
-        _dodgeVariable.IsPerfectDodge = _dodgeVariable.CanPerfectDodge;
+
+        _isPerfectDodge = _core.CanPerfectDodge;
 
         // 완벽 회피 트리거
-        if (_dodgeVariable.IsPerfectDodge)
+        if (_core.CanPerfectDodge)
         {
             if (_core.DamageFlag)
             {
@@ -73,13 +75,13 @@ public class DodgeState : StateBase
         PlayerStateUtil.RotateImmediatelyTowardsDirection(_core.transform, _lookDir);
 
         // 데미지를 입으면 데미지 상태로 전환
-        if (_core.DamageFlag && !_dodgeVariable.IsPerfectDodge)
+        if (_core.DamageFlag && !_isPerfectDodge)
         {
             _core.FSM.Transition(_core.FSM.DamagedState);
             return;
         }
 
-        if (_dodgeVariable.IsPerfectDodge && _core.InputController.BasicComboAttackInput)
+        if (_isPerfectDodge && _core.InputController.BasicComboAttackInput)
         {
             _core.FSM.Transition(_core.FSM.DodgeCounterState);
             return;
@@ -92,10 +94,6 @@ public class DodgeState : StateBase
         }
 
         _currentStateTime += Time.deltaTime;
-        if(_dodgeVariable.IsPerfectDodge && _core.DodgeCounterDuration <= _currentStateTime)
-        {
-            _dodgeVariable.IsPerfectDodge = false;
-        }
 
         if (_isFront)
             FrontDodgeTick();
@@ -113,7 +111,7 @@ public class DodgeState : StateBase
 
     public override void Exit()
     {
-        _dodgeVariable.IsPerfectDodge = false;
+        _isPerfectDodge = false;
     }
 
     private void FrontDodgeTick()

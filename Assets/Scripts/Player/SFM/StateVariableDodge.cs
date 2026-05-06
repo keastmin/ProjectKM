@@ -12,7 +12,4 @@ public class StateVariableDodge
     [SerializeField] private float _backDodgeDistance = 3.0f; // 후면 회피 거리
 
     public float FrontDodgeTime => _frontDodgeTime;
-
-    public bool CanPerfectDodge = false;
-    public bool IsPerfectDodge = false;
 }

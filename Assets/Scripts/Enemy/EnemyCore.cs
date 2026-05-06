@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class EnemyCore : MonoBehaviour, IDamageable
 {
-    [Header("공격")]
-    [SerializeField] private List<EnemyMeleeAttackStruct> _meleeAttacks;
-
     [Header("경직")]
     [SerializeField] private int _stiffnessLevel = 0;
 
@@ -26,23 +23,9 @@ public class EnemyCore : MonoBehaviour, IDamageable
     public bool IsSuperArmour => _enableSuperArmour && _superArmourRemainTime > 0f;
     public Collider[] HurtColliders => _hurtColliders;
 
-    // 공격 데이터
-    public Dictionary<string, GameObject> AttackObjectDic;
-    public Dictionary<string, GameObject> DodgeWindowObjectDic;
-
     protected virtual void Awake()
     {
-        AttackObjectDic = new Dictionary<string, GameObject>();
-        DodgeWindowObjectDic = new Dictionary<string, GameObject>();
 
-        foreach (var ma in _meleeAttacks)
-        {
-            // 적 공격 이름과 콜라이더 딕셔너리 초기화
-            InitializeDic(ma.AttackObjects, AttackObjectDic);
-
-            // 적 회피 윈도우 이름과 콜라이더 딕셔너리 초기화
-            InitializeDic(ma.DodgeWindowObjects, DodgeWindowObjectDic);
-        }
     }
 
     protected virtual void Update()
@@ -126,66 +109,5 @@ public class EnemyCore : MonoBehaviour, IDamageable
     {
         _continuousDamageAmount = 0f;
         _lastDamageTime = float.MinValue;
-    }
-
-    // 오브젝트와 이름을 연결하는 딕셔너리를 초기화 하는 함수
-    private void InitializeDic(List<EnemyAttackColliderName> colList, Dictionary<string, GameObject> dataDic)
-    {
-        if (colList != null)
-        {
-            foreach (var cl in colList)
-            {
-                if (cl.AttackObject != null)
-                {
-                    dataDic[cl.Name] = cl.AttackObject;
-                    cl.AttackObject.SetActive(false);
-                }
-            }
-        }
-    }
-
-    public void SetAttackObjectsActive(IEnumerable<string> ids, bool isActive)
-    {
-        SetObjectsActive(AttackObjectDic, ids, isActive);
-    }
-
-    public void SetDodgeWindowObjectsActive(IEnumerable<string> ids, bool isActive)
-    {
-        SetObjectsActive(DodgeWindowObjectDic, ids, isActive);
-    }
-
-    private void SetObjectsActive(Dictionary<string, GameObject> objectDic, IEnumerable<string> ids, bool isActive)
-    {
-        if (objectDic == null || ids == null)
-        {
-            return;
-        }
-
-        foreach (string id in ids)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                continue;
-            }
-
-            if (objectDic.TryGetValue(id, out GameObject attackObject) && attackObject != null)
-            {
-                attackObject.SetActive(isActive);
-            }
-        }
-    }
-
-    public bool TryGetEnemyMeleeAttackData(string id, out EnemyMeleeAttackData data)
-    {
-        data = null;
-        foreach(var ad in _meleeAttacks)
-        {
-            if(ad.MeleeAttackData.ID == id)
-            {
-                data = ad.MeleeAttackData;
-                return true;
-            }
-        }
-        return false;
     }
 }
