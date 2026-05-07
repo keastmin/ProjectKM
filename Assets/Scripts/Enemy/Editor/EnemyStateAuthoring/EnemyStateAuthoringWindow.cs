@@ -335,6 +335,7 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         float overlayHeight = block.Type switch
         {
             EnemyStateAuthoringActionBlockType.AdditionalRootmotion => 394f,
+            EnemyStateAuthoringActionBlockType.AttackTiming => 390f,
             EnemyStateAuthoringActionBlockType.DodgeTiming => 390f,
             _ => 254f
         };
@@ -398,11 +399,36 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
             return;
         }
 
-        using (new EditorGUI.DisabledScope(true))
+        if (type == EnemyStateAuthoringActionBlockType.AttackTiming)
         {
-            EditorGUILayout.TextField("Attack ID", "Preview_Attack");
-            EditorGUILayout.Toggle("Enable Hitbox", true);
+            DrawAttackTimingPreviewFields();
+            return;
         }
+    }
+
+    private void DrawAttackTimingPreviewFields()
+    {
+        EnemyStateAuthoringActionBlockPreviewData block = _actionBlocks[_selectedActionBlockIndex];
+
+        block.PreviewAttackArea = EditorGUILayout.Toggle("Show Area In Preview", block.PreviewAttackArea);
+        block.AttackAreaBindingMode = (EnemyStateAuthoringDodgeAreaBindingMode)EditorGUILayout.EnumPopup("Binding", block.AttackAreaBindingMode);
+
+        if (block.AttackAreaBindingMode == EnemyStateAuthoringDodgeAreaBindingMode.AttachToTransform)
+        {
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                EditorGUILayout.PrefixLabel("Transform");
+                string label = string.IsNullOrEmpty(block.AttackAttachTransformPath) ? "(Root)" : block.AttackAttachTransformPath;
+                if (GUILayout.Button(label, EditorStyles.popup))
+                {
+                    ShowTransformSelectionMenu(block, true);
+                }
+            }
+        }
+
+        block.AttackAreaPositionOffset = EditorGUILayout.Vector3Field("Position Offset", block.AttackAreaPositionOffset);
+        block.AttackAreaRotationEuler = EditorGUILayout.Vector3Field("Rotation", block.AttackAreaRotationEuler);
+        block.AttackAreaSize = ClampAreaSize(EditorGUILayout.Vector3Field("Size", block.AttackAreaSize));
     }
 
     private void DrawDodgeTimingPreviewFields()
@@ -420,14 +446,14 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
                 string label = string.IsNullOrEmpty(block.DodgeAttachTransformPath) ? "(Root)" : block.DodgeAttachTransformPath;
                 if (GUILayout.Button(label, EditorStyles.popup))
                 {
-                    ShowTransformSelectionMenu(block);
+                    ShowTransformSelectionMenu(block, false);
                 }
             }
         }
 
         block.DodgeAreaPositionOffset = EditorGUILayout.Vector3Field("Position Offset", block.DodgeAreaPositionOffset);
         block.DodgeAreaRotationEuler = EditorGUILayout.Vector3Field("Rotation", block.DodgeAreaRotationEuler);
-        block.DodgeAreaSize = ClampDodgeAreaSize(EditorGUILayout.Vector3Field("Size", block.DodgeAreaSize));
+        block.DodgeAreaSize = ClampAreaSize(EditorGUILayout.Vector3Field("Size", block.DodgeAreaSize));
     }
 
     private void DrawAdditionalRootmotionPreviewFields()
@@ -442,12 +468,21 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         block.RootmotionCurve = EditorGUILayout.CurveField("Speed Curve", block.RootmotionCurve);
     }
 
-    private void ShowTransformSelectionMenu(EnemyStateAuthoringActionBlockPreviewData block)
+    private void ShowTransformSelectionMenu(EnemyStateAuthoringActionBlockPreviewData block, bool isAttackArea)
     {
         GenericMenu menu = new();
-        menu.AddItem(new GUIContent("(Root)"), string.IsNullOrEmpty(block.DodgeAttachTransformPath), () =>
+        string currentPath = isAttackArea ? block.AttackAttachTransformPath : block.DodgeAttachTransformPath;
+        menu.AddItem(new GUIContent("(Root)"), string.IsNullOrEmpty(currentPath), () =>
         {
-            block.DodgeAttachTransformPath = string.Empty;
+            if (isAttackArea)
+            {
+                block.AttackAttachTransformPath = string.Empty;
+            }
+            else
+            {
+                block.DodgeAttachTransformPath = string.Empty;
+            }
+
             SaveAssetState();
             Repaint();
         });
@@ -473,10 +508,18 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
                 continue;
             }
 
-            bool selected = block.DodgeAttachTransformPath == path;
+            bool selected = currentPath == path;
             menu.AddItem(new GUIContent(path), selected, () =>
             {
-                block.DodgeAttachTransformPath = path;
+                if (isAttackArea)
+                {
+                    block.AttackAttachTransformPath = path;
+                }
+                else
+                {
+                    block.DodgeAttachTransformPath = path;
+                }
+
                 SaveAssetState();
                 Repaint();
             });
@@ -485,7 +528,7 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         menu.ShowAsContext();
     }
 
-    private static Vector3 ClampDodgeAreaSize(Vector3 size)
+    private static Vector3 ClampAreaSize(Vector3 size)
     {
         return new Vector3(
             Mathf.Max(0.01f, size.x),
@@ -788,7 +831,13 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
             DodgeAttachTransformPath = string.Empty,
             DodgeAreaPositionOffset = new Vector3(0f, 1f, 1.5f),
             DodgeAreaRotationEuler = Vector3.zero,
-            DodgeAreaSize = new Vector3(1.5f, 1f, 1.5f)
+            DodgeAreaSize = new Vector3(1.5f, 1f, 1.5f),
+            PreviewAttackArea = true,
+            AttackAreaBindingMode = EnemyStateAuthoringDodgeAreaBindingMode.World,
+            AttackAttachTransformPath = string.Empty,
+            AttackAreaPositionOffset = new Vector3(0f, 1f, 1.2f),
+            AttackAreaRotationEuler = Vector3.zero,
+            AttackAreaSize = new Vector3(1.2f, 1f, 1.2f)
         });
 
         _selectedActionBlockIndex = _actionBlocks.Count - 1;
@@ -1343,12 +1392,12 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
 
         _previewUtility.BeginPreview(previewRect, GUIStyle.none);
         _previewUtility.camera.Render();
-        DrawDodgeTimingPreviewAreas(_previewUtility.camera);
+        DrawActionAreaPreviewAreas(_previewUtility.camera);
         Texture previewTexture = _previewUtility.EndPreview();
         GUI.DrawTexture(previewRect, previewTexture, ScaleMode.StretchToFill, false);
     }
 
-    private void DrawDodgeTimingPreviewAreas(Camera camera)
+    private void DrawActionAreaPreviewAreas(Camera camera)
     {
         if (camera == null || _previewModel == null || _actionBlocks == null)
         {
@@ -1370,9 +1419,7 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         for (int i = 0; i < _actionBlocks.Count; i++)
         {
             EnemyStateAuthoringActionBlockPreviewData block = _actionBlocks[i];
-            if (block == null ||
-                block.Type != EnemyStateAuthoringActionBlockType.DodgeTiming ||
-                !block.PreviewDodgeArea)
+            if (block == null || !ShouldDrawActionArea(block))
             {
                 continue;
             }
@@ -1384,29 +1431,51 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
                 continue;
             }
 
-            Color color = isActive
-                ? new Color(0.2f, 0.72f, 1f, 1f)
-                : new Color(0.2f, 0.72f, 1f, 0.42f);
+            Color color = GetActionAreaPreviewColor(block.Type, isActive);
             if (isSelected)
             {
                 color = Color.Lerp(color, Color.white, 0.22f);
             }
 
-            DrawDodgeAreaBox(block, color);
+            DrawActionAreaBox(block, color);
         }
 
         GL.End();
         GL.PopMatrix();
     }
 
-    private void DrawDodgeAreaBox(EnemyStateAuthoringActionBlockPreviewData block, Color color)
+    private bool ShouldDrawActionArea(EnemyStateAuthoringActionBlockPreviewData block)
     {
-        if (!TryGetDodgeAreaMatrix(block, out Matrix4x4 matrix))
+        return block.Type switch
+        {
+            EnemyStateAuthoringActionBlockType.AttackTiming => block.PreviewAttackArea,
+            EnemyStateAuthoringActionBlockType.DodgeTiming => block.PreviewDodgeArea,
+            _ => false
+        };
+    }
+
+    private Color GetActionAreaPreviewColor(EnemyStateAuthoringActionBlockType type, bool isActive)
+    {
+        return type switch
+        {
+            EnemyStateAuthoringActionBlockType.AttackTiming => isActive
+                ? new Color(1f, 0.28f, 0.18f, 1f)
+                : new Color(1f, 0.28f, 0.18f, 0.42f),
+            EnemyStateAuthoringActionBlockType.DodgeTiming => isActive
+                ? new Color(0.2f, 0.72f, 1f, 1f)
+                : new Color(0.2f, 0.72f, 1f, 0.42f),
+            _ => Color.clear
+        };
+    }
+
+    private void DrawActionAreaBox(EnemyStateAuthoringActionBlockPreviewData block, Color color)
+    {
+        if (!TryGetActionAreaMatrix(block, out Matrix4x4 matrix, out Vector3 size))
         {
             return;
         }
 
-        Vector3 half = ClampDodgeAreaSize(block.DodgeAreaSize) * 0.5f;
+        Vector3 half = ClampAreaSize(size) * 0.5f;
         Vector3 p000 = matrix.MultiplyPoint3x4(new Vector3(-half.x, -half.y, -half.z));
         Vector3 p001 = matrix.MultiplyPoint3x4(new Vector3(-half.x, -half.y, half.z));
         Vector3 p010 = matrix.MultiplyPoint3x4(new Vector3(-half.x, half.y, -half.z));
@@ -1431,27 +1500,56 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         DrawPreviewLine(p011, p111);
     }
 
-    private bool TryGetDodgeAreaMatrix(EnemyStateAuthoringActionBlockPreviewData block, out Matrix4x4 matrix)
+    private bool TryGetActionAreaMatrix(EnemyStateAuthoringActionBlockPreviewData block, out Matrix4x4 matrix, out Vector3 size)
     {
         matrix = Matrix4x4.identity;
-        Quaternion localRotation = Quaternion.Euler(block.DodgeAreaRotationEuler);
+        size = Vector3.one;
 
-        if (block.DodgeAreaBindingMode == EnemyStateAuthoringDodgeAreaBindingMode.AttachToTransform)
+        EnemyStateAuthoringDodgeAreaBindingMode bindingMode;
+        string attachTransformPath;
+        Vector3 positionOffset;
+        Vector3 rotationEuler;
+
+        switch (block.Type)
         {
-            Transform attachTransform = FindTransformByPath(_previewModel.transform, block.DodgeAttachTransformPath);
+            case EnemyStateAuthoringActionBlockType.AttackTiming:
+                bindingMode = block.AttackAreaBindingMode;
+                attachTransformPath = block.AttackAttachTransformPath;
+                positionOffset = block.AttackAreaPositionOffset;
+                rotationEuler = block.AttackAreaRotationEuler;
+                size = block.AttackAreaSize;
+                break;
+
+            case EnemyStateAuthoringActionBlockType.DodgeTiming:
+                bindingMode = block.DodgeAreaBindingMode;
+                attachTransformPath = block.DodgeAttachTransformPath;
+                positionOffset = block.DodgeAreaPositionOffset;
+                rotationEuler = block.DodgeAreaRotationEuler;
+                size = block.DodgeAreaSize;
+                break;
+
+            default:
+                return false;
+        }
+
+        Quaternion localRotation = Quaternion.Euler(rotationEuler);
+
+        if (bindingMode == EnemyStateAuthoringDodgeAreaBindingMode.AttachToTransform)
+        {
+            Transform attachTransform = FindTransformByPath(_previewModel.transform, attachTransformPath);
             if (attachTransform == null)
             {
                 return false;
             }
 
             matrix = Matrix4x4.TRS(
-                attachTransform.TransformPoint(block.DodgeAreaPositionOffset),
+                attachTransform.TransformPoint(positionOffset),
                 attachTransform.rotation * localRotation,
                 Vector3.one);
             return true;
         }
 
-        matrix = Matrix4x4.TRS(block.DodgeAreaPositionOffset, localRotation, Vector3.one);
+        matrix = Matrix4x4.TRS(positionOffset, localRotation, Vector3.one);
         return true;
     }
 

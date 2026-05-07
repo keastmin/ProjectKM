@@ -220,6 +220,68 @@ public sealed class EnemyStateAuthoringDodgeTimingBlock
     }
 }
 
+[Serializable]
+public sealed class EnemyStateAuthoringAttackTimingBlock
+{
+    [SerializeField, Range(0f, 1f)] private float _startNormalizedTime;
+    [SerializeField, Range(0f, 1f)] private float _endNormalizedTime = 0.2f;
+    [SerializeField] private EnemyStateAuthoringDodgeAreaBindingMode _bindingMode = EnemyStateAuthoringDodgeAreaBindingMode.World;
+    [SerializeField] private string _attachTransformPath = string.Empty;
+    [SerializeField] private Vector3 _positionOffset;
+    [SerializeField] private Vector3 _rotationEuler;
+    [SerializeField] private Vector3 _size = Vector3.one;
+
+    public float StartNormalizedTime => _startNormalizedTime;
+    public float EndNormalizedTime => _endNormalizedTime;
+    public EnemyStateAuthoringDodgeAreaBindingMode BindingMode => _bindingMode;
+    public string AttachTransformPath => _attachTransformPath;
+    public Vector3 PositionOffset => _positionOffset;
+    public Vector3 RotationEuler => _rotationEuler;
+    public Vector3 Size => _size;
+
+    public void SetData(
+        float startNormalizedTime,
+        float endNormalizedTime,
+        EnemyStateAuthoringDodgeAreaBindingMode bindingMode,
+        string attachTransformPath,
+        Vector3 positionOffset,
+        Vector3 rotationEuler,
+        Vector3 size)
+    {
+        _startNormalizedTime = startNormalizedTime;
+        _endNormalizedTime = endNormalizedTime;
+        _bindingMode = bindingMode;
+        _attachTransformPath = attachTransformPath ?? string.Empty;
+        _positionOffset = positionOffset;
+        _rotationEuler = rotationEuler;
+        _size = size;
+
+        Validate();
+    }
+
+    public bool IsOpen(float normalizedTime)
+    {
+        float clampedTime = Mathf.Clamp01(normalizedTime);
+        return clampedTime >= _startNormalizedTime && clampedTime <= _endNormalizedTime;
+    }
+
+    public void Validate()
+    {
+        _startNormalizedTime = Mathf.Clamp01(_startNormalizedTime);
+        _endNormalizedTime = Mathf.Clamp01(_endNormalizedTime);
+        if (_endNormalizedTime < _startNormalizedTime)
+        {
+            _endNormalizedTime = _startNormalizedTime;
+        }
+
+        _attachTransformPath ??= string.Empty;
+        _size = new Vector3(
+            Mathf.Max(0.01f, _size.x),
+            Mathf.Max(0.01f, _size.y),
+            Mathf.Max(0.01f, _size.z));
+    }
+}
+
 #if UNITY_EDITOR
 public enum EnemyStateAuthoringActionBlockType
 {
@@ -248,6 +310,12 @@ public sealed class EnemyStateAuthoringActionBlockPreviewData
     public Vector3 DodgeAreaPositionOffset;
     public Vector3 DodgeAreaRotationEuler;
     public Vector3 DodgeAreaSize = Vector3.one;
+    public bool PreviewAttackArea = true;
+    public EnemyStateAuthoringDodgeAreaBindingMode AttackAreaBindingMode = EnemyStateAuthoringDodgeAreaBindingMode.World;
+    public string AttackAttachTransformPath = string.Empty;
+    public Vector3 AttackAreaPositionOffset;
+    public Vector3 AttackAreaRotationEuler;
+    public Vector3 AttackAreaSize = Vector3.one;
 }
 #endif
 
@@ -257,10 +325,12 @@ public sealed class EnemyStateAuthoringAsset : ScriptableObject
     [SerializeField] private string _animatorStateName;
     [SerializeField] private EnemyStateAuthoringRootmotionBlock[] _additionalRootmotionBlocks = Array.Empty<EnemyStateAuthoringRootmotionBlock>();
     [SerializeField] private EnemyStateAuthoringDodgeTimingBlock[] _dodgeTimingBlocks = Array.Empty<EnemyStateAuthoringDodgeTimingBlock>();
+    [SerializeField] private EnemyStateAuthoringAttackTimingBlock[] _attackTimingBlocks = Array.Empty<EnemyStateAuthoringAttackTimingBlock>();
 
     public string AnimatorStateName => _animatorStateName;
     public EnemyStateAuthoringRootmotionBlock[] AdditionalRootmotionBlocks => _additionalRootmotionBlocks;
     public EnemyStateAuthoringDodgeTimingBlock[] DodgeTimingBlocks => _dodgeTimingBlocks;
+    public EnemyStateAuthoringAttackTimingBlock[] AttackTimingBlocks => _attackTimingBlocks;
 
     public Vector3 EvaluateAdditionalRootmotionCumulativeDelta(float normalizedTime, Quaternion localBasisRotation)
     {
@@ -416,6 +486,7 @@ public sealed class EnemyStateAuthoringAsset : ScriptableObject
     {
         SyncAdditionalRootmotionBlocksFromEditor();
         SyncDodgeTimingBlocksFromEditor();
+        SyncAttackTimingBlocksFromEditor();
     }
 
     public void SyncAdditionalRootmotionBlocksFromEditor()
@@ -481,6 +552,38 @@ public sealed class EnemyStateAuthoringAsset : ScriptableObject
 
         _dodgeTimingBlocks = dodgeTimingBlocks.ToArray();
     }
+
+    private void SyncAttackTimingBlocksFromEditor()
+    {
+        if (_editorActionBlocks == null)
+        {
+            _attackTimingBlocks = Array.Empty<EnemyStateAuthoringAttackTimingBlock>();
+            return;
+        }
+
+        List<EnemyStateAuthoringAttackTimingBlock> attackTimingBlocks = new();
+        for (int i = 0; i < _editorActionBlocks.Count; i++)
+        {
+            EnemyStateAuthoringActionBlockPreviewData editorBlock = _editorActionBlocks[i];
+            if (editorBlock == null || editorBlock.Type != EnemyStateAuthoringActionBlockType.AttackTiming)
+            {
+                continue;
+            }
+
+            EnemyStateAuthoringAttackTimingBlock attackTimingBlock = new();
+            attackTimingBlock.SetData(
+                editorBlock.StartTime,
+                editorBlock.EndTime,
+                editorBlock.AttackAreaBindingMode,
+                editorBlock.AttackAttachTransformPath,
+                editorBlock.AttackAreaPositionOffset,
+                editorBlock.AttackAreaRotationEuler,
+                editorBlock.AttackAreaSize);
+            attackTimingBlocks.Add(attackTimingBlock);
+        }
+
+        _attackTimingBlocks = attackTimingBlocks.ToArray();
+    }
 #endif
 
     private void OnValidate()
@@ -505,6 +608,17 @@ public sealed class EnemyStateAuthoringAsset : ScriptableObject
         {
             _dodgeTimingBlocks[i] ??= new EnemyStateAuthoringDodgeTimingBlock();
             _dodgeTimingBlocks[i].Validate();
+        }
+
+        if (_attackTimingBlocks == null)
+        {
+            _attackTimingBlocks = Array.Empty<EnemyStateAuthoringAttackTimingBlock>();
+        }
+
+        for (int i = 0; i < _attackTimingBlocks.Length; i++)
+        {
+            _attackTimingBlocks[i] ??= new EnemyStateAuthoringAttackTimingBlock();
+            _attackTimingBlocks[i].Validate();
         }
     }
 }
