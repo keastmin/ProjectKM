@@ -394,6 +394,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5852798176326268176, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
   m_PrefabInstance: {fileID: 3247384886497990576}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &726732293 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6074259771264933821, guid: 87a7b334819c5974fb0d0dde7cb148d1, type: 3}
+  m_PrefabInstance: {fileID: 4591024633482626244}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &921893345 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2773439520693383253, guid: 4e1b49457fe7edc419b4726fec8efd6b, type: 3}
@@ -1662,6 +1667,18 @@ PrefabInstance:
     - target: {fileID: 4311959702204664398, guid: 87a7b334819c5974fb0d0dde7cb148d1, type: 3}
       propertyPath: m_Name
       value: Enemy Hell Cat
+      objectReference: {fileID: 0}
+    - target: {fileID: 4311959702204664398, guid: 87a7b334819c5974fb0d0dde7cb148d1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4692940353805908275, guid: 87a7b334819c5974fb0d0dde7cb148d1, type: 3}
+      propertyPath: _modelRootTransform
+      value: 
+      objectReference: {fileID: 726732293}
+    - target: {fileID: 4703905574568540011, guid: 87a7b334819c5974fb0d0dde7cb148d1, type: 3}
+      propertyPath: m_Radius
+      value: 0.77
       objectReference: {fileID: 0}
     - target: {fileID: 6074259771264933821, guid: 87a7b334819c5974fb0d0dde7cb148d1, type: 3}
       propertyPath: m_LocalPosition.x

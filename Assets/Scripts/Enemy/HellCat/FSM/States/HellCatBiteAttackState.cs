@@ -12,6 +12,7 @@ public class HellCatBiteAttackState : IState
 
     private EnemyDodgeTimingDataPlayer _dodgeTimingPlayer;
     private EnemyAdditionalRootMotionPlayer _additionalRMPlayer;
+    private EnemyAttackTimingDataPlayer _attackTimingPlayer;
 
     public HellCatBiteAttackState(HellCatCore core)
     {
@@ -19,11 +20,13 @@ public class HellCatBiteAttackState : IState
         _animHash = Animator.StringToHash("Base Layer." + core.BiteAttackData.AnimatorStateName);
         _additionalRMPlayer = new EnemyAdditionalRootMotionPlayer(core, core.BiteAttackData.AdditionalRootmotionBlocks);
         _dodgeTimingPlayer = new EnemyDodgeTimingDataPlayer(core, core.BiteAttackData.DodgeTimingBlocks);
+        _attackTimingPlayer = new EnemyAttackTimingDataPlayer(core, core.BiteAttackData.AttackTimingBlocks);
     }
 
     public void Enter()
     {
         _additionalRMPlayer.InitAdditionalRootMotion();
+        _attackTimingPlayer.ClearDamageHashSet();
         _stateInfo = default;
         _hasStateInfo = false;
 
@@ -40,7 +43,10 @@ public class HellCatBiteAttackState : IState
         }
 
         // 플레이어에게 회피 타이밍을 알림
-        _dodgeTimingPlayer.NotifyReciever();
+        _dodgeTimingPlayer.NotifyReciever(_stateInfo.normalizedTime);
+
+        // 플레이어를 공격
+        _attackTimingPlayer.GiveDamage(_stateInfo.normalizedTime, 10f, _core.PlayerLayer);
     }
 
     public void FixedTick()
@@ -70,6 +76,7 @@ public class HellCatBiteAttackState : IState
 
     public void Exit()
     {
+        _attackTimingPlayer.ClearDamageHashSet();
         _core.DamagedFlag = false;
     }
 }

@@ -1,26 +1,37 @@
+using Player;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyDodgeTimingDataPlayer
+public class EnemyAttackTimingDataPlayer
 {
     private EnemyCore _core;
-    private EnemyStateAuthoringDodgeTimingBlock[] _blocks;
-    
-    public EnemyDodgeTimingDataPlayer(EnemyCore core, EnemyStateAuthoringDodgeTimingBlock[] blocks)
+    private EnemyStateAuthoringAttackTimingBlock[] _blocks;
+
+    private HashSet<IDamageable> _damageHash;
+
+    public EnemyAttackTimingDataPlayer(EnemyCore core, EnemyStateAuthoringAttackTimingBlock[] blocks)
     {
         _core = core;
         _blocks = blocks;
+        _damageHash = new HashSet<IDamageable>();
     }
 
-    public void NotifyReciever(float normalizedTime)
+    public void ClearDamageHashSet()
+    {
+        _damageHash.Clear();
+    }
+
+    public void GiveDamage(float normalizedTime, float damage, LayerMask layer)
     {
         if (_core == null || _blocks == null || _blocks.Length == 0)
         {
             return;
         }
 
-        foreach (EnemyStateAuthoringDodgeTimingBlock block in _blocks)
+        float clampedNormalizedTime = Mathf.Clamp01(normalizedTime);
+        foreach (EnemyStateAuthoringAttackTimingBlock block in _blocks)
         {
-            if (block == null || !block.IsOpen(normalizedTime))
+            if (block == null || !block.IsOpen(clampedNormalizedTime))
             {
                 continue;
             }
@@ -35,11 +46,13 @@ public class EnemyDodgeTimingDataPlayer
 
                 if (attachTransform == null)
                 {
+                    Debug.Log("attackTransform이 없음");
                     continue;
                 }
 
                 center = attachTransform.TransformPoint(block.PositionOffset);
                 rotation = attachTransform.rotation * rotation;
+                Debug.Log(attachTransform.name);
             }
 
             Vector3 halfExtents = new Vector3(
@@ -47,19 +60,23 @@ public class EnemyDodgeTimingDataPlayer
                 Mathf.Max(0.01f, block.Size.y),
                 Mathf.Max(0.01f, block.Size.z)) * 0.5f;
 
-            Collider[] overlappedColliders = Physics.OverlapBox(center, halfExtents, rotation, ~0, QueryTriggerInteraction.Collide);
+            Collider[] overlappedColliders = Physics.OverlapBox(center, halfExtents, rotation, layer, QueryTriggerInteraction.Collide);
             foreach (Collider overlappedCollider in overlappedColliders)
             {
+                Debug.Log("감지됨");
                 if (overlappedCollider == null)
                 {
                     continue;
                 }
 
-                Player.PlayerCore playerCore = overlappedCollider.GetComponentInParent<Player.PlayerCore>();
-                if (playerCore != null)
+                IDamageable damageable = overlappedCollider.GetComponentInParent<IDamageable>();
+                if (damageable == null || _damageHash.Contains(damageable))
                 {
-                    playerCore.SetPerfectDodgeEnable(true);
+                    continue;
                 }
+
+                _damageHash.Add(damageable);
+                damageable.TakeDamage(damage);
             }
         }
     }

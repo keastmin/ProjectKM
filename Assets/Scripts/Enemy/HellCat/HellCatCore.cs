@@ -35,6 +35,9 @@ public class HellCatCore : EnemyCore
     [SerializeField] private EnemyStateData _damagedStateData;
     [SerializeField] private EnemyStateAuthoringAsset _hellCatBiteAttackStateData;
 
+    [Header("모델")]
+    [SerializeField] private Transform _modelRootTransform;
+
     private Collider[] _detectedColliders;
     private Collider _playerCollider;
 
@@ -54,6 +57,8 @@ public class HellCatCore : EnemyCore
     public float ReChaseDistance => _reChaseDistance;
     public Vector2 StrafingRange => _strafingRange;
     public Collider PlayerCollider => _playerCollider;
+    public LayerMask PlayerLayer => _playerLayer;
+    public Transform ModelRootTransform => _modelRootTransform;
 
     public EnemyStateData IdleStateData => _idleStateData;
     public EnemyStateData LeftStrafeStateData => _leftStrafeStateData;
