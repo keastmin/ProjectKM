@@ -1,4 +1,5 @@
 using Player;
+using System;
 using UnityEngine;
 
 public class DodgeState : StateBase
@@ -19,6 +20,10 @@ public class DodgeState : StateBase
     private float _currentStateTime = 0f;
     private bool _isPerfectDodge = false;
 
+    private float _perfectDodgeEndNormalizedTime = 0.8f;
+    public event Action<float> OnPerfectDodgeVolumeEffectStarted;
+    public event Action OnPerfectDodgeVolumeEffectEnded;
+
     public DodgeState(PlayerCore core) : base(core) 
     {
         _dodgeVariable = core.StateVariables.DodgeVariable;
@@ -28,6 +33,15 @@ public class DodgeState : StateBase
 
     public override void Enter()
     {
+        // 정면 회피, 후면 회피 결정
+        _isFront = (_core.InputController.MoveInput.sqrMagnitude >= 0.01f);
+
+        // 애니메이션 해쉬 결정
+        _animHash = (_isFront) ? PlayerAnimationHash.Katana_Dodge_Front : PlayerAnimationHash.Katana_Dodge_Back;
+
+        // 애니메이션 재생
+        _core.Animator.CrossFade(_animHash, 0f, 0, 0f);
+
         Debug.Log("Dodge State");
         _core.ConsumeDodge(); // 회피 횟수 감소
 
@@ -36,31 +50,13 @@ public class DodgeState : StateBase
         // 완벽 회피 트리거
         if (_core.CanPerfectDodge)
         {
-            if (_core.DamageFlag)
-            {
-                _core.DamageFlag = false;
-                // 잃은 HP 복원
-
-            }
-            _core.TriggerPerfectDodgeTimeScale();
-            _core.SetNearDodgeCounterTarget();
-            _core.TrailEffector.PerfactDodgeMeshTrailEffectOn(_core.DodgeCounterDuration);
-            _core.VolumeEffect.PerfectDodgeEffectOn(_core.DodgeCounterDuration);
+            PerfectDodgeStart();
         }
         _currentStateTime = 0f;
-
-        // 정면 회피, 후면 회피 결정
-        _isFront = (_core.InputController.MoveInput.sqrMagnitude >= 0.01f);
 
         // 바라볼 방향 결정
         _lookDir = PlayerStateUtil.GetCameraRelativeFacingDirection(_core.transform, _core.PlayerCamera, _core.InputController.MoveInput);
         PlayerStateUtil.RotateImmediatelyTowardsDirection(_core.transform, _lookDir);
-
-        // 애니메이션 해쉬 결정
-        _animHash = (_isFront) ? PlayerAnimationHash.Katana_Dodge_Front : PlayerAnimationHash.Katana_Dodge_Back;
-        
-        // 애니메이션 재생
-        _core.Animator.CrossFade(_animHash, 0f, 0, 0f);
 
         // 정면 회피 변수 초기화
         _frontDodgeCurrentTime = 0f;
@@ -95,6 +91,12 @@ public class DodgeState : StateBase
 
         _currentStateTime += Time.deltaTime;
 
+        if (_currentStateTime >= _perfectDodgeEndNormalizedTime && _isPerfectDodge)
+        {
+            PerfectDodgeEnd();
+            _isPerfectDodge = false;
+        }
+
         if (_isFront)
             FrontDodgeTick();
         else
@@ -111,6 +113,8 @@ public class DodgeState : StateBase
 
     public override void Exit()
     {
+        if (_isPerfectDodge)
+            PerfectDodgeEnd();
         _isPerfectDodge = false;
     }
 
@@ -144,5 +148,32 @@ public class DodgeState : StateBase
     private void BackDodgeFixedTick()
     {
         _core.Mover.Move(_lookDir.normalized * _core.CurrentSpeed);
+    }
+
+    private void PerfectDodgeStart()
+    {
+        float animLength = GetAnimationPlayTime();
+        OnPerfectDodgeVolumeEffectStarted?.Invoke(animLength);
+
+        if (_core.DamageFlag)
+        {
+            _core.DamageFlag = false;
+            // 잃은 HP 복원
+
+        }
+        _core.TriggerPerfectDodgeTimeScale();
+        _core.SetNearDodgeCounterTarget();
+        _core.TrailEffector.PerfactDodgeMeshTrailEffectOn(_core.DodgeCounterDuration);
+        _core.VolumeEffect.PerfectDodgeEffectOn(_core.DodgeCounterDuration);
+    }
+
+    private void PerfectDodgeEnd()
+    {
+        OnPerfectDodgeVolumeEffectEnded?.Invoke();
+    }
+
+    private float GetAnimationPlayTime()
+    {
+        return _stateInfo.length / _core.Animator.speed;
     }
 }

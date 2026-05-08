@@ -44,9 +44,10 @@ namespace Player
 
         [Header("회피")]
         [SerializeField] private float _perfectDodgeSlowTimeScale = 0.15f;
-        [SerializeField] private float _perfectDodgeSlowDownDuration = 0.08f;
-        [SerializeField] private float _perfectDodgeSlowHoldDuration = 2f;
-        [SerializeField] private float _perfectDodgeRecoverDuration = 0.35f;
+        [SerializeField] private float _perfectDodgeSlowStartOffset = 0.12f;
+        [SerializeField] private float _perfectDodgeSlowDownDuration = 0.1f;
+        [SerializeField] private float _perfectDodgeSlowHoldDuration = 0.11f;
+        [SerializeField] private float _perfectDodgeRecoverDuration = 0.1f;
         [SerializeField] private int _maxDodgeAvailableCount = 2; // 최대 연속 회피 가능 횟수
         [SerializeField] private float _dodgeCooldown = 2f; // 회피 쿨타임
         [SerializeField]
@@ -270,6 +271,8 @@ namespace Player
         {
             const float normalTimeScale = 1f;
             float targetTimeScale = Mathf.Clamp(_perfectDodgeSlowTimeScale, 0.01f, normalTimeScale);
+
+            yield return new WaitForSecondsRealtime(_perfectDodgeSlowStartOffset);
 
             yield return LerpTimeScale(Time.timeScale, targetTimeScale, _perfectDodgeSlowDownDuration);
 

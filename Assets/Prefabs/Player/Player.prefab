@@ -7408,6 +7408,7 @@ MonoBehaviour:
       _frontDodgeDistance: 2
       _backDodgeDistance: 2
   _perfectDodgeSlowTimeScale: 0.15
+  _perfectDodgeSlowStartOffset: 0.12
   _perfectDodgeSlowDownDuration: 0.35
   _perfectDodgeSlowHoldDuration: 0.25
   _perfectDodgeRecoverDuration: 0.1

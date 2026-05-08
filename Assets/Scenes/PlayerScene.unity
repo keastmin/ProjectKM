@@ -1640,6 +1640,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: _animClip
+      value: 
+      objectReference: {fileID: 7400000, guid: 00a12c5d130b0eb46867072a41035e3f, type: 2}
+    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: _playerCamera
       value: 
       objectReference: {fileID: 2084274438}
@@ -1647,6 +1651,14 @@ PrefabInstance:
       propertyPath: _volumeEffect
       value: 
       objectReference: {fileID: 1834032606}
+    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: _perfectDodgeSlowDownDuration
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: _perfectDodgeSlowHoldDuration
+      value: 0.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1670,7 +1682,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4311959702204664398, guid: 87a7b334819c5974fb0d0dde7cb148d1, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4692940353805908275, guid: 87a7b334819c5974fb0d0dde7cb148d1, type: 3}
       propertyPath: _modelRootTransform
