@@ -11,9 +11,8 @@ public class DodgeState : StateBase
     private Vector3 _lookDir;
 
     // 정면 회피
-    private float _frontDodgeCurrentTime;
-    private float _frontDodgeEndTime;
-    private float _frontDodgeTargetEndSpeed; // 정면 회피 목표 종료 속도
+    private float _dodgeCurrentTime;
+    private float _dodgePlayTime;
 
     private StateVariableDodge _dodgeVariable;
 
@@ -33,6 +32,9 @@ public class DodgeState : StateBase
 
     public override void Enter()
     {
+        _core.TargetSpeed = 0f;
+        _core.CurrentSpeed = 0f;
+
         // 정면 회피, 후면 회피 결정
         _isFront = (_core.InputController.MoveInput.sqrMagnitude >= 0.01f);
 
@@ -41,6 +43,9 @@ public class DodgeState : StateBase
 
         // 애니메이션 재생
         _core.Animator.CrossFade(_animHash, 0f, 0, 0f);
+        _core.Animator.Update(0f);
+        RefreshDodgeAnimatorStateInfo();
+        _dodgePlayTime = GetAnimationPlayTime();
 
         Debug.Log("Dodge State");
         _core.ConsumeDodge(); // 회피 횟수 감소
@@ -59,11 +64,9 @@ public class DodgeState : StateBase
         PlayerStateUtil.RotateImmediatelyTowardsDirection(_core.transform, _lookDir);
 
         // 정면 회피 변수 초기화
-        _frontDodgeCurrentTime = 0f;
-        _frontDodgeEndTime = _core.StateVariables.DodgeVariable.FrontDodgeTime;
-        _frontDodgeTargetEndSpeed = _core.RunSpeed; // 달리기 속도가 목표 회피 종료 속도
+        _dodgeCurrentTime = 0f;
 
-        _core.TargetSpeed = (_isFront) ? _core.RunSpeed : -_core.RunSpeed;
+        ApplyDodgeSpeed(0f);
     }
 
     public override void Tick()
@@ -97,18 +100,12 @@ public class DodgeState : StateBase
             _isPerfectDodge = false;
         }
 
-        if (_isFront)
-            FrontDodgeTick();
-        else
-            BackDodgeTick();
+        DodgeTick();
     }
 
     public override void FixedTick()
     {
-        if (_isFront)
-            FrontDodgeFixedTick();
-        else
-            BackDodgeFixedTick();
+        DodgeFixedTick();
     }
 
     public override void Exit()
@@ -118,36 +115,43 @@ public class DodgeState : StateBase
         _isPerfectDodge = false;
     }
 
-    private void FrontDodgeTick()
+    private void DodgeTick()
     {
-        _frontDodgeCurrentTime += Time.deltaTime;
+        _dodgeCurrentTime += Time.deltaTime;
+        float normalizedTime = GetDodgeNormalizedTime();
+        ApplyDodgeSpeed(normalizedTime);
 
-        if (_frontDodgeCurrentTime >= _frontDodgeEndTime)
+        if(normalizedTime >= 0.98f)
         {
-            _core.FSM.Transition(_core.FSM.RunState);
+            _core.FSM.Transition(_isFront ? _core.FSM.RunState : _core.FSM.IdleState);
             return;
         }
     }
 
-    private void BackDodgeTick()
-    {
-        AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animHash, out _stateInfo);
-
-        if(_stateInfo.normalizedTime >= 0.98f)
-        {
-            _core.FSM.Transition(_core.FSM.IdleState);
-            return;
-        }
-    }
-
-    private void FrontDodgeFixedTick()
+    private void DodgeFixedTick()
     {
         _core.Mover.Move(_lookDir.normalized * _core.CurrentSpeed);
     }
 
-    private void BackDodgeFixedTick()
+    private float GetDodgeNormalizedTime()
     {
-        _core.Mover.Move(_lookDir.normalized * _core.CurrentSpeed);
+        if (_dodgePlayTime <= 0f)
+            return 1f;
+
+        return Mathf.Clamp01(_dodgeCurrentTime / _dodgePlayTime);
+    }
+
+    private void ApplyDodgeSpeed(float normalizedTime)
+    {
+        float maxSpeed = _isFront ? _dodgeVariable.FrontDodgeMaxSpeed : _dodgeVariable.BackDodgeMaxSpeed;
+        float recoverySpeed = _isFront ? _dodgeVariable.FrontDodgeRecoverySpeed : _dodgeVariable.BackDodgeRecoverySpeed;
+        AnimationCurve speedCurve = _isFront ? _dodgeVariable.FrontDodgeSpeedCurve : _dodgeVariable.BackDodgeSpeedCurve;
+        float curveValue = speedCurve != null && speedCurve.length > 0 ? Mathf.Clamp01(speedCurve.Evaluate(normalizedTime)) : 1f;
+        float speed = Mathf.Lerp(recoverySpeed, maxSpeed, curveValue);
+        float signedSpeed = _isFront ? speed : -speed;
+
+        _core.TargetSpeed = signedSpeed;
+        _core.CurrentSpeed = signedSpeed;
     }
 
     private void PerfectDodgeStart()
@@ -174,6 +178,18 @@ public class DodgeState : StateBase
 
     private float GetAnimationPlayTime()
     {
-        return _stateInfo.length / _core.Animator.speed;
+        if (_stateInfo.length <= 0f)
+            return 0f;
+
+        float animatorSpeed = Mathf.Abs(_core.Animator.speed);
+        if (animatorSpeed <= 0f)
+            return _stateInfo.length;
+
+        return _stateInfo.length / animatorSpeed;
+    }
+
+    private bool RefreshDodgeAnimatorStateInfo()
+    {
+        return AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animHash, out _stateInfo);
     }
 }

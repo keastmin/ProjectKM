@@ -1659,6 +1659,10 @@ PrefabInstance:
       propertyPath: _perfectDodgeSlowHoldDuration
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+      propertyPath: _stateVariables._dodgeVariable._backDodgeMaxSpeed
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
