@@ -52,7 +52,6 @@ public class EnemyAttackTimingDataPlayer
 
                 center = attachTransform.TransformPoint(block.PositionOffset);
                 rotation = attachTransform.rotation * rotation;
-                Debug.Log(attachTransform.name);
             }
 
             Vector3 halfExtents = new Vector3(
@@ -63,7 +62,6 @@ public class EnemyAttackTimingDataPlayer
             Collider[] overlappedColliders = Physics.OverlapBox(center, halfExtents, rotation, layer, QueryTriggerInteraction.Collide);
             foreach (Collider overlappedCollider in overlappedColliders)
             {
-                Debug.Log("°¨ÁöµÊ");
                 if (overlappedCollider == null)
                 {
                     continue;

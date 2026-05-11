@@ -166,7 +166,6 @@ public class DodgeState : StateBase
 
         }
         _core.TriggerPerfectDodgeTimeScale();
-        _core.SetNearDodgeCounterTarget();
         _core.TrailEffector.PerfactDodgeMeshTrailEffectOn(_core.DodgeCounterDuration);
         _core.VolumeEffect.PerfectDodgeEffectOn(_core.DodgeCounterDuration);
     }

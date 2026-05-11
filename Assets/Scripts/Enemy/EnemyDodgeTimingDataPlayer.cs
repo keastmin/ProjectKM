@@ -58,7 +58,7 @@ public class EnemyDodgeTimingDataPlayer
                 Player.PlayerCore playerCore = overlappedCollider.GetComponentInParent<Player.PlayerCore>();
                 if (playerCore != null)
                 {
-                    playerCore.SetPerfectDodgeEnable(true);
+                    playerCore.RecievePerfectDodgeInfo(_core);
                 }
             }
         }

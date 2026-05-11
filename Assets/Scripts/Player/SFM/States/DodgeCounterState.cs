@@ -12,6 +12,7 @@ public class DodgeCounterState : StateBase
     private Vector3 _animDeltaPos;
     private AttackData _attackData;
     private int _animHash;
+    private Quaternion _targetRot;
 
     public DodgeCounterState(PlayerCore core) : base(core)
     {
@@ -32,16 +33,7 @@ public class DodgeCounterState : StateBase
         _attackRuntime.Reset(_attackData != null ? _attackData.TimingProfile : null);
         _core.Animator.CrossFade(_attackData != null ? _attackData.AnimationName : "Katana_Dodge_Counter", 0.03f, 0, 0f);
 
-        if(_core.DodgeCounterTarget != null)
-        {
-            Vector3 enemyHurtColPos = _core.DodgeCounterTarget.transform.position;
-            enemyHurtColPos.y = _core.transform.position.y;
-            PlayerStateUtil.RotateImmediatelyTowardsDirection(_core.transform, (enemyHurtColPos - _core.transform.position).normalized);
-        }
-        else
-        {
-            Debug.Log("회피 카운터 대상이 없습니다.");
-        }
+        _targetRot = _core.transform.rotation;
 
         _additionalRootmotionRuntime.Reset(_attackData != null ? _attackData.AdditionalRootmotion : null, _core.transform.rotation);
 
@@ -52,6 +44,14 @@ public class DodgeCounterState : StateBase
     {
         AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animHash, out _animInfo);
         _attackRuntime.Process(_attackData, _animInfo.normalizedTime, _core.CameraShake, _core.StartHitStop);
+
+        if (_core.DodgeEnemy != null)
+        {
+            Vector3 enemyHurtColPos = _core.DodgeEnemy.transform.position;
+            enemyHurtColPos.y = _core.transform.position.y;
+            _targetRot = Quaternion.LookRotation((enemyHurtColPos - _core.transform.position).normalized);
+        }
+        _core.transform.rotation = _targetRot;
 
         if (_animInfo.normalizedTime >= 0.97f)
         {

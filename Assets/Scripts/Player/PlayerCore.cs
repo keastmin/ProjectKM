@@ -58,6 +58,7 @@ namespace Player
                 new Keyframe(1f, 0f)); // 완벽 회피 시 화면을 흑백으로 만드는 효과를 위한 커브
         private int _dodgeAvailableCount; // 현재 남은 연속 회피 가능 횟수
         private float _currentDodgeCooldownTimer; // 현재 회피 쿨타임 타이머
+        private EnemyCore _dodgeEnemy; // 회피 타이밍을 준 주체 적
 
         // 컴포넌트
         private InputController _inputController;
@@ -79,9 +80,6 @@ namespace Player
 
         // 상태머신
         private StateMachine _fsm;
-
-        // 타겟
-        private Collider _dodgeCounterTarget;
 
         // 스탯
         private float _hp;
@@ -118,8 +116,6 @@ namespace Player
         public AttackData DodgeCounterData => _dodgeCounterData;
         public AttackData DashAttackData => _dashAttackData;
         public StateVariableContainter StateVariables => _stateVariables;
-        public HashSet<Component> ActiveDodgeTimingSources => _activeDodgeTimingSources;
-        public Collider DodgeCounterTarget => _dodgeCounterTarget;
         public bool DamageFlag { get; set; } = false;
         public bool CanReceiveDamage => _fsm?.CanReceiveDamage ?? true;
         public int DodgeAvailableCount
@@ -150,6 +146,7 @@ namespace Player
                 _isDead = value;
             }
         }
+        public EnemyCore DodgeEnemy => _dodgeEnemy;
 
         private void Awake()
         {
@@ -306,42 +303,6 @@ namespace Player
             Time.timeScale = end;
         }
 
-        /// <summary>
-        /// 회피 성공 후 카운터 공격을 할 수 있는 타겟 설정
-        /// </summary>
-        public void SetNearDodgeCounterTarget()
-        {
-            // 1. 현재 _activeDodgeTimingSources에 있는 타겟들이 가지고 있는 타격 가능한 콜라이더 중 가장 가까운 콜라이더를 찾음
-            // 2. 찾은 콜라이더를 _dodgeCounterTarget 타겟으로 등록함
-
-            _dodgeCounterTarget = null;
-            float minDistance = float.MaxValue;
-            
-            foreach(var source in _activeDodgeTimingSources)
-            {
-                EnemyCore enemy = source.GetComponentInParent<EnemyCore>();
-                if(enemy == null)
-                    continue;
-
-                Collider[] hurtColliders = enemy.HurtColliders;
-                if (hurtColliders == null)
-                    continue;
-
-                foreach(var col in hurtColliders)
-                {
-                    if (col == null) continue;
-
-                    Vector3 targetPos = _targetingController.GetWarpPos(col);
-                    float dist = Vector3.Distance(transform.position, targetPos);
-                    if (dist < minDistance)
-                    {
-                        _dodgeCounterTarget = col;
-                        minDistance = dist;
-                    }
-                }
-            }
-        }
-
         // 회피 카운트를 감소시킴
         public void ConsumeDodge() => DodgeAvailableCount--;
 
@@ -351,7 +312,6 @@ namespace Player
             if(_cinemachineImpulseSource != null)
             {
                 _cinemachineImpulseSource.GenerateImpulse();
-                Debug.Log("카메라 흔들기");
             }
             else
             {
@@ -376,6 +336,12 @@ namespace Player
             yield return new WaitForSecondsRealtime(_hitStopDuration);
             Time.timeScale = originalTimeScale;
             _hitStopCoroutine = null;
+        }
+
+        public void RecievePerfectDodgeInfo(EnemyCore dodgeEnemy)
+        {
+            SetPerfectDodgeEnable(true);
+            _dodgeEnemy = dodgeEnemy;
         }
 
         public void SetPerfectDodgeEnable(bool isPerfectDodgeTiming)
