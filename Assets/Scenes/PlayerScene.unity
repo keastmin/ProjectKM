@@ -867,6 +867,17 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!114 &1720184073 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3694149225040573424, guid: 4e1b49457fe7edc419b4726fec8efd6b, type: 3}
+  m_PrefabInstance: {fileID: 7303288817778436828}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!20 &1739902535 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 1743255942322742081, guid: 52e99dc35b4b9c7428000169f23130fc, type: 3}
@@ -949,7 +960,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -1923,6 +1934,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1821481759}
     m_Modifications:
+    - target: {fileID: 1359839394016539427, guid: 4e1b49457fe7edc419b4726fec8efd6b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2773439520693383253, guid: 4e1b49457fe7edc419b4726fec8efd6b, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2003,6 +2018,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5332326240307354570, guid: 4e1b49457fe7edc419b4726fec8efd6b, type: 3}
+      propertyPath: _timerText
+      value: 
+      objectReference: {fileID: 1720184073}
     - target: {fileID: 5468122451613621164, guid: 4e1b49457fe7edc419b4726fec8efd6b, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -2010,6 +2029,10 @@ PrefabInstance:
     - target: {fileID: 5468122451613621164, guid: 4e1b49457fe7edc419b4726fec8efd6b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6769156354410936406, guid: 4e1b49457fe7edc419b4726fec8efd6b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7753869528221747554, guid: 4e1b49457fe7edc419b4726fec8efd6b, type: 3}
       propertyPath: m_Name

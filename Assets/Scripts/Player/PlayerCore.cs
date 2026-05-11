@@ -85,7 +85,10 @@ namespace Player
         private float _hp;
         private bool _isDead = false;
 
-        public event Action<float, float> HealthChanged;
+        // Action
+        public event Action<float, float> OnHealthChanged;
+        public event Action<int> OnDodgeCountChanged;
+        public event Action<float, float> OnDodgeTimerRunning;
 
         public StateMachine FSM => _fsm;
         public InputController InputController => _inputController;
@@ -118,6 +121,18 @@ namespace Player
         public StateVariableContainter StateVariables => _stateVariables;
         public bool DamageFlag { get; set; } = false;
         public bool CanReceiveDamage => _fsm?.CanReceiveDamage ?? true;
+        public float CurrentDodgeCooldownTimer
+        {
+            get
+            {
+                return _currentDodgeCooldownTimer;
+            }
+            set
+            {
+                _currentDodgeCooldownTimer = value;
+                OnDodgeTimerRunning?.Invoke(_currentDodgeCooldownTimer, _dodgeCooldown);
+            }
+        }
         public int DodgeAvailableCount
         {
             get
@@ -127,11 +142,20 @@ namespace Player
             private set
             {
                 _dodgeAvailableCount = value;
-                _currentDodgeCooldownTimer = 0f;
+                OnDodgeCountChanged?.Invoke(_dodgeAvailableCount);
             }
         }
         public bool CanPerfectDodge => _canPerfectDodge;
-        public float HP => _hp;
+        public float HP
+        {
+            get { return _hp; }
+            set
+            {
+                _hp = value;
+                _hp = Mathf.Clamp(_hp, 0f, MaxHealth);
+                OnHealthChanged?.Invoke(_hp, MaxHealth);
+            }
+        }
         public float MaxHealth => _maxHealth;
         public float AttackPower => _attackPower;
         public float DefensePower => _defensePower;
@@ -160,12 +184,11 @@ namespace Player
             TryGetComponent(out _cinemachineImpulseSource);
             TryGetComponent(out _trailEffector);
             _fsm = new StateMachine(this);
-            _hp = Mathf.Max(0f, _maxHealth);
+            HP = MaxHealth;
 
-            _dodgeAvailableCount = _maxDodgeAvailableCount;
-            _currentDodgeCooldownTimer = 0f;
+            DodgeAvailableCount = _maxDodgeAvailableCount;
+            CurrentDodgeCooldownTimer = _dodgeCooldown;
             _isDead = false;
-            HealthChanged?.Invoke(_hp, _maxHealth);
         }
 
         private void Start()
@@ -181,12 +204,12 @@ namespace Player
                 return;
             }
 
-            if(_currentDodgeCooldownTimer < _dodgeCooldown)
+            if(CurrentDodgeCooldownTimer < _dodgeCooldown)
             {
-                _currentDodgeCooldownTimer += Time.deltaTime;
-                if(_currentDodgeCooldownTimer >= _dodgeCooldown)
+                CurrentDodgeCooldownTimer += Time.deltaTime;
+                if(CurrentDodgeCooldownTimer >= _dodgeCooldown)
                 {
-                    _dodgeAvailableCount = _maxDodgeAvailableCount;
+                    DodgeAvailableCount = _maxDodgeAvailableCount;
                 }
             }
 
@@ -226,21 +249,12 @@ namespace Player
             }
 
             DamageFlag = true;
-            _hp -= Mathf.Max(0f, damage - DefensePower);
-            _hp = Mathf.Max(0f, HP);
-            HealthChangeHandle(HP);
+            HP -= (damage - DefensePower);
         }
 
         public void Heal(float amount)
         {
-            _hp += amount;
-            _hp = Mathf.Min(MaxHealth, HP);
-            HealthChangeHandle(HP);
-        }
-
-        public void HealthChangeHandle(float hp)
-        {
-            HealthChanged?.Invoke(hp, MaxHealth);
+            HP += amount;
         }
 
         public void TriggerPerfectDodgeTimeScale()
@@ -304,7 +318,11 @@ namespace Player
         }
 
         // 회피 카운트를 감소시킴
-        public void ConsumeDodge() => DodgeAvailableCount--;
+        public void ConsumeDodge() 
+        {
+            CurrentDodgeCooldownTimer = 0f;
+            DodgeAvailableCount--; 
+        }
 
         // 카메라 흔들림 트리거
         public void CameraShake()
