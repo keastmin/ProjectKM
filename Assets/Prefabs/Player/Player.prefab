@@ -7405,7 +7405,7 @@ MonoBehaviour:
   _stateVariables:
     _dodgeVariable:
       _frontDodgeMaxSpeed: 12
-      _frontDodgeRecoverySpeed: 8
+      _frontDodgeRecoverySpeed: 6
       _frontDodgeSpeedCurve:
         serializedVersion: 2
         m_Curve:
@@ -7439,7 +7439,7 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      _backDodgeMaxSpeed: 10
+      _backDodgeMaxSpeed: 20
       _backDodgeRecoverySpeed: 0
       _backDodgeSpeedCurve:
         serializedVersion: 2
@@ -7476,8 +7476,8 @@ MonoBehaviour:
         m_RotationOrder: 4
   _perfectDodgeSlowTimeScale: 0.15
   _perfectDodgeSlowStartOffset: 0.12
-  _perfectDodgeSlowDownDuration: 0.35
-  _perfectDodgeSlowHoldDuration: 0.25
+  _perfectDodgeSlowDownDuration: 0.1
+  _perfectDodgeSlowHoldDuration: 0.3
   _perfectDodgeRecoverDuration: 0.1
   _maxDodgeAvailableCount: 2
   _dodgeCooldown: 2
@@ -7613,6 +7613,8 @@ MonoBehaviour:
   _moveName: Move
   _dodgeName: Dodge
   _basicComboAttackName: BasicComboAttack
+  _qSkillName: QSkill
+  _eSkillName: ESkill
 --- !u!114 &807235723518459982
 MonoBehaviour:
   m_ObjectHideFlags: 0

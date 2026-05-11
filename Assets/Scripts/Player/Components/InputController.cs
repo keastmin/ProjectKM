@@ -9,16 +9,22 @@ namespace Player
         [SerializeField] private string _moveName;
         [SerializeField] private string _dodgeName;
         [SerializeField] private string _basicComboAttackName;
+        [SerializeField] private string _qSkillName;
+        [SerializeField] private string _eSkillName;
 
         private PlayerInput _pi;
 
         private InputAction _moveAction;
         private InputAction _dodgeAction;
         private InputAction _basicComboAttackAction;
+        private InputAction _qSkillAction;
+        private InputAction _eSkillAction;
 
         public Vector2 MoveInput { get; private set; }
         public bool DodgeInput { get; private set; }
         public bool BasicComboAttackInput { get; private set; }
+        public bool QSkillInput { get; private set; }
+        public bool ESkillInput { get; private set; }
 
         private void Awake()
         {
@@ -26,6 +32,8 @@ namespace Player
             _moveAction = _pi.actions[_moveName];
             _dodgeAction = _pi.actions[_dodgeName];
             _basicComboAttackAction = _pi.actions[_basicComboAttackName];
+            _qSkillAction = _pi.actions[_qSkillName];
+            _eSkillAction = _pi.actions[_eSkillName];
         }
 
         private void Update()
@@ -33,6 +41,8 @@ namespace Player
             DetectMoveInput();
             DetectDodgeInput();
             DetectBasicComboAttackInput();
+            DetectQSkillInput();
+            DetectESkillInput();
         }
 
         private void DetectMoveInput()
@@ -48,6 +58,16 @@ namespace Player
         private void DetectBasicComboAttackInput()
         {
             BasicComboAttackInput = _basicComboAttackAction.WasPressedThisFrame();
+        }
+
+        private void DetectQSkillInput()
+        {
+            QSkillInput = _qSkillAction.WasPressedThisFrame();
+        }
+
+        private void DetectESkillInput()
+        {
+            ESkillInput = _eSkillAction.WasPressedThisFrame();
         }
     }
 }
