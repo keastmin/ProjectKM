@@ -33,11 +33,6 @@ namespace NoiRC.SRMove
             _velocityGravity = Vector3.zero;
         }
 
-        public void PhysicsBasedRotate(Quaternion targetRotation)
-        {
-            _rigidbody.MoveRotation(targetRotation);
-        }
-
         [Obsolete]
         public void AddLeaveGroundForce(Vector3 force)
         {
