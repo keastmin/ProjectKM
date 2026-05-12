@@ -44,6 +44,13 @@ public class IdleState : StateBase
             return;
         }
 
+        if (_core.InputController.QSkillInput && _core.SkillController.IsEnableUseSkill(PlayerSkillSlot.Q))
+        {
+            string skillStateId = _core.SkillController.GetCurrentEquipedSkillID(PlayerSkillSlot.Q);
+            _core.FSM.Transition(_core.FSM.SkillStateDictionary[skillStateId]);
+            return;
+        }
+
         // 데미지를 입으면 데미지 상태로 전환
         if (_core.DamageFlag)
         {

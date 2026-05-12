@@ -61,6 +61,9 @@ namespace Player
         private float _currentDodgeCooldownTimer; // 현재 회피 쿨타임 타이머
         private EnemyCore _dodgeEnemy; // 회피 타이밍을 준 주체 적
 
+        [Header("스킬")]
+        [SerializeField] private List<SkillDefinition> _skillDatas;
+
         // 컴포넌트
         private InputController _inputController;
         //private CharacterMover _characterMover;
@@ -91,6 +94,7 @@ namespace Player
         public event Action<float, float> OnHealthChanged;
         public event Action<int> OnDodgeCountChanged;
         public event Action<float, float> OnDodgeTimerRunning;
+        public event Action<SkillDefinition> OnQSkillChanged;
 
         public StateMachine FSM => _fsm;
         public InputController InputController => _inputController;
@@ -174,6 +178,7 @@ namespace Player
             }
         }
         public EnemyCore DodgeEnemy => _dodgeEnemy;
+        public List<SkillDefinition> SkillDatas => _skillDatas;
 
         private void Awake()
         {
@@ -184,6 +189,8 @@ namespace Player
             TryGetComponent(out _targetingController);
             TryGetComponent(out _attackEffectController);
             TryGetComponent(out _skillController);
+            _skillController.OnQSkillEquiped += QSkillChange;
+
             TryGetComponent(out _animator);
             TryGetComponent(out _cinemachineImpulseSource);
             TryGetComponent(out _trailEffector);
@@ -202,6 +209,11 @@ namespace Player
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                SkillController.EquipSkill(PlayerSkillSlot.Q, SkillDatas[0]);
+            }
+
             if(HP <= 0f && !IsDead)
             {
                 FSM.Transition(FSM.DeathState);
@@ -369,6 +381,11 @@ namespace Player
         public void SetPerfectDodgeEnable(bool isPerfectDodgeTiming)
         {
             _canPerfectDodge = isPerfectDodgeTiming;
+        }
+
+        private void QSkillChange(SkillDefinition skill)
+        {
+            OnQSkillChanged?.Invoke(skill);
         }
     }
 }

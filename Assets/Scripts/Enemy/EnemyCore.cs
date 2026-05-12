@@ -12,16 +12,12 @@ public class EnemyCore : MonoBehaviour, IDamageable
     [SerializeField] private float _superArmourDamage = 80f;
     [SerializeField] private float _superArmourHoldTime = 3f;
 
-    [Header("피격 콜라이더")]
-    [SerializeField] private Collider[] _hurtColliders;
-
     private float _lastDamageTime = float.MinValue;
     private float _continuousDamageAmount = 0f;
     private float _superArmourRemainTime = 0f;
 
     public bool DamagedFlag { get; set; }
     public bool IsSuperArmour => _enableSuperArmour && _superArmourRemainTime > 0f;
-    public Collider[] HurtColliders => _hurtColliders;
 
     protected virtual void Awake()
     {

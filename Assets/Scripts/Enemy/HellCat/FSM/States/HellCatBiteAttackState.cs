@@ -36,6 +36,7 @@ public class HellCatBiteAttackState : IState
     public void Tick()
     {
         _hasStateInfo = AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animHash, out _stateInfo);
+        Debug.Log(_stateInfo.length);
 
         if (_hasStateInfo && _stateInfo.normalizedTime > 0.92f)
         {

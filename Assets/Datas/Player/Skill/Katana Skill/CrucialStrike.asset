@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bf38f8c6e4271c46aee7f2118da6a02, type: 3}
   m_Name: CrucialStrike
   m_EditorClassIdentifier: Assembly-CSharp::CrucialStrikeDefinition
-  _skillId: 
+  _skillId: CrucialStrike
   _displayName: 
-  _icon: {fileID: 0}
-  _cooldown: 0
+  _icon: {fileID: 21300000, guid: 927195476d46e574e95438f856484bcf, type: 3}
+  _cooldown: 5

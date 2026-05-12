@@ -13,7 +13,7 @@ public abstract class SkillDefinition : ScriptableObject
     public Sprite Icon => _icon;
     public float Cooldown => _cooldown;
 
-    public abstract SkillState CreateState(PlayerCore core, PlayerSkillSlot slot);
+    public abstract StateBase CreateState(PlayerCore core);
 
     private void OnValidate()
     {

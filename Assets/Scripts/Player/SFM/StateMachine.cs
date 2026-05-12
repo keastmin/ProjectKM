@@ -1,4 +1,5 @@
 using Player;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -14,6 +15,7 @@ public class StateMachine
     public DodgeCounterState DodgeCounterState;
     public DashAttackState DashAttackState;
     public DeathState DeathState;
+    public Dictionary<string, StateBase> SkillStateDictionary;
 
     private StateBase _currentState;
     private StateBase _prevState;
@@ -33,6 +35,13 @@ public class StateMachine
         DodgeCounterState = new DodgeCounterState(core);
         DashAttackState = new DashAttackState(core);
         DeathState = new DeathState(core);
+
+        SkillStateDictionary = new Dictionary<string, StateBase>();
+        foreach(var data in core.SkillDatas)
+        {
+            StateBase state = data.CreateState(core);
+            SkillStateDictionary.Add(data.SkillId, state);
+        }
     }
 
     public void InitStateMachine(StateBase initState)

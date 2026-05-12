@@ -4,8 +4,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CrucialStrike", menuName = "Player/Skill/Crucial Strike")]
 public class CrucialStrikeDefinition : SkillDefinition
 {
-    public override SkillState CreateState(PlayerCore core, PlayerSkillSlot slot)
+    public override StateBase CreateState(PlayerCore core)
     {
-        return new CrucialStrikeState(core, this, slot);
+        return new CrucialStrikeState(core);
     }
 }
