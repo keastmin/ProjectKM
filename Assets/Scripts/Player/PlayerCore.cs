@@ -13,6 +13,7 @@ namespace Player
     [RequireComponent(typeof(HitController))]
     [RequireComponent(typeof(TargetingController))]
     [RequireComponent(typeof(AttackEffectController))]
+    [RequireComponent(typeof(PlayerSkillController))]
     [RequireComponent(typeof(Animator))]
     public class PlayerCore : MonoBehaviour, IDamageable
     {
@@ -67,6 +68,7 @@ namespace Player
         private HitController _hitController;
         private TargetingController _targetingController;
         private AttackEffectController _attackEffectController;
+        private PlayerSkillController _skillController;
         private Animator _animator;
         private MeshTrailEffectController _trailEffector;
         private readonly HashSet<Component> _activeDodgeTimingSources = new();
@@ -97,6 +99,7 @@ namespace Player
         public HitController HitController => _hitController;
         public TargetingController TargetingController => _targetingController;
         public AttackEffectController AttackEffectController => _attackEffectController;
+        public PlayerSkillController SkillController => _skillController;
         public Animator Animator => _animator;
         public VolumeEffect VolumeEffect => _volumeEffect;
         public MeshTrailEffectController TrailEffector => _trailEffector;
@@ -180,6 +183,7 @@ namespace Player
             TryGetComponent(out _hitController);
             TryGetComponent(out _targetingController);
             TryGetComponent(out _attackEffectController);
+            TryGetComponent(out _skillController);
             TryGetComponent(out _animator);
             TryGetComponent(out _cinemachineImpulseSource);
             TryGetComponent(out _trailEffector);
