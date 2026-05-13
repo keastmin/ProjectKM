@@ -12,6 +12,10 @@ public class EnemyCore : MonoBehaviour, IDamageable
     [SerializeField] private float _superArmourDamage = 80f;
     [SerializeField] private float _superArmourHoldTime = 3f;
 
+    [Header("감지")]
+    [SerializeField] private LayerMask _playerLayer;
+    [SerializeField] private float _detectRadius;
+
     private float _lastDamageTime = float.MinValue;
     private float _continuousDamageAmount = 0f;
     private float _superArmourRemainTime = 0f;
@@ -19,13 +23,24 @@ public class EnemyCore : MonoBehaviour, IDamageable
     public bool DamagedFlag { get; set; }
     public bool IsSuperArmour => _enableSuperArmour && _superArmourRemainTime > 0f;
 
+    // 플레이어 감지
+    private Collider[] _detectedColliders;
+    private Collider _detectedPlayer;
+
+    public LayerMask PlayerLayer => _playerLayer;
+    public float DetectRadius => _detectRadius;
+    public Collider DetectedPlayer => _detectedPlayer;
+
     protected virtual void Awake()
     {
-
+        _detectedColliders = new Collider[3];
     }
 
     protected virtual void Update()
     {
+        // 플레이어 감지
+        DetectPlayer();
+
         //UpdateSuperArmour();
     }
 
@@ -105,5 +120,13 @@ public class EnemyCore : MonoBehaviour, IDamageable
     {
         _continuousDamageAmount = 0f;
         _lastDamageTime = float.MinValue;
+    }
+
+    private void DetectPlayer()
+    {
+        _detectedPlayer = null;
+        int detectedCount = Physics.OverlapSphereNonAlloc(transform.position, DetectRadius, _detectedColliders, PlayerLayer);
+        if (detectedCount > 0)
+            _detectedPlayer = _detectedColliders[0];
     }
 }

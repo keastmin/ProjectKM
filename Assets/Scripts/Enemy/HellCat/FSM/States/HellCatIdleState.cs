@@ -25,7 +25,7 @@ public class HellCatIdleState : IState
             return;
         }
 
-        if(_core.PlayerCollider != null)
+        if(_core.DetectedPlayer != null)
         {
             _core.FSM.Transition(_core.FSM.ChaseState);
             return;

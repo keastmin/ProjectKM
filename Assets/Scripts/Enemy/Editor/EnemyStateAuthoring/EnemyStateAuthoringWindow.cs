@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor.Callbacks;
 using UnityEditor;
@@ -11,19 +12,19 @@ public static class EnemyStateAuthoringAssetOpener
     [OnOpenAsset]
     public static bool OpenAsset(EntityId instanceID)
     {
-        Object openedObject = EditorUtility.EntityIdToObject(instanceID);
+        UnityEngine.Object openedObject = EditorUtility.EntityIdToObject(instanceID);
         return OpenIfAuthoringAsset(openedObject);
     }
 #else
     [OnOpenAsset]
     public static bool OpenAsset(int instanceID)
     {
-        Object openedObject = EditorUtility.InstanceIDToObject(instanceID);
+        UnityEngine.Object openedObject = EditorUtility.InstanceIDToObject(instanceID);
         return OpenIfAuthoringAsset(openedObject);
     }
 #endif
 
-    private static bool OpenIfAuthoringAsset(Object openedObject)
+    private static bool OpenIfAuthoringAsset(UnityEngine.Object openedObject)
     {
         if (openedObject is not EnemyStateAuthoringAsset authoringAsset)
         {
@@ -337,6 +338,7 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
             EnemyStateAuthoringActionBlockType.AdditionalRootmotion => 394f,
             EnemyStateAuthoringActionBlockType.AttackTiming => 390f,
             EnemyStateAuthoringActionBlockType.DodgeTiming => 390f,
+            EnemyStateAuthoringActionBlockType.Custom => 390f,
             _ => 254f
         };
         Rect overlayRect = new(12f, 12f, 300f, overlayHeight);
@@ -349,7 +351,7 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         {
             using (new EditorGUILayout.HorizontalScope())
             {
-                EditorGUILayout.LabelField(GetActionBlockLabel(block.Type), EditorStyles.boldLabel);
+                EditorGUILayout.LabelField(GetActionBlockLabel(block), EditorStyles.boldLabel);
                 if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(22f)))
                 {
                     _selectedActionBlockIndex = -1;
@@ -403,6 +405,71 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         {
             DrawAttackTimingPreviewFields();
             return;
+        }
+
+        if (type == EnemyStateAuthoringActionBlockType.Custom)
+        {
+            DrawCustomBlockPreviewFields();
+            return;
+        }
+    }
+
+    private void DrawCustomBlockPreviewFields()
+    {
+        if (_asset == null || _selectedActionBlockIndex < 0 || _selectedActionBlockIndex >= _actionBlocks.Count)
+        {
+            return;
+        }
+
+        SerializedObject serializedAsset = new(_asset);
+        serializedAsset.Update();
+        SerializedProperty actionBlocksProperty = serializedAsset.FindProperty("_editorActionBlocks");
+        if (actionBlocksProperty == null || _selectedActionBlockIndex >= actionBlocksProperty.arraySize)
+        {
+            return;
+        }
+
+        SerializedProperty blockProperty = actionBlocksProperty.GetArrayElementAtIndex(_selectedActionBlockIndex);
+        SerializedProperty customBlockProperty = blockProperty.FindPropertyRelative("CustomBlock");
+        if (customBlockProperty == null || customBlockProperty.managedReferenceValue == null)
+        {
+            EditorGUILayout.HelpBox("Custom block data is missing.", MessageType.Warning);
+            return;
+        }
+
+        EditorGUI.BeginChangeCheck();
+        EditorGUILayout.LabelField("Properties", EditorStyles.boldLabel);
+        SerializedProperty iterator = customBlockProperty.Copy();
+        SerializedProperty endProperty = iterator.GetEndProperty();
+        bool hasVisibleProperty = false;
+        bool enterChildren = true;
+        while (iterator.NextVisible(enterChildren) && !SerializedProperty.EqualContents(iterator, endProperty))
+        {
+            enterChildren = false;
+            if (iterator.name == "_startNormalizedTime" || iterator.name == "_endNormalizedTime")
+            {
+                continue;
+            }
+
+            hasVisibleProperty = true;
+            EditorGUILayout.PropertyField(iterator, true);
+        }
+
+        if (!hasVisibleProperty)
+        {
+            EditorGUILayout.HelpBox("No editable properties found.", MessageType.Info);
+        }
+
+        if (EditorGUI.EndChangeCheck())
+        {
+            serializedAsset.ApplyModifiedProperties();
+            _actionBlocks = _asset.EditorActionBlocks;
+            SaveAssetState();
+            Repaint();
+        }
+        else
+        {
+            serializedAsset.ApplyModifiedProperties();
         }
     }
 
@@ -617,6 +684,7 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         Rect addAttackRect = new(headerRect.x + 76f, headerRect.y + 3f, 104f, 18f);
         Rect addDodgeRect = new(addAttackRect.xMax + 4f, headerRect.y + 3f, 112f, 18f);
         Rect addRootmotionRect = new(addDodgeRect.xMax + 4f, headerRect.y + 3f, 142f, 18f);
+        Rect addCustomRect = new(addRootmotionRect.xMax + 4f, headerRect.y + 3f, 104f, 18f);
         Rect trackAreaRect = new(
             totalRect.x + TimelinePadding,
             headerRect.yMax + 4f,
@@ -639,6 +707,11 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         if (GUI.Button(addRootmotionRect, "Additional Rootmotion", EditorStyles.miniButton))
         {
             AddActionBlock(EnemyStateAuthoringActionBlockType.AdditionalRootmotion);
+        }
+
+        if (GUI.Button(addCustomRect, "Custom Block", EditorStyles.miniButton))
+        {
+            ShowCustomBlockMenu();
         }
 
         if (_actionBlocks.Count == 0)
@@ -684,7 +757,7 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         EditorGUI.DrawRect(blockRect, blockColor);
         EditorGUI.DrawRect(leftHandleRect, new Color(1f, 1f, 1f, 0.28f));
         EditorGUI.DrawRect(rightHandleRect, new Color(1f, 1f, 1f, 0.28f));
-        GUI.Label(new Rect(blockRect.x + 8f, blockRect.y + 5f, blockRect.width - 16f, 16f), GetActionBlockLabel(block.Type), EditorStyles.whiteMiniLabel);
+        GUI.Label(new Rect(blockRect.x + 8f, blockRect.y + 5f, blockRect.width - 16f, 16f), GetActionBlockLabel(block), EditorStyles.whiteMiniLabel);
 
         if (Event.current.type == EventType.Repaint)
         {
@@ -845,6 +918,78 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         Repaint();
     }
 
+    private void AddCustomActionBlock(Type blockType)
+    {
+        if (blockType == null || !typeof(EnemyStateTimelineBlock).IsAssignableFrom(blockType))
+        {
+            return;
+        }
+
+        EnemyStateTimelineBlock customBlock;
+        try
+        {
+            customBlock = Activator.CreateInstance(blockType) as EnemyStateTimelineBlock;
+        }
+        catch (Exception exception)
+        {
+            Debug.LogException(exception);
+            return;
+        }
+
+        if (customBlock == null)
+        {
+            return;
+        }
+
+        float startTime = Mathf.Clamp01(_animationNormalizedTime);
+        float endTime = Mathf.Clamp01(startTime + 0.18f);
+        if (endTime - startTime < 0.03f)
+        {
+            startTime = Mathf.Max(0f, endTime - 0.18f);
+        }
+
+        customBlock.SetTime(startTime, endTime);
+        _actionBlocks.Add(new EnemyStateAuthoringActionBlockPreviewData
+        {
+            Type = EnemyStateAuthoringActionBlockType.Custom,
+            StartTime = startTime,
+            EndTime = endTime,
+            Memo = string.Empty,
+            CustomBlock = customBlock
+        });
+
+        _selectedActionBlockIndex = _actionBlocks.Count - 1;
+        SaveAssetState();
+        Repaint();
+    }
+
+    private void ShowCustomBlockMenu()
+    {
+        GenericMenu menu = new();
+        TypeCache.TypeCollection blockTypes = TypeCache.GetTypesDerivedFrom<EnemyStateTimelineBlock>();
+        int itemCount = 0;
+        foreach (Type blockType in blockTypes)
+        {
+            if (blockType.IsAbstract || blockType.IsGenericType || blockType.GetConstructor(Type.EmptyTypes) == null)
+            {
+                continue;
+            }
+
+            EnemyStateBlockAttribute attribute = Attribute.GetCustomAttribute(blockType, typeof(EnemyStateBlockAttribute)) as EnemyStateBlockAttribute;
+            string menuPath = attribute != null ? attribute.MenuPath : $"Custom/{ObjectNames.NicifyVariableName(blockType.Name)}";
+            Type capturedType = blockType;
+            menu.AddItem(new GUIContent(menuPath), false, () => AddCustomActionBlock(capturedType));
+            itemCount++;
+        }
+
+        if (itemCount == 0)
+        {
+            menu.AddDisabledItem(new GUIContent("No custom block types found"));
+        }
+
+        menu.ShowAsContext();
+    }
+
     private void DeleteActionBlock(int index)
     {
         if (index < 0 || index >= _actionBlocks.Count)
@@ -861,13 +1006,30 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         Repaint();
     }
 
+    private string GetActionBlockLabel(EnemyStateAuthoringActionBlockPreviewData block)
+    {
+        if (block == null)
+        {
+            return "Action";
+        }
+
+        if (block.Type == EnemyStateAuthoringActionBlockType.Custom)
+        {
+            return block.CustomBlock != null ? block.CustomBlock.DisplayName : "Custom Block";
+        }
+
+        return GetActionBlockLabel(block.Type);
+    }
+
     private string GetActionBlockLabel(EnemyStateAuthoringActionBlockType type)
     {
         return type switch
         {
             EnemyStateAuthoringActionBlockType.AttackTiming => "Attack Timing",
             EnemyStateAuthoringActionBlockType.DodgeTiming => "Dodge Timing",
-            _ => "Additional Rootmotion"
+            EnemyStateAuthoringActionBlockType.AdditionalRootmotion => "Additional Rootmotion",
+            EnemyStateAuthoringActionBlockType.Custom => "Custom Block",
+            _ => "Action"
         };
     }
 
@@ -877,7 +1039,9 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         {
             EnemyStateAuthoringActionBlockType.AttackTiming => new Color(0.86f, 0.28f, 0.22f, 1f),
             EnemyStateAuthoringActionBlockType.DodgeTiming => new Color(0.26f, 0.55f, 0.95f, 1f),
-            _ => new Color(0.34f, 0.78f, 0.42f, 1f)
+            EnemyStateAuthoringActionBlockType.AdditionalRootmotion => new Color(0.34f, 0.78f, 0.42f, 1f),
+            EnemyStateAuthoringActionBlockType.Custom => new Color(0.86f, 0.62f, 0.22f, 1f),
+            _ => new Color(0.5f, 0.5f, 0.5f, 1f)
         };
     }
 
@@ -1615,7 +1779,7 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
 
     private GameObject GetDraggedModel()
     {
-        foreach (Object draggedObject in DragAndDrop.objectReferences)
+        foreach (UnityEngine.Object draggedObject in DragAndDrop.objectReferences)
         {
             if (draggedObject is GameObject gameObject)
             {
@@ -2053,7 +2217,7 @@ public sealed class EnemyStateAuthoringWindow : EditorWindow
         _pressedKeys.Clear();
     }
 
-    private static void DestroyPreviewObject(Object previewObject)
+    private static void DestroyPreviewObject(UnityEngine.Object previewObject)
     {
         if (previewObject != null)
         {

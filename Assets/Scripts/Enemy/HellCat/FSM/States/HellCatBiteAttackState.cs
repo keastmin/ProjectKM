@@ -13,6 +13,7 @@ public class HellCatBiteAttackState : IState
     private EnemyDodgeTimingDataPlayer _dodgeTimingPlayer;
     private EnemyAdditionalRootMotionPlayer _additionalRMPlayer;
     private EnemyAttackTimingDataPlayer _attackTimingPlayer;
+    private EnemyStateCustomBlockPlayer _customBlockPlayer;
 
     public HellCatBiteAttackState(HellCatCore core)
     {
@@ -21,10 +22,14 @@ public class HellCatBiteAttackState : IState
         _additionalRMPlayer = new EnemyAdditionalRootMotionPlayer(core, core.BiteAttackData.AdditionalRootmotionBlocks);
         _dodgeTimingPlayer = new EnemyDodgeTimingDataPlayer(core, core.BiteAttackData.DodgeTimingBlocks);
         _attackTimingPlayer = new EnemyAttackTimingDataPlayer(core, core.BiteAttackData.AttackTimingBlocks);
+        _customBlockPlayer = new EnemyStateCustomBlockPlayer();
     }
 
     public void Enter()
     {
+        // 커스텀 블록 초기화
+        _customBlockPlayer.Enter(_core.BiteAttackData, _core);
+
         _additionalRMPlayer.InitAdditionalRootMotion();
         _attackTimingPlayer.ClearDamageHashSet();
         _stateInfo = default;
@@ -36,7 +41,6 @@ public class HellCatBiteAttackState : IState
     public void Tick()
     {
         _hasStateInfo = AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animHash, out _stateInfo);
-        Debug.Log(_stateInfo.length);
 
         if (_hasStateInfo && _stateInfo.normalizedTime > 0.92f)
         {
@@ -48,6 +52,9 @@ public class HellCatBiteAttackState : IState
 
         // 플레이어를 공격
         _attackTimingPlayer.GiveDamage(_stateInfo.normalizedTime, 10f, _core.PlayerLayer);
+
+        // 커스텀 블록 실행
+        _customBlockPlayer.Tick(_stateInfo.normalizedTime);
     }
 
     public void FixedTick()
@@ -72,7 +79,7 @@ public class HellCatBiteAttackState : IState
         if (!_hasStateInfo)
             return;
 
-        _additionalRMPlayer.AccrueDeltaPosition(_stateInfo.normalizedTime);
+        _additionalRMPlayer.AccrueDeltaPosition(_stateInfo.normalizedTime, true);
     }
 
     public void Exit()

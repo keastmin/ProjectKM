@@ -32,7 +32,7 @@ public class HellCatChaseState : IState
             return;
         }
 
-        if (_core.PlayerCollider == null)
+        if (_core.DetectedPlayer == null)
         {
             _core.FSM.Transition(_core.FSM.IdleState);
             return;
@@ -44,7 +44,7 @@ public class HellCatChaseState : IState
             return;
         }
 
-        _core.Agent.SetDestination(_core.PlayerCollider.transform.position);
+        _core.Agent.SetDestination(_core.DetectedPlayer.transform.position);
     }
 
     public void FixedTick()

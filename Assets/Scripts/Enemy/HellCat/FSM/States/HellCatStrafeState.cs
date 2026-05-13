@@ -110,9 +110,9 @@ public class HellCatStrafeState : IState
 
     private void RotateTowardsPlayer()
     {
-        if(_core.PlayerCollider != null)
+        if(_core.DetectedPlayer != null)
         {
-            Vector3 lookDir = _core.PlayerCollider.transform.position - _core.transform.position;
+            Vector3 lookDir = _core.DetectedPlayer.transform.position - _core.transform.position;
             lookDir.y = 0f;
             Quaternion targetRot = Quaternion.LookRotation(lookDir.normalized, Vector3.up);
             _core.Rigidbody.MoveRotation(Quaternion.RotateTowards(_core.Rigidbody.rotation, targetRot, 360f * Time.fixedDeltaTime));
@@ -127,7 +127,7 @@ public class HellCatStrafeState : IState
 
     private StrafingDirection DecideStrafingDirection()
     {
-        if(_core.PlayerCollider != null)
+        if(_core.DetectedPlayer != null)
         {
             var dist = _core.PlayerDistance;
             if(dist < _core.StrafingRange.x)

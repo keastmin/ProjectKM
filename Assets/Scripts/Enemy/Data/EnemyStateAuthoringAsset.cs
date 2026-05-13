@@ -287,7 +287,8 @@ public enum EnemyStateAuthoringActionBlockType
 {
     AttackTiming,
     DodgeTiming,
-    AdditionalRootmotion
+    AdditionalRootmotion,
+    Custom
 }
 
 [System.Serializable]
@@ -316,6 +317,7 @@ public sealed class EnemyStateAuthoringActionBlockPreviewData
     public Vector3 AttackAreaPositionOffset;
     public Vector3 AttackAreaRotationEuler;
     public Vector3 AttackAreaSize = Vector3.one;
+    [SerializeReference] public EnemyStateTimelineBlock CustomBlock;
 }
 #endif
 
@@ -326,11 +328,13 @@ public sealed class EnemyStateAuthoringAsset : ScriptableObject
     [SerializeField] private EnemyStateAuthoringRootmotionBlock[] _additionalRootmotionBlocks = Array.Empty<EnemyStateAuthoringRootmotionBlock>();
     [SerializeField] private EnemyStateAuthoringDodgeTimingBlock[] _dodgeTimingBlocks = Array.Empty<EnemyStateAuthoringDodgeTimingBlock>();
     [SerializeField] private EnemyStateAuthoringAttackTimingBlock[] _attackTimingBlocks = Array.Empty<EnemyStateAuthoringAttackTimingBlock>();
+    [SerializeReference] private List<EnemyStateTimelineBlock> _customBlocks = new();
 
     public string AnimatorStateName => _animatorStateName;
     public EnemyStateAuthoringRootmotionBlock[] AdditionalRootmotionBlocks => _additionalRootmotionBlocks;
     public EnemyStateAuthoringDodgeTimingBlock[] DodgeTimingBlocks => _dodgeTimingBlocks;
     public EnemyStateAuthoringAttackTimingBlock[] AttackTimingBlocks => _attackTimingBlocks;
+    public IReadOnlyList<EnemyStateTimelineBlock> CustomBlocks => _customBlocks;
 
     public Vector3 EvaluateAdditionalRootmotionCumulativeDelta(float normalizedTime, Quaternion localBasisRotation)
     {
@@ -487,6 +491,7 @@ public sealed class EnemyStateAuthoringAsset : ScriptableObject
         SyncAdditionalRootmotionBlocksFromEditor();
         SyncDodgeTimingBlocksFromEditor();
         SyncAttackTimingBlocksFromEditor();
+        SyncCustomBlocksFromEditor();
     }
 
     public void SyncAdditionalRootmotionBlocksFromEditor()
@@ -584,6 +589,33 @@ public sealed class EnemyStateAuthoringAsset : ScriptableObject
 
         _attackTimingBlocks = attackTimingBlocks.ToArray();
     }
+
+    private void SyncCustomBlocksFromEditor()
+    {
+        if (_editorActionBlocks == null)
+        {
+            _customBlocks = new List<EnemyStateTimelineBlock>();
+            return;
+        }
+
+        List<EnemyStateTimelineBlock> customBlocks = new();
+        for (int i = 0; i < _editorActionBlocks.Count; i++)
+        {
+            EnemyStateAuthoringActionBlockPreviewData editorBlock = _editorActionBlocks[i];
+            if (editorBlock == null ||
+                editorBlock.Type != EnemyStateAuthoringActionBlockType.Custom ||
+                editorBlock.CustomBlock == null)
+            {
+                continue;
+            }
+
+            editorBlock.CustomBlock.SetTime(editorBlock.StartTime, editorBlock.EndTime);
+            editorBlock.CustomBlock.Validate();
+            customBlocks.Add(editorBlock.CustomBlock);
+        }
+
+        _customBlocks = customBlocks;
+    }
 #endif
 
     private void OnValidate()
@@ -619,6 +651,12 @@ public sealed class EnemyStateAuthoringAsset : ScriptableObject
         {
             _attackTimingBlocks[i] ??= new EnemyStateAuthoringAttackTimingBlock();
             _attackTimingBlocks[i].Validate();
+        }
+
+        _customBlocks ??= new List<EnemyStateTimelineBlock>();
+        for (int i = 0; i < _customBlocks.Count; i++)
+        {
+            _customBlocks[i]?.Validate();
         }
     }
 }

@@ -33,7 +33,7 @@ public class EnemyAdditionalRootMotionPlayer
         return vel;
     }
 
-    public void AccrueDeltaPosition(float normalizedTime)
+    public void AccrueDeltaPosition(float normalizedTime, bool useCurrentRotation = false)
     {
         if (_blocks == null || _blocks.Length == 0)
         {
@@ -44,6 +44,35 @@ public class EnemyAdditionalRootMotionPlayer
         if (clampedNormalizedTime < _previousNormalizedTime)
         {
             _previousCumulativeDeltaPosition = Vector3.zero;
+            _previousNormalizedTime = 0f;
+        }
+
+        if (useCurrentRotation)
+        {
+            Quaternion currentRotation = _core != null ? _core.transform.rotation : Quaternion.identity;
+            for (int i = 0; i < _blocks.Length; i++)
+            {
+                EnemyStateAuthoringRootmotionBlock block = _blocks[i];
+                if (block == null)
+                {
+                    continue;
+                }
+
+                float previousRatio = block.EvaluateCumulativeRatio(_previousNormalizedTime);
+                float currentRatio = block.EvaluateCumulativeRatio(clampedNormalizedTime);
+                Vector3 frameDeltaPosition = block.TargetDeltaPosition * (currentRatio - previousRatio);
+                if (block.ConstrainToGroundPlane)
+                {
+                    frameDeltaPosition.y = 0f;
+                }
+
+                _deltaPosition += block.Space == EnemyStateAuthoringRootmotionSpace.Local
+                    ? currentRotation * frameDeltaPosition
+                    : frameDeltaPosition;
+            }
+
+            _previousNormalizedTime = clampedNormalizedTime;
+            return;
         }
 
         Vector3 currentCumulativeDeltaPosition = Vector3.zero;

@@ -74,16 +74,19 @@ MonoBehaviour:
     _positionOffset: {x: 0, y: 0, z: 0}
     _rotationEuler: {x: 0, y: 0, z: 0}
     _size: {x: 0.5, y: 0.5, z: 0.5}
+  _customBlocks:
+  - rid: 7025239689991815238
+  - rid: 7025239689991815239
   _editorModelAsset: {fileID: 919132149155446097, guid: 08c315b262fa38a4898c62c00dbf361a, type: 3}
   _editorAnimationClip: {fileID: 1827226128182048838, guid: 1f46e4ede87dd274198858842cd6222a, type: 3}
   _editorApplyRootMotion: 0
   _editorBackgroundColor: {r: 0.16, g: 0.17, b: 0.19, a: 1}
   _editorShowGrid: 1
-  _editorCameraTarget: {x: -0.11466606, y: 1.2463716, z: 0.45097834}
+  _editorCameraTarget: {x: 0.00000011920929, y: 1.2272894, z: -1.3874545}
   _editorCameraDistance: 8.278598
-  _editorCameraYaw: 186.16013
-  _editorCameraPitch: 18.819996
-  _editorAnimationNormalizedTime: 0.026245572
+  _editorCameraYaw: 180
+  _editorCameraPitch: 12
+  _editorAnimationNormalizedTime: 0.16818774
   _editorIsAnimationPlaying: 0
   _editorActionBlocks:
   - Type: 2
@@ -132,6 +135,8 @@ MonoBehaviour:
     AttackAreaPositionOffset: {x: 0, y: 0, z: 0}
     AttackAreaRotationEuler: {x: 0, y: 0, z: 0}
     AttackAreaSize: {x: 1, y: 1, z: 1}
+    CustomBlock:
+      rid: -2
   - Type: 1
     StartTime: 0.2750978
     EndTime: 0.59973925
@@ -178,6 +183,8 @@ MonoBehaviour:
     AttackAreaPositionOffset: {x: 0, y: 0, z: 0}
     AttackAreaRotationEuler: {x: 0, y: 0, z: 0}
     AttackAreaSize: {x: 1, y: 1, z: 1}
+    CustomBlock:
+      rid: -2
   - Type: 0
     StartTime: 0.44589305
     EndTime: 0.59973925
@@ -224,6 +231,8 @@ MonoBehaviour:
     AttackAreaPositionOffset: {x: 0, y: 0, z: 0}
     AttackAreaRotationEuler: {x: 0, y: 0, z: 0}
     AttackAreaSize: {x: 0.5, y: 0.5, z: 0.5}
+    CustomBlock:
+      rid: -2
   - Type: 0
     StartTime: 0.445893
     EndTime: 0.5997393
@@ -270,6 +279,8 @@ MonoBehaviour:
     AttackAreaPositionOffset: {x: 0, y: 0, z: 0}
     AttackAreaRotationEuler: {x: 0, y: 0, z: 0}
     AttackAreaSize: {x: 0.5, y: 0.5, z: 0.5}
+    CustomBlock:
+      rid: -2
   - Type: 0
     StartTime: 0.44589308
     EndTime: 0.5997393
@@ -316,4 +327,119 @@ MonoBehaviour:
     AttackAreaPositionOffset: {x: 0, y: 0, z: 0}
     AttackAreaRotationEuler: {x: 0, y: 0, z: 0}
     AttackAreaSize: {x: 0.5, y: 0.5, z: 0.5}
-  _editorSelectedActionBlockIndex: 1
+    CustomBlock:
+      rid: -2
+  - Type: 3
+    StartTime: 0
+    EndTime: 0.44458932
+    Memo: 
+    PreviewValue: 1
+    PreviewRootmotion: 1
+    RootmotionSpace: 0
+    ConstrainRootmotionToGroundPlane: 1
+    RootmotionDirection: {x: 0, y: 0, z: 1}
+    RootmotionDistance: 1
+    RootmotionCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 1
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    PreviewDodgeArea: 1
+    DodgeAreaBindingMode: 0
+    DodgeAttachTransformPath: 
+    DodgeAreaPositionOffset: {x: 0, y: 0, z: 0}
+    DodgeAreaRotationEuler: {x: 0, y: 0, z: 0}
+    DodgeAreaSize: {x: 1, y: 1, z: 1}
+    PreviewAttackArea: 1
+    AttackAreaBindingMode: 0
+    AttackAttachTransformPath: 
+    AttackAreaPositionOffset: {x: 0, y: 0, z: 0}
+    AttackAreaRotationEuler: {x: 0, y: 0, z: 0}
+    AttackAreaSize: {x: 1, y: 1, z: 1}
+    CustomBlock:
+      rid: 7025239689991815238
+  - Type: 3
+    StartTime: 0.44719687
+    EndTime: 0.5280313
+    Memo: 
+    PreviewValue: 1
+    PreviewRootmotion: 1
+    RootmotionSpace: 0
+    ConstrainRootmotionToGroundPlane: 1
+    RootmotionDirection: {x: 0, y: 0, z: 1}
+    RootmotionDistance: 1
+    RootmotionCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 1
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    PreviewDodgeArea: 1
+    DodgeAreaBindingMode: 0
+    DodgeAttachTransformPath: 
+    DodgeAreaPositionOffset: {x: 0, y: 0, z: 0}
+    DodgeAreaRotationEuler: {x: 0, y: 0, z: 0}
+    DodgeAreaSize: {x: 1, y: 1, z: 1}
+    PreviewAttackArea: 1
+    AttackAreaBindingMode: 0
+    AttackAttachTransformPath: 
+    AttackAreaPositionOffset: {x: 0, y: 0, z: 0}
+    AttackAreaRotationEuler: {x: 0, y: 0, z: 0}
+    AttackAreaSize: {x: 1, y: 1, z: 1}
+    CustomBlock:
+      rid: 7025239689991815239
+  _editorSelectedActionBlockIndex: 6
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 7025239689991815238
+      type: {class: RotateToPlayerBlock, ns: , asm: Assembly-CSharp}
+      data:
+        _startNormalizedTime: 0
+        _endNormalizedTime: 0.44458932
+        _rotateSpeed: 720
+    - rid: 7025239689991815239
+      type: {class: RotateToPlayerBlock, ns: , asm: Assembly-CSharp}
+      data:
+        _startNormalizedTime: 0.44719687
+        _endNormalizedTime: 0.5280313
+        _rotateSpeed: 180

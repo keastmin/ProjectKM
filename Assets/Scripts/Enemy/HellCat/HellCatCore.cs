@@ -19,8 +19,6 @@ public class HellCatCore : EnemyCore
     [SerializeField] private float _attackFacingAngle = 20f;
 
     [Header("감지")]
-    [SerializeField] private LayerMask _playerLayer;
-    [SerializeField] private float _detectRadius = 100f;
     [SerializeField] private float _chaseEndDistance = 5f;
     [SerializeField] private float _reChaseDistance = 7f;
     [SerializeField] private Vector2 _strafingRange = new Vector2(4f, 5f);
@@ -38,9 +36,6 @@ public class HellCatCore : EnemyCore
     [Header("모델")]
     [SerializeField] private Transform _modelRootTransform;
 
-    private Collider[] _detectedColliders;
-    private Collider _playerCollider;
-
     private Animator _animator;
     private Rigidbody _rigidbody;
     private NavMeshAgent _agent;
@@ -51,13 +46,11 @@ public class HellCatCore : EnemyCore
     public float ChaseSpeed => _chaseSpeed;
     public float StrafeSpeed => _strafeSpeed;
     public float ChaseEndDistance => _chaseEndDistance;
-    public float PlayerDistance => (PlayerCollider != null) ? Vector3.Distance(transform.position, PlayerCollider.transform.position) : _detectRadius;
+    public float PlayerDistance => (DetectedPlayer != null) ? Vector3.Distance(transform.position, DetectedPlayer.transform.position) : DetectRadius;
     public float AttackRange => _attackRange;
     public float CombatDistance => _combatDistance;
     public float ReChaseDistance => _reChaseDistance;
     public Vector2 StrafingRange => _strafingRange;
-    public Collider PlayerCollider => _playerCollider;
-    public LayerMask PlayerLayer => _playerLayer;
     public Transform ModelRootTransform => _modelRootTransform;
 
     public EnemyStateData IdleStateData => _idleStateData;
@@ -86,7 +79,6 @@ public class HellCatCore : EnemyCore
 
         _agent.enabled = false;
         _fsm = new HellCatFSM(this);
-        _detectedColliders = new Collider[3];
     }
 
     private void Start()
@@ -104,9 +96,6 @@ public class HellCatCore : EnemyCore
         //    CurrentBasicAttackCoolTime += Time.deltaTime;
         //}
 
-        // 플레이어 감지
-        DetectPlayer();
-
         _fsm.Tick();
     }
 
@@ -123,13 +112,5 @@ public class HellCatCore : EnemyCore
     private void OnAnimatorMove()
     {
         _fsm.AnimationTick();
-    }
-
-    private void DetectPlayer()
-    {
-        _playerCollider = null;
-        int detectedCount = Physics.OverlapSphereNonAlloc(transform.position, _detectRadius, _detectedColliders, _playerLayer);
-        if (detectedCount > 0)
-            _playerCollider = _detectedColliders[0];
     }
 }
