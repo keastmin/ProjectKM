@@ -7515,7 +7515,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _skillDatas: []
+  _skillDatas:
+  - {fileID: 11400000, guid: dc4424b88f871c440841415d7ea7f59f, type: 2}
 --- !u!114 &5921264619617047054
 MonoBehaviour:
   m_ObjectHideFlags: 0

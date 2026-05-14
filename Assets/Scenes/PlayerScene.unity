@@ -1896,10 +1896,6 @@ PrefabInstance:
       propertyPath: m_Center.y
       value: 1.155
       objectReference: {fileID: 0}
-    - target: {fileID: 5694683045896662184, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
-      propertyPath: _qSkill
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 6538668474974009422, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1912,18 +1908,6 @@ PrefabInstance:
       propertyPath: _volumeEffect
       value: 
       objectReference: {fileID: 1834032606}
-    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
-      propertyPath: _skillDatas.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
-      propertyPath: '_skillDatas.Array.data[0]'
-      value: 
-      objectReference: {fileID: 11400000, guid: dc4424b88f871c440841415d7ea7f59f, type: 2}
-    - target: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
-      propertyPath: _stateVariables._dodgeVariable._frontDodgeRecoverySpeed
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
