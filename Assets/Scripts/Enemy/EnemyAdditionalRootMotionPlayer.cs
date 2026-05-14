@@ -9,6 +9,7 @@ public class EnemyAdditionalRootMotionPlayer
     private Vector3 _previousCumulativeDeltaPosition;
     private float _previousNormalizedTime;
     private Quaternion _localBasisRotation = Quaternion.identity;
+    private Transform _rotationSource;
 
     public EnemyAdditionalRootMotionPlayer(EnemyCore core, EnemyStateAuthoringRootmotionBlock[] blocks)
     {
@@ -16,12 +17,18 @@ public class EnemyAdditionalRootMotionPlayer
         _blocks = blocks;
     }
 
+    public EnemyAdditionalRootMotionPlayer(EnemyCore core, EnemyStateAuthoringRootmotionBlock[] blocks, Transform rotationSource)
+        : this(core, blocks)
+    {
+        _rotationSource = rotationSource;
+    }
+
     public void InitAdditionalRootMotion()
     {
         _deltaPosition = Vector3.zero;
         _previousCumulativeDeltaPosition = Vector3.zero;
         _previousNormalizedTime = 0f;
-        _localBasisRotation = _core != null ? _core.transform.rotation : Quaternion.identity;
+        _localBasisRotation = GetCurrentRotation();
     }
 
     public Vector3 ConsumeDeltaPosition(bool applyYAxis = false)
@@ -49,7 +56,7 @@ public class EnemyAdditionalRootMotionPlayer
 
         if (useCurrentRotation)
         {
-            Quaternion currentRotation = _core != null ? _core.transform.rotation : Quaternion.identity;
+            Quaternion currentRotation = GetCurrentRotation();
             for (int i = 0; i < _blocks.Length; i++)
             {
                 EnemyStateAuthoringRootmotionBlock block = _blocks[i];
@@ -89,5 +96,15 @@ public class EnemyAdditionalRootMotionPlayer
         _deltaPosition += currentCumulativeDeltaPosition - _previousCumulativeDeltaPosition;
         _previousCumulativeDeltaPosition = currentCumulativeDeltaPosition;
         _previousNormalizedTime = clampedNormalizedTime;
+    }
+
+    private Quaternion GetCurrentRotation()
+    {
+        if (_rotationSource != null)
+        {
+            return _rotationSource.rotation;
+        }
+
+        return _core != null ? _core.transform.rotation : Quaternion.identity;
     }
 }

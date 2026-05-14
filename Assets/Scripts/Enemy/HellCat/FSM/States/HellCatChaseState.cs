@@ -18,6 +18,7 @@ public class HellCatChaseState : IState
     {
         _core.Agent.enabled = true;
         _core.Agent.isStopped = false;
+        _core.Agent.updateRotation = false;
         _core.Agent.speed = _core.ChaseSpeed;
         _core.Agent.stoppingDistance = _core.ChaseEndDistance;
 
@@ -45,6 +46,7 @@ public class HellCatChaseState : IState
         }
 
         _core.Agent.SetDestination(_core.DetectedPlayer.transform.position);
+        _core.RequestModelRotationTowards(_core.DetectedPlayer.transform.position, 720f);
     }
 
     public void FixedTick()

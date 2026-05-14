@@ -11,7 +11,7 @@ public class EnemyDodgeTimingDataPlayer
         _blocks = blocks;
     }
 
-    public void NotifyReciever(float normalizedTime)
+    public void NotifyReciever(float normalizedTime, Transform model)
     {
         if (_core == null || _blocks == null || _blocks.Length == 0)
         {
@@ -30,8 +30,8 @@ public class EnemyDodgeTimingDataPlayer
             if (block.BindingMode == EnemyStateAuthoringDodgeAreaBindingMode.AttachToTransform)
             {
                 Transform attachTransform = string.IsNullOrEmpty(block.AttachTransformPath)
-                    ? _core.transform
-                    : _core.transform.Find(block.AttachTransformPath);
+                    ? model != null ? model : _core.transform
+                    : model != null ? model.Find(block.AttachTransformPath) : null;
 
                 if (attachTransform == null)
                 {

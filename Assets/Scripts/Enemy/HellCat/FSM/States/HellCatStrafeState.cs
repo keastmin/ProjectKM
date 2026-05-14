@@ -112,10 +112,7 @@ public class HellCatStrafeState : IState
     {
         if(_core.DetectedPlayer != null)
         {
-            Vector3 lookDir = _core.DetectedPlayer.transform.position - _core.transform.position;
-            lookDir.y = 0f;
-            Quaternion targetRot = Quaternion.LookRotation(lookDir.normalized, Vector3.up);
-            _core.Rigidbody.MoveRotation(Quaternion.RotateTowards(_core.Rigidbody.rotation, targetRot, 360f * Time.fixedDeltaTime));
+            _core.RequestModelRotationTowards(_core.DetectedPlayer.transform.position, 360f);
         }
     }
 
@@ -160,13 +157,13 @@ public class HellCatStrafeState : IState
 
     private Vector3 GetTargetNormalVector(StrafingDirection dir)
     {
-        Vector3 normal = _core.transform.forward;
+        Vector3 normal = _core.FacingForward;
         if (dir == StrafingDirection.Left)
-            normal = -_core.transform.right;
+            normal = -_core.FacingRight;
         else if (dir == StrafingDirection.Right)
-            normal = _core.transform.right;
+            normal = _core.FacingRight;
         else if (dir == StrafingDirection.Backward)
-            normal = -_core.transform.forward;
+            normal = -_core.FacingForward;
         return normal;
     }
 }

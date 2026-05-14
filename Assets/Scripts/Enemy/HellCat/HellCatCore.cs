@@ -39,6 +39,9 @@ public class HellCatCore : EnemyCore
     private Animator _animator;
     private Rigidbody _rigidbody;
     private NavMeshAgent _agent;
+    private bool _hasModelRotationTarget;
+    private Quaternion _modelRotationTarget;
+    private float _modelRotateSpeed;
 
     private HellCatFSM _fsm;
     public HellCatFSM FSM => _fsm;
@@ -52,6 +55,9 @@ public class HellCatCore : EnemyCore
     public float ReChaseDistance => _reChaseDistance;
     public Vector2 StrafingRange => _strafingRange;
     public Transform ModelRootTransform => _modelRootTransform;
+    public Quaternion FacingRotation => _modelRootTransform != null ? _modelRootTransform.rotation : transform.rotation;
+    public Vector3 FacingForward => GetPlanarDirection(FacingRotation * Vector3.forward, Vector3.forward);
+    public Vector3 FacingRight => GetPlanarDirection(FacingRotation * Vector3.right, Vector3.right);
 
     public EnemyStateData IdleStateData => _idleStateData;
     public EnemyStateData LeftStrafeStateData => _leftStrafeStateData;
@@ -74,10 +80,21 @@ public class HellCatCore : EnemyCore
     {
         base.Awake();
         _animator = GetComponentInChildren<Animator>();
+        if (_animator != null && _animator.gameObject != gameObject && !_animator.TryGetComponent(out HellCatAnimRM _))
+        {
+            _animator.gameObject.AddComponent<HellCatAnimRM>();
+        }
+
         TryGetComponent(out _rigidbody);
         TryGetComponent(out _agent);
 
+        if (_rigidbody.interpolation == RigidbodyInterpolation.None)
+        {
+            _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+        }
+
         _agent.enabled = false;
+        _agent.updateRotation = false;
         _fsm = new HellCatFSM(this);
     }
 
@@ -107,10 +124,71 @@ public class HellCatCore : EnemyCore
     private void LateUpdate()
     {
         _fsm.LateTick();
+        ApplyModelRotationTarget();
     }
 
     private void OnAnimatorMove()
     {
+        HandleAnimatorMove();
+    }
+
+    public void HandleAnimatorMove()
+    {
         _fsm.AnimationTick();
+    }
+
+    public void RotateModelTowards(Vector3 worldPosition, float rotateSpeed, float deltaTime)
+    {
+        RequestModelRotationTowards(worldPosition, rotateSpeed);
+    }
+
+    public void RequestModelRotationTowards(Vector3 worldPosition, float rotateSpeed)
+    {
+        if (_modelRootTransform == null)
+        {
+            return;
+        }
+
+        Vector3 lookDir = worldPosition - _modelRootTransform.position;
+        lookDir.y = 0f;
+        if (lookDir.sqrMagnitude <= 0.0001f)
+        {
+            return;
+        }
+
+        Quaternion targetRot = Quaternion.LookRotation(lookDir.normalized, Vector3.up);
+        RequestModelRotation(targetRot, rotateSpeed);
+    }
+
+    public void RequestModelRotation(Quaternion targetRotation, float rotateSpeed)
+    {
+        _modelRotationTarget = targetRotation;
+        _modelRotateSpeed = rotateSpeed;
+        _hasModelRotationTarget = true;
+    }
+
+    private void ApplyModelRotationTarget()
+    {
+        if (!_hasModelRotationTarget || _modelRootTransform == null)
+        {
+            return;
+        }
+
+        _modelRootTransform.rotation = Quaternion.RotateTowards(
+            _modelRootTransform.rotation,
+            _modelRotationTarget,
+            _modelRotateSpeed * Time.deltaTime);
+    }
+
+    private static Vector3 GetPlanarDirection(Vector3 direction, Vector3 fallback)
+    {
+        direction.y = 0f;
+        if (direction.sqrMagnitude <= 0.0001f)
+        {
+            direction = fallback;
+            direction.y = 0f;
+        }
+
+        return direction.normalized;
     }
 }

@@ -19,6 +19,7 @@ public sealed class RotateToPlayerBlock : EnemyStateTimelineBlock
         private readonly RotateToPlayerBlock _data;
 
         private EnemyCore _core;
+        private HellCatCore _hellCatCore;
         private Transform _root;
 
         public Runner(RotateToPlayerBlock data)
@@ -30,6 +31,11 @@ public sealed class RotateToPlayerBlock : EnemyStateTimelineBlock
         {
             _core = context.Core;
             _root = context.Root;
+            if (_core is HellCatCore hellCatCore && hellCatCore.ModelRootTransform != null)
+            {
+                _hellCatCore = hellCatCore;
+                _root = hellCatCore.ModelRootTransform;
+            }
         }
 
         public override void OnBlockEnter(float normalizedTime)
@@ -40,6 +46,11 @@ public sealed class RotateToPlayerBlock : EnemyStateTimelineBlock
         public override void OnBlockTick(float normalizedTime)
         {
             if (_core == null || _root == null || _core.DetectedPlayer == null) return;
+            if (_hellCatCore != null)
+            {
+                _hellCatCore.RequestModelRotationTowards(_core.DetectedPlayer.transform.position, _data._rotateSpeed);
+                return;
+            }
 
             Vector3 playerPos = _core.DetectedPlayer.transform.position;
             Vector3 enemyPos = _root.position;

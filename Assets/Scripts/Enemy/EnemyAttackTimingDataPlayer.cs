@@ -21,7 +21,7 @@ public class EnemyAttackTimingDataPlayer
         _damageHash.Clear();
     }
 
-    public void GiveDamage(float normalizedTime, float damage, LayerMask layer)
+    public void GiveDamage(float normalizedTime, float damage, LayerMask layer, Transform model)
     {
         if (_core == null || _blocks == null || _blocks.Length == 0)
         {
@@ -42,7 +42,7 @@ public class EnemyAttackTimingDataPlayer
             {
                 Transform attachTransform = string.IsNullOrEmpty(block.AttachTransformPath)
                     ? _core.transform
-                    : _core.transform.Find(block.AttachTransformPath);
+                    : model.Find(block.AttachTransformPath);
 
                 if (attachTransform == null)
                 {

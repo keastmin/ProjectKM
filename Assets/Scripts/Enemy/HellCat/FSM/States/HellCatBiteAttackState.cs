@@ -19,7 +19,7 @@ public class HellCatBiteAttackState : IState
     {
         _core = core;
         _animHash = Animator.StringToHash("Base Layer." + core.BiteAttackData.AnimatorStateName);
-        _additionalRMPlayer = new EnemyAdditionalRootMotionPlayer(core, core.BiteAttackData.AdditionalRootmotionBlocks);
+        _additionalRMPlayer = new EnemyAdditionalRootMotionPlayer(core, core.BiteAttackData.AdditionalRootmotionBlocks, core.ModelRootTransform);
         _dodgeTimingPlayer = new EnemyDodgeTimingDataPlayer(core, core.BiteAttackData.DodgeTimingBlocks);
         _attackTimingPlayer = new EnemyAttackTimingDataPlayer(core, core.BiteAttackData.AttackTimingBlocks);
         _customBlockPlayer = new EnemyStateCustomBlockPlayer();
@@ -48,10 +48,10 @@ public class HellCatBiteAttackState : IState
         }
 
         // 플레이어에게 회피 타이밍을 알림
-        _dodgeTimingPlayer.NotifyReciever(_stateInfo.normalizedTime);
+        _dodgeTimingPlayer.NotifyReciever(_stateInfo.normalizedTime, _core.ModelRootTransform);
 
         // 플레이어를 공격
-        _attackTimingPlayer.GiveDamage(_stateInfo.normalizedTime, 10f, _core.PlayerLayer);
+        _attackTimingPlayer.GiveDamage(_stateInfo.normalizedTime, 10f, _core.PlayerLayer, _core.ModelRootTransform);
 
         // 커스텀 블록 실행
         _customBlockPlayer.Tick(_stateInfo.normalizedTime);
