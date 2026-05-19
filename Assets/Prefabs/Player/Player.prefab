@@ -7403,6 +7403,7 @@ MonoBehaviour:
   _playerCamera: {fileID: 0}
   _cinemachineImpulseSource: {fileID: 9169834115983168031}
   _volumeEffect: {fileID: 0}
+  _cameraPivot: {fileID: 5852798176326268176}
   _stateVariables:
     _dodgeVariable:
       _frontDodgeMaxSpeed: 12

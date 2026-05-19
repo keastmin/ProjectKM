@@ -39,6 +39,7 @@ namespace Player
         [SerializeField] private Camera _playerCamera;
         [SerializeField] private CinemachineImpulseSource _cinemachineImpulseSource;
         [SerializeField] private VolumeEffect _volumeEffect;
+        [SerializeField] private Transform _cameraPivot;
 
         [Header("상태")]
         [SerializeField] private StateVariableContainter _stateVariables;
@@ -77,7 +78,10 @@ namespace Player
         private readonly HashSet<Component> _activeDodgeTimingSources = new();
         private Coroutine _perfectDodgeTimeScaleCoroutine;
         private Coroutine _hitStopCoroutine;
+        private Coroutine _bindingWaitCoroutine;
         private bool _canPerfectDodge = false;
+        private bool _isCoreReady = false;
+        private bool _isInitialized = false;
 
         // 속도
         private float _targetSpeed;
@@ -107,6 +111,7 @@ namespace Player
         public Animator Animator => _animator;
         public VolumeEffect VolumeEffect => _volumeEffect;
         public MeshTrailEffectController TrailEffector => _trailEffector;
+        public Transform CameraPivot => _cameraPivot;
         public float JogSpeed => _jogSpeed;
         public float RunSpeed => _runSpeed;
         public float TargetSpeed
@@ -128,6 +133,7 @@ namespace Player
         public StateVariableContainter StateVariables => _stateVariables;
         public bool DamageFlag { get; set; } = false;
         public bool CanReceiveDamage => _fsm?.CanReceiveDamage ?? true;
+        public bool IsInitialized => _isInitialized;
         public float CurrentDodgeCooldownTimer
         {
             get
@@ -200,15 +206,21 @@ namespace Player
             DodgeAvailableCount = _maxDodgeAvailableCount;
             CurrentDodgeCooldownTimer = _dodgeCooldown;
             _isDead = false;
+            _isCoreReady = true;
         }
 
         private void Start()
         {
-            _fsm.InitStateMachine(_fsm.IdleState);
+            TryInitializeWhenReady();
         }
 
         private void Update()
         {
+            if (!_isInitialized)
+            {
+                return;
+            }
+
             if (Input.GetKeyDown(KeyCode.X))
             {
                 SkillController.EquipSkill(PlayerSkillSlot.Q, SkillDatas[0]);
@@ -236,18 +248,82 @@ namespace Player
 
         private void FixedUpdate()
         {
+            if (!_isInitialized)
+            {
+                return;
+            }
+
             SmoothSpeedChanger();
             _fsm.FixedTick();
         }
 
         private void LateUpdate()
         {
+            if (!_isInitialized)
+            {
+                return;
+            }
+
             _fsm.LateTick();
         }
 
         private void OnAnimatorMove()
         {
+            if (!_isInitialized)
+            {
+                return;
+            }
+
             _fsm.AnimationTick();
+        }
+
+        private bool HasRequiredBindings()
+        {
+            return _playerCamera != null && _volumeEffect != null;
+        }
+
+        private bool TryInitializeWhenReady()
+        {
+            if (_isInitialized)
+            {
+                return true;
+            }
+
+            if (!_isCoreReady)
+            {
+                return false;
+            }
+
+            if (!HasRequiredBindings())
+            {
+                if (_bindingWaitCoroutine == null)
+                {
+                    _bindingWaitCoroutine = StartCoroutine(WaitForRequiredBindings());
+                }
+
+                return false;
+            }
+
+            if (_bindingWaitCoroutine != null)
+            {
+                StopCoroutine(_bindingWaitCoroutine);
+                _bindingWaitCoroutine = null;
+            }
+
+            _fsm.InitStateMachine(_fsm.IdleState);
+            _isInitialized = true;
+            return true;
+        }
+
+        private IEnumerator WaitForRequiredBindings()
+        {
+            while (!HasRequiredBindings())
+            {
+                yield return null;
+            }
+
+            _bindingWaitCoroutine = null;
+            TryInitializeWhenReady();
         }
 
         private void SmoothSpeedChanger()
@@ -386,6 +462,42 @@ namespace Player
         private void QSkillChange(SkillDefinition skill)
         {
             OnQSkillChanged?.Invoke(skill);
+        }
+
+        public void BindCameraReference(Camera mainCamera)
+        {
+            if (_playerCamera != null)
+            {
+                TryInitializeWhenReady();
+                return;
+            }
+
+            if (mainCamera == null)
+            {
+                TryInitializeWhenReady();
+                return;
+            }
+
+            _playerCamera = mainCamera;
+            TryInitializeWhenReady();
+        }
+
+        public void BindVolumeEffectReference(VolumeEffect volumeEffect)
+        {
+            if (_volumeEffect != null)
+            {
+                TryInitializeWhenReady();
+                return;
+            }
+
+            if (volumeEffect == null)
+            {
+                TryInitializeWhenReady();
+                return;
+            }
+
+            _volumeEffect = volumeEffect;
+            TryInitializeWhenReady();
         }
     }
 }

@@ -11,7 +11,7 @@ public static class PlayerStateUtil
     {
         if(mainCamera == null)
         {
-            Debug.Log("참조가 없습니다.");
+            Debug.LogError("참조가 없습니다.");
             return Vector3.zero;
         }
 

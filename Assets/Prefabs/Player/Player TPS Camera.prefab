@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6265494930515792638}
   - component: {fileID: 4153807132277301428}
   - component: {fileID: 8247654235173425414}
+  - component: {fileID: 3921434412115293063}
   - component: {fileID: 2790006097147140448}
   - component: {fileID: 6941596582759447963}
   - component: {fileID: 1946081826299122385}
@@ -190,6 +191,18 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
+--- !u!114 &3921434412115293063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047183723110580088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7f3c46d3e13e724bb9cb50caa4f2275, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCinemachineController
 --- !u!114 &2790006097147140448
 MonoBehaviour:
   m_ObjectHideFlags: 0

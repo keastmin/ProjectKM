@@ -5,6 +5,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [SerializeField] private GameState _startGameState;
+
     private GameState _state;
 
     public GameState State
@@ -46,7 +48,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        State = GameState.Main;
+        State = _startGameState;
     }
 
     private void MouseVisable(GameState state)
