@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+
     private GameState _state;
 
     public GameState State
@@ -13,27 +16,60 @@ public class GameManager : MonoBehaviour
         set
         {
             _state = value;
-            MouseVisable(_state);
+            OnChangeGameState?.Invoke(_state);
         }
+    }
+
+    public event Action<GameState> OnChangeGameState;
+
+    private void Awake()
+    {
+        if(Instance != null)
+        {
+            Debug.Log("이미 있음");
+            Destroy(this.gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(this.gameObject);
+    }
+
+    private void OnEnable()
+    {
+        OnChangeGameState += MouseVisable;
+    }
+
+    private void OnDisable()
+    {
+        OnChangeGameState -= MouseVisable;
     }
 
     private void Start()
     {
-        State = GameState.Player;
+        State = GameState.Main;
     }
 
     private void MouseVisable(GameState state)
     {
         switch (state)
         {
-            case GameState.Player:
-                // 커서를 숨기고 락을 걸어둠
+            case GameState.Game:
                 Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
+                break;
+            case GameState.Main:
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                break;
+            case GameState.Loading:
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
                 break;
             case GameState.UI:
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
+                break;
+            default:
                 break;
         }
     }

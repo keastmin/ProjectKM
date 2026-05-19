@@ -1,5 +1,7 @@
 public enum GameState
 {
-    Player,
+    Main,
+    Loading,
+    Game,
     UI
 }

@@ -12,7 +12,7 @@ public class MainMenuUI : MonoBehaviour
 
     public void OnClickNewGameButton()
     {
-        SceneManager.LoadScene(_gameScene);
+        LoadingController.LoadScene(_gameScene);
     }
 
     public void OnClickQuitButton()
