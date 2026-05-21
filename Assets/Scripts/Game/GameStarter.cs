@@ -1,15 +1,19 @@
 using Player;
-using Unity.Cinemachine;
 using UnityEngine;
 
 public class GameStarter : MonoBehaviour
 {
+    [Header("Player")]
     [SerializeField] private PlayerCore _playerPrefab;
     [SerializeField] private PlayerCinemachineController _playerCineCamPrefab;
     [SerializeField] private VolumeEffect _volumeEffectPrefab;
-    [SerializeField] private Camera _mainCamera;
-
     [SerializeField] private Transform _playerSpawnPoint;
+
+    [Header("Protal")]
+    [SerializeField] private GameObject _portalPrefab;
+
+    [Header("Camera")]
+    [SerializeField] private Camera _mainCamera;
 
     private void Start()
     {
