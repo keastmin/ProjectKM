@@ -1971,13 +1971,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6074259771264933821}
-  - component: {fileID: 4692940353805908275}
-  - component: {fileID: 5154556876286786}
+  - component: {fileID: 5650889683855127600}
   - component: {fileID: 1121965747540496071}
-  - component: {fileID: 4201323835727100468}
-  - component: {fileID: 4703905574568540011}
-  - component: {fileID: 6298738394623785329}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Enemy Hell Cat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2001,7 +1997,7 @@ Transform:
   - {fileID: 7683129504306876488}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4692940353805908275
+--- !u!114 &5650889683855127600
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2010,91 +2006,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4311959702204664398}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af80121a216d20a4a8745ac602d9b2af, type: 3}
+  m_Script: {fileID: 11500000, guid: 5ad45d6410f69f64888b6e69d8f6b299, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HellCatCore
-  _meleeAttacks: []
-  _stiffnessLevel: 0
-  _enableSuperArmour: 1
-  _superArmourDuration: 3
-  _superArmourDamage: 80
-  _superArmourHoldTime: 3
-  _hurtColliders: []
-  _basicAttackCoolDown: 4
-  _chaseSpeed: 7
-  _strafeSpeed: 0.8
-  _attackRange: 2.4
-  _combatDistance: 3.4
-  _preAttackStrafeTime: 1.2
-  _attackFacingAngle: 20
-  _playerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  _detectRadius: 100
-  _chaseEndDistance: 5
-  _reChaseDistance: 7
-  _strafingRange: {x: 4, y: 5}
-  _idleStateData: {fileID: 11400000, guid: 677f561722094574fb599b7873361a1e, type: 2}
-  _leftStrafeStateData: {fileID: 11400000, guid: f654cf0b31deadb40abfe5fc7a4fbcca, type: 2}
-  _rightStrafeStateData: {fileID: 11400000, guid: 925edad8eabf2bc49b8a34e66f1b479b, type: 2}
-  _forwardStrafeStateData: {fileID: 11400000, guid: 0cd88719e6e2ddc4d92232717a074e79, type: 2}
-  _backwardStrafeStateData: {fileID: 11400000, guid: 6562c948d268f1f43b09bcc6dd370e8a, type: 2}
-  _chaseStateData: {fileID: 11400000, guid: 20fa7f601af43bd45879b9137a7016a2, type: 2}
-  _damagedStateData: {fileID: 11400000, guid: 4675caba3e0ded447aede29731bc7350, type: 2}
-  _biteAttackStateData: {fileID: 11400000, guid: 3f1ff245f0240f54c909bd3eff2775f2, type: 2}
-  _hellCatBiteAttackStateData: {fileID: 11400000, guid: 448249acddb932142af93a58c5ef8af5, type: 2}
---- !u!114 &5154556876286786
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4311959702204664398}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7729ee5b701c7e948b0513a104de6e44, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Player.CameraDistanceDitherFade
-  _targetCamera: {fileID: 0}
-  _fadeOrigin: {fileID: 6074259771264933821}
-  _targetRenderers:
-  - {fileID: 3288094186306723869}
-  - {fileID: 2009882689618328552}
-  - {fileID: 2755520100558808683}
-  - {fileID: 7894420669208718278}
-  - {fileID: 6148046828974279112}
-  - {fileID: 846566975422485343}
-  - {fileID: 1163086205070116391}
-  - {fileID: 7881696159705609789}
-  - {fileID: 3684804277425745171}
-  - {fileID: 3309054803032690396}
-  - {fileID: 4631533926325281504}
-  _fadeStartDistance: 3
-  _fadeEndDistance: 0.8
-  _fadeCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 1
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  m_EditorClassIdentifier: Assembly-CSharp::HellCatAnimRM
 --- !u!95 &1121965747540496071
 Animator:
   serializedVersion: 7
@@ -2117,78 +2031,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!54 &4201323835727100468
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4311959702204664398}
-  serializedVersion: 5
-  m_Mass: 5000
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 112
-  m_CollisionDetection: 2
---- !u!136 &4703905574568540011
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4311959702204664398}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.92
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
---- !u!195 &6298738394623785329
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4311959702204664398}
-  m_Enabled: 1
-  m_AgentTypeID: -1372625422
-  m_Radius: 1.2
-  m_Speed: 1.4
-  m_Acceleration: 20
-  avoidancePriority: 50
-  m_AngularSpeed: 240
-  m_StoppingDistance: 3.2
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2.39
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!1 &4452806274224181117
 GameObject:
   m_ObjectHideFlags: 0

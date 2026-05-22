@@ -4,12 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Player
 {
     [RequireComponent(typeof(InputController))]
-    [RequireComponent(typeof(CharacterMover))]
     [RequireComponent(typeof(HitController))]
     [RequireComponent(typeof(TargetingController))]
     [RequireComponent(typeof(AttackEffectController))]

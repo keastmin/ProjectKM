@@ -1,4 +1,3 @@
-using Jorjouto.AnimComposerSystem;
 using UnityEngine;
 
 public class EnemyHumanoidCore : EnemyTest
