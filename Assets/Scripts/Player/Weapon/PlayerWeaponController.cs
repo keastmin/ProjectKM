@@ -7,18 +7,13 @@ public class PlayerWeaponController : MonoBehaviour
     [SerializeField] private Transform _rightHandTransform;
     [SerializeField] private Transform _leftHandTransform;
 
-    private List<WeaponInstance> _weaponList;
+    private List<WeaponSlot> _weaponList;
     private int _weaponIndex;
+    private WeaponSlot _currentWeaponSlot;
 
-    public List<WeaponInstance> WeaponList => _weaponList;
-    public bool IsExistWeapon
-    {
-        get
-        {
-            return (WeaponList != null && WeaponList.Count < _weaponIndex && WeaponList[_weaponIndex] != null);
-        }
-    }
-
+    public List<WeaponSlot> WeaponList => _weaponList;
+    public int WeaponIndex => _weaponIndex;
+    public WeaponSlot CurrentWeaponSlot => _currentWeaponSlot;
 
     private void OnValidate()
     {
@@ -27,37 +22,101 @@ public class PlayerWeaponController : MonoBehaviour
 
     private void Awake()
     {
-        _weaponIndex = 0;   
+        _weaponIndex = 0;
+        _currentWeaponSlot = WeaponSlot.Empty;
     }
 
-    public void TryEquipWeapon()
+    public void ChangeNextWeapon()
     {
-        if (!CheckWeaponList())
+        UnequipWeapon();
+        ChangeNextIndex();
+        EquipWeapon();
+    }
+
+    public void UnequipWeapon()
+    {
+        if (CurrentWeaponSlot.Actor == null)
             return;
 
+        WeaponActor actor = CurrentWeaponSlot.Actor;
+        actor.gameObject.SetActive(false);
+        _currentWeaponSlot = WeaponSlot.Empty;
+    }
 
+    public void EquipWeapon()
+    {
+        WeaponSlot slot;
+        if (TryGetWeaponSlot(WeaponIndex, out slot))
+        {
+            _currentWeaponSlot = slot;
+            EquipWeaponOnHand();
+        }
     }
 
     /// <summary>
-    /// 다음 무기로 교체
+    /// 다음 인덱스로 이동
     /// </summary>
-    public void TryChangeNextWeapon()
+    public void ChangeNextIndex()
     {
-        if (!CheckWeaponList())
+        if (!CheckWeaponList(WeaponIndex))
             return;
 
-        int maxIndex = _weaponList.Count;
-        int currentIndex = _weaponIndex;
+        int maxIndex = WeaponList.Count;
+        int currentIndex = WeaponIndex;
         _weaponIndex = (currentIndex + 1) % maxIndex;
     }
 
-    private bool CheckWeaponList()
+    public bool TryGetWeaponSlot(int index, out WeaponSlot slot)
     {
-        if(_weaponList == null)
+        slot = WeaponSlot.Empty;
+
+        if (!CheckWeaponList(index))
         {
-            Debug.LogError("무기 리스트가 없습니다.");
+            return false;
+        }
+        if (WeaponList[index].Instance == null)
+        {
+            Debug.LogError("무기 인스턴스가 없습니다");
+            return false;
+        }
+
+        slot = WeaponList[index];
+        return true;
+    }
+
+    public bool CheckWeaponList(int index)
+    {
+        if (WeaponList == null)
+        {
+            Debug.LogError("무기 리스트가 없습니다");
+            return false;
+        }
+        if (index < 0 && index >= WeaponList.Count)
+        {
+            Debug.LogError("인덱스가 리스트 카운트를 벗어납니다");
             return false;
         }
         return true;
+    }
+
+    public void EquipWeaponOnHand()
+    {
+        if(CurrentWeaponSlot.Actor == null)
+        {
+            Debug.LogError("무기가 없습니다");
+            return;
+        }
+
+        WeaponActor actor = CurrentWeaponSlot.Actor;
+        WeaponHandType type = actor.HandType;
+
+        actor.gameObject.SetActive(true);
+        if(type == WeaponHandType.Left)
+            actor.transform.parent = _leftHandTransform;
+        else if(type == WeaponHandType.Right)
+            actor.transform.parent = _rightHandTransform;
+        actor.transform.localPosition = Vector3.zero;
+        actor.transform.localRotation = Quaternion.identity;
+        actor.transform.localScale = Vector3.one;
     }
 }

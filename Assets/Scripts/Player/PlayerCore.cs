@@ -12,6 +12,7 @@ namespace Player
     [RequireComponent(typeof(TargetingController))]
     [RequireComponent(typeof(AttackEffectController))]
     [RequireComponent(typeof(PlayerSkillController))]
+    [RequireComponent(typeof(PlayerWeaponController))]
     [RequireComponent(typeof(Animator))]
     public class PlayerCore : MonoBehaviour, IDamageable
     {
@@ -50,12 +51,6 @@ namespace Player
         [SerializeField] private float _perfectDodgeRecoverDuration = 0.1f;
         [SerializeField] private int _maxDodgeAvailableCount = 2; // 최대 연속 회피 가능 횟수
         [SerializeField] private float _dodgeCooldown = 2f; // 회피 쿨타임
-        [SerializeField]
-        private AnimationCurve _vignetteCurve =
-            new AnimationCurve(
-                new Keyframe(0f, 0f),
-                new Keyframe(0.3f, 0.35f),
-                new Keyframe(1f, 0f)); // 완벽 회피 시 화면을 흑백으로 만드는 효과를 위한 커브
         private int _dodgeAvailableCount; // 현재 남은 연속 회피 가능 횟수
         private float _currentDodgeCooldownTimer; // 현재 회피 쿨타임 타이머
         private EnemyCore _dodgeEnemy; // 회피 타이밍을 준 주체 적
@@ -65,7 +60,6 @@ namespace Player
 
         // 컴포넌트
         private InputController _inputController;
-        //private CharacterMover _characterMover;
         private AvatarMover _avatarMover;
         private HitController _hitController;
         private TargetingController _targetingController;
@@ -73,7 +67,7 @@ namespace Player
         private PlayerSkillController _skillController;
         private Animator _animator;
         private MeshTrailEffectController _trailEffector;
-        private readonly HashSet<Component> _activeDodgeTimingSources = new();
+        private PlayerWeaponController _weaponController;
         private Coroutine _perfectDodgeTimeScaleCoroutine;
         private Coroutine _hitStopCoroutine;
         private Coroutine _bindingWaitCoroutine;
@@ -109,6 +103,7 @@ namespace Player
         public Animator Animator => _animator;
         public VolumeEffect VolumeEffect => _volumeEffect;
         public MeshTrailEffectController TrailEffector => _trailEffector;
+        public PlayerWeaponController WeaponController => _weaponController;
         public Transform CameraPivot => _cameraPivot;
         public float JogSpeed => _jogSpeed;
         public float RunSpeed => _runSpeed;
@@ -187,12 +182,12 @@ namespace Player
         private void Awake()
         {
             TryGetComponent(out _inputController);
-            //TryGetComponent(out _characterMover);
             TryGetComponent(out _avatarMover);
             TryGetComponent(out _hitController);
             TryGetComponent(out _targetingController);
             TryGetComponent(out _attackEffectController);
             TryGetComponent(out _skillController);
+            TryGetComponent(out _weaponController);
             _skillController.OnQSkillEquiped += QSkillChange;
 
             TryGetComponent(out _animator);
