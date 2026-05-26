@@ -219,6 +219,11 @@ namespace Player
                 SkillController.EquipSkill(PlayerSkillSlot.Q, SkillDatas[0]);
             }
 
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                WeaponController.ChangeNextWeapon();
+            }
+
             if(HP <= 0f && !IsDead)
             {
                 FSM.Transition(FSM.DeathState);

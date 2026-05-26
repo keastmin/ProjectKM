@@ -40,7 +40,7 @@ public sealed class RotateToPlayerBlock : EnemyStateTimelineBlock
 
         public override void OnBlockEnter(float normalizedTime)
         {
-            Debug.Log("블록 시작");
+            
         }
 
         public override void OnBlockTick(float normalizedTime)
@@ -63,7 +63,7 @@ public sealed class RotateToPlayerBlock : EnemyStateTimelineBlock
 
         public override void OnBlockExit(float normalizedTime)
         {
-            Debug.Log("블록 끝");
+            
         }
 
         public override void OnStateExit()

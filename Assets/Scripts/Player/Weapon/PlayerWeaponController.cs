@@ -3,27 +3,53 @@ using UnityEngine;
 
 public class PlayerWeaponController : MonoBehaviour
 {
-    [SerializeField] private List<WeaponData> _testWeaponList;
+    [SerializeField] private WeaponData[] _testWeaponArray;
     [SerializeField] private Transform _rightHandTransform;
     [SerializeField] private Transform _leftHandTransform;
 
     private List<WeaponSlot> _weaponList;
     private int _weaponIndex;
     private WeaponSlot _currentWeaponSlot;
+    private bool _isEquipped;
 
     public List<WeaponSlot> WeaponList => _weaponList;
     public int WeaponIndex => _weaponIndex;
     public WeaponSlot CurrentWeaponSlot => _currentWeaponSlot;
-
-    private void OnValidate()
-    {
-        
-    }
+    public bool IsEquipped => _isEquipped;
 
     private void Awake()
     {
+        _weaponList = new List<WeaponSlot>();
         _weaponIndex = 0;
         _currentWeaponSlot = WeaponSlot.Empty;
+        _isEquipped = true;
+
+        if(_testWeaponArray != null)
+        {
+            foreach(var data in _testWeaponArray)
+            {
+                AcquisitionWeaponData(data);
+            }
+        }
+    }
+
+    public void AcquisitionWeaponData(WeaponData data)
+    {
+        if(_weaponList == null)
+        {
+            _weaponList = new List<WeaponSlot>();
+        }
+
+        WeaponInstance instance = new WeaponInstance(data.OriginDamage);
+        WeaponActor actor = Instantiate(data.Actor);
+        actor.gameObject.SetActive(false);
+        WeaponSlot newSlot = new WeaponSlot(instance, actor);
+        _weaponList.Add(newSlot);
+
+        if (IsEquipped && ((WeaponList.Count - 1) == WeaponIndex))
+        {
+            EquipWeapon();
+        }
     }
 
     public void ChangeNextWeapon()
@@ -41,6 +67,7 @@ public class PlayerWeaponController : MonoBehaviour
         WeaponActor actor = CurrentWeaponSlot.Actor;
         actor.gameObject.SetActive(false);
         _currentWeaponSlot = WeaponSlot.Empty;
+        _isEquipped = false;
     }
 
     public void EquipWeapon()
@@ -50,6 +77,7 @@ public class PlayerWeaponController : MonoBehaviour
         {
             _currentWeaponSlot = slot;
             EquipWeaponOnHand();
+            _isEquipped = true;
         }
     }
 
