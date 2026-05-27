@@ -147,8 +147,7 @@ Transform:
   m_LocalPosition: {x: 0.08532028, y: -0.073276974, z: -0.034564782}
   m_LocalScale: {x: 0.999999, y: 1, z: 0.999999}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2126138790}
+  m_Children: []
   m_Father: {fileID: 2047239753}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &10712061
@@ -463,63 +462,6 @@ Transform:
   - {fileID: 1334924464}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1088859498
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 2126138790}
-    m_Modifications:
-    - target: {fileID: 1489832004896410, guid: a20a162ac11a35643bed0f3823718abb, type: 3}
-      propertyPath: m_Name
-      value: Modeling_Weapon_katana_Blade
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503961772854434, guid: a20a162ac11a35643bed0f3823718abb, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503961772854434, guid: a20a162ac11a35643bed0f3823718abb, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503961772854434, guid: a20a162ac11a35643bed0f3823718abb, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503961772854434, guid: a20a162ac11a35643bed0f3823718abb, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503961772854434, guid: a20a162ac11a35643bed0f3823718abb, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.000000014901154
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503961772854434, guid: a20a162ac11a35643bed0f3823718abb, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.0000001639127
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503961772854434, guid: a20a162ac11a35643bed0f3823718abb, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.000000011175866
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503961772854434, guid: a20a162ac11a35643bed0f3823718abb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503961772854434, guid: a20a162ac11a35643bed0f3823718abb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503961772854434, guid: a20a162ac11a35643bed0f3823718abb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a20a162ac11a35643bed0f3823718abb, type: 3}
 --- !u!1 &1089866887
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,11 +1022,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f44ab16d5bfc7441abb900bf2239e12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VolumeEffect
---- !u!4 &1882316990 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4503961772854434, guid: a20a162ac11a35643bed0f3823718abb, type: 3}
-  m_PrefabInstance: {fileID: 1088859498}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1956899873
 GameObject:
   m_ObjectHideFlags: 0
@@ -1520,38 +1457,6 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
---- !u!1 &2126138789
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2126138790}
-  m_Layer: 0
-  m_Name: Hand_R
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2126138790
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126138789}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.094007455, y: -0.17590976, z: 0.026060514, w: 0.97956073}
-  m_LocalPosition: {x: -0.009, y: -0.011, z: 0.001}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1882316990}
-  m_Father: {fileID: 7835005}
-  m_LocalEulerAnglesHint: {x: -10.079, y: -20.794, z: 4.902}
 --- !u!4 &543450651968658840
 Transform:
   m_ObjectHideFlags: 0
@@ -1719,7 +1624,7 @@ PrefabInstance:
     - target: {fileID: 759722651250657309, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: _rightHandTransform
       value: 
-      objectReference: {fileID: 2126138790}
+      objectReference: {fileID: 7835005}
     - target: {fileID: 1103392367578762510, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.36
@@ -2105,10 +2010,6 @@ PrefabInstance:
     - target: {fileID: 4479407381422867305, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
       propertyPath: m_Name
       value: Hell Cat
-      objectReference: {fileID: 0}
-    - target: {fileID: 4479407381422867305, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5801187150842432432, guid: 5092844cb4fdbf64784cb12da5f7094c, type: 3}
       propertyPath: _targetCamera

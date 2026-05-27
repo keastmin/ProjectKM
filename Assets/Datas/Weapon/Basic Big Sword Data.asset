@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d380f2cce2d5fc42bcc11bc53b9887c, type: 3}
   m_Name: Basic Big Sword Data
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
-  Actor: {fileID: 5661811716497915224, guid: 20763610b5ea2214189edb5e5adccf7a, type: 3}
+  Actor: {fileID: 7637713014670213882, guid: cb55470036baa854987887041e9e7df4, type: 3}
   OriginDamage: 500
