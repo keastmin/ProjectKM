@@ -1,4 +1,6 @@
 using Player;
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameStarter : MonoBehaviour
@@ -14,6 +16,8 @@ public class GameStarter : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] private Camera _mainCamera;
+
+    public event Action<PlayerCore> OnPlayerSpawnedAction;
 
     private void Start()
     {
@@ -42,5 +46,7 @@ public class GameStarter : MonoBehaviour
         Camera mainCamera = _mainCamera != null ? _mainCamera : Camera.main;
         player.BindCameraReference(mainCamera);
         player.BindVolumeEffectReference(volumeEffect);
+
+        OnPlayerSpawnedAction?.Invoke(player);
     }
 }
