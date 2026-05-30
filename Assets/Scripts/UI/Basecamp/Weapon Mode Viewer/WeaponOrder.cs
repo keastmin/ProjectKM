@@ -6,7 +6,7 @@ public class WeaponOrder : MonoBehaviour
 {
     [SerializeField] private WeaponOrderSlot _orderSlot;
 
-    public void InitializeSlot(PlayerCore player)
+    public void InitializeWeaponOrder(PlayerCore player)
     {
         if(player == null)
         {
@@ -34,6 +34,15 @@ public class WeaponOrder : MonoBehaviour
         {
             WeaponOrderSlot orderSlot = Instantiate(_orderSlot, transform);
             orderSlot.InitializeSlot();
+        }
+    }
+
+    public void ClearWeaponOrder()
+    {
+        WeaponOrderSlot[] orderSlots = this.GetComponentsInChildren<WeaponOrderSlot>();
+        foreach(var slot in orderSlots)
+        {
+            Destroy(slot.gameObject);
         }
     }
 }

@@ -913,6 +913,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d9b877de89262324faea9ff06571e93b, type: 3}
+--- !u!114 &2344708996288875506 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7338079538493710009, guid: d9b877de89262324faea9ff06571e93b, type: 3}
+  m_PrefabInstance: {fileID: 2344708996288875505}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b808c0de94aee024aaf969cf42104df9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponEditor
 --- !u!1001 &6255726412838642859
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1017,6 +1028,14 @@ PrefabInstance:
       propertyPath: _gameStarter
       value: 
       objectReference: {fileID: 7273489900052780054}
+    - target: {fileID: 8831860593561033776, guid: 3535d23560024054eabee268d61749b6, type: 3}
+      propertyPath: _playerUpgradeWorld
+      value: 
+      objectReference: {fileID: 8174647504752073604}
+    - target: {fileID: 8831860593561033776, guid: 3535d23560024054eabee268d61749b6, type: 3}
+      propertyPath: _weaponModeViewerWorld
+      value: 
+      objectReference: {fileID: 2344708996288875506}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1159,6 +1178,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
+--- !u!114 &8174647504752073604 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1027228360078587579, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
+  m_PrefabInstance: {fileID: 8174647504752073603}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9130319237ccf54885112158c8fbc1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUpgrade
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

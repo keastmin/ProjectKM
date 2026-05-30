@@ -2,36 +2,21 @@ using Player;
 using System;
 using UnityEngine;
 
-public class WeaponModeViewerUI : MonoBehaviour
+public class WeaponModeViewerUI : BasecampUI
 {
     [SerializeField] private WeaponOrder _weaponOrder;
 
-    private PlayerCore _player;
-
     private void OnEnable()
     {
-        InitializeWeaponOrder();
+        InitializeWeaponModeViewerUI();
     }
 
-    public void ExitWeaponModeViewerUI()
+    private void OnDisable()
     {
-        if (gameObject.activeSelf)
-        {
-            if (GameManager.Instance != null)
-            {
-                GameManager.Instance.State = GameState.Game;
-            }
-
-            gameObject.SetActive(false);
-        }
+        ClearWeaponModeViewerUI();
     }
 
-    public void GetPlayerReference(PlayerCore player)
-    {
-        _player = player;
-    }
-
-    private void InitializeWeaponOrder()
+    private void InitializeWeaponModeViewerUI()
     {
         if(_player == null)
         {
@@ -39,6 +24,11 @@ public class WeaponModeViewerUI : MonoBehaviour
             return;
         }
 
-        _weaponOrder.InitializeSlot(_player);
+        _weaponOrder.InitializeWeaponOrder(_player);
+    }
+
+    private void ClearWeaponModeViewerUI()
+    {
+        _weaponOrder.ClearWeaponOrder();
     }
 }
