@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3053996441956497589}
   - component: {fileID: 3105548595957875944}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Basecamp Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,6 +33,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2907044582334629822}
+  - {fileID: 5597459609869086227}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -53,7 +54,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasecampCanvas
   _player: {fileID: 0}
+  _gameStarter: {fileID: 0}
   _weaponModeViewerUI: {fileID: 6684839405552347469}
+  _playerUpgradeUI: {fileID: 8325907548913374562}
 --- !u!223 &2943655444533584559
 Canvas:
   m_ObjectHideFlags: 0
@@ -117,6 +120,119 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!1001 &211483688358906139
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 959739744726425803}
+    m_Modifications:
+    - target: {fileID: 3611435882915858050, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_Name
+      value: Player Upgrade UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+--- !u!224 &5597459609869086227 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5710982762592986888, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+  m_PrefabInstance: {fileID: 211483688358906139}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8325907548913374562 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8170875005884013689, guid: bf3d949fea2d6f6498ac20d628f660ed, type: 3}
+  m_PrefabInstance: {fileID: 211483688358906139}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c209fe0a017074845a3a8dd4eed4fd63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUpgradeUI
 --- !u!1001 &5803120218048807379
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -128,6 +244,10 @@ PrefabInstance:
     - target: {fileID: 2751970490078957693, guid: 2c0a2d0e8ac442040b2aae59b6460467, type: 3}
       propertyPath: m_Name
       value: Weapon Mode Viewer UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 2751970490078957693, guid: 2c0a2d0e8ac442040b2aae59b6460467, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8709740345407587949, guid: 2c0a2d0e8ac442040b2aae59b6460467, type: 3}
       propertyPath: m_Pivot.x

@@ -567,6 +567,9 @@ MonoBehaviour:
   _dodgeCooldown: 2
   _skillDatas:
   - {fileID: 11400000, guid: dc4424b88f871c440841415d7ea7f59f, type: 2}
+  _interactLayer:
+    serializedVersion: 2
+    m_Bits: 8192
 --- !u!114 &759722651250657309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -683,6 +686,7 @@ MonoBehaviour:
   _basicComboAttackName: BasicComboAttack
   _qSkillName: QSkill
   _eSkillName: ESkill
+  _interactName: Interact
 --- !u!114 &807235723518459982
 MonoBehaviour:
   m_ObjectHideFlags: 0

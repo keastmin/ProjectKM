@@ -11,6 +11,7 @@ namespace Player
         [SerializeField] private string _basicComboAttackName;
         [SerializeField] private string _qSkillName;
         [SerializeField] private string _eSkillName;
+        [SerializeField] private string _interactName;
 
         private PlayerInput _pi;
 
@@ -19,12 +20,14 @@ namespace Player
         private InputAction _basicComboAttackAction;
         private InputAction _qSkillAction;
         private InputAction _eSkillAction;
+        private InputAction _interactAction;
 
         public Vector2 MoveInput { get; private set; }
         public bool DodgeInput { get; private set; }
         public bool BasicComboAttackInput { get; private set; }
         public bool QSkillInput { get; private set; }
         public bool ESkillInput { get; private set; }
+        public bool InteractInput { get; private set; }
 
         private void Awake()
         {
@@ -34,15 +37,23 @@ namespace Player
             _basicComboAttackAction = _pi.actions[_basicComboAttackName];
             _qSkillAction = _pi.actions[_qSkillName];
             _eSkillAction = _pi.actions[_eSkillName];
+            _interactAction = _pi.actions[_interactName];
         }
 
         private void Update()
         {
+            if (GameManager.Instance != null && GameManager.Instance.State == GameState.UI)
+            {
+                ResetInput();
+                return;
+            }
+
             DetectMoveInput();
             DetectDodgeInput();
             DetectBasicComboAttackInput();
             DetectQSkillInput();
             DetectESkillInput();
+            DetectInteractInput();
         }
 
         private void DetectMoveInput()
@@ -68,6 +79,21 @@ namespace Player
         private void DetectESkillInput()
         {
             ESkillInput = _eSkillAction.WasPressedThisFrame();
+        }
+
+        private void DetectInteractInput()
+        {
+            InteractInput = _interactAction.WasPressedThisFrame();
+        }
+
+        private void ResetInput()
+        {
+            MoveInput = Vector2.zero;
+            DodgeInput = false;
+            BasicComboAttackInput = false;
+            QSkillInput = false;
+            ESkillInput = false;
+            InteractInput = false;
         }
     }
 }

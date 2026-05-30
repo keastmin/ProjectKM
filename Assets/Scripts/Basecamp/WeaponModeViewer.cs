@@ -6,6 +6,10 @@ public class WeaponModeViewer : MonoBehaviour, IInteraction
 
     public void Interaction()
     {
+        if (GameManager.Instance == null)
+            return;
+
+        GameManager.Instance.State = GameState.UI;
         _weaponModeViewerUI.gameObject.SetActive(true);
     }
 }

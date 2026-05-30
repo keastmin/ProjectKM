@@ -119,6 +119,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &99824071 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8325907548913374562, guid: 3535d23560024054eabee268d61749b6, type: 3}
+  m_PrefabInstance: {fileID: 6255726412838642859}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c209fe0a017074845a3a8dd4eed4fd63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUpgradeUI
 --- !u!1 &795986862
 GameObject:
   m_ObjectHideFlags: 0
@@ -990,9 +1001,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3526655536095334297, guid: 3535d23560024054eabee268d61749b6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7269925737877070707, guid: 3535d23560024054eabee268d61749b6, type: 3}
       propertyPath: m_Name
-      value: Canvas
+      value: Basecamp Canvas
       objectReference: {fileID: 0}
     - target: {fileID: 8554628737099649454, guid: 3535d23560024054eabee268d61749b6, type: 3}
       propertyPath: m_IsActive
@@ -1083,6 +1098,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a64a233a340276141939cfe035f1c1f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStarter
+--- !u!1001 &8174647504752073603
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1027228360078587579, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
+      propertyPath: _playerUpgradeUI
+      value: 
+      objectReference: {fileID: 99824071}
+    - target: {fileID: 2053813924801365810, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -9.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 2053813924801365810, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2053813924801365810, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 2053813924801365810, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2053813924801365810, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2053813924801365810, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2053813924801365810, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2053813924801365810, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2053813924801365810, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2053813924801365810, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6082819794508606232, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
+      propertyPath: m_Name
+      value: Player Upgrade
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1095,5 +1171,6 @@ SceneRoots:
   - {fileID: 1845467818}
   - {fileID: 1266564221}
   - {fileID: 2344708996288875505}
+  - {fileID: 8174647504752073603}
   - {fileID: 6255726412838642859}
   - {fileID: 1029144906}

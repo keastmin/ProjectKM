@@ -58,6 +58,9 @@ namespace Player
         [Header("스킬")]
         [SerializeField] private List<SkillDefinition> _skillDatas;
 
+        [Header("상호작용")]
+        [SerializeField] private LayerMask _interactLayer;
+
         // 컴포넌트
         private InputController _inputController;
         private AvatarMover _avatarMover;
@@ -236,6 +239,22 @@ namespace Player
                 if(CurrentDodgeCooldownTimer >= _dodgeCooldown)
                 {
                     DodgeAvailableCount = _maxDodgeAvailableCount;
+                }
+            }
+
+            if (InputController.InteractInput)
+            {
+                Debug.Log("누름");
+                Vector3 origin = transform.position + (Vector3.up * 1.2f);
+                if (Physics.Raycast(origin, transform.forward, out RaycastHit hitInfo, 5f, _interactLayer))
+                {
+                    Debug.Log("감지됨");
+                    IInteraction inter = hitInfo.collider.GetComponentInParent<IInteraction>();
+                    if(inter != null)
+                    {
+                        Debug.Log("존재함");
+                        inter.Interaction();
+                    }
                 }
             }
 
