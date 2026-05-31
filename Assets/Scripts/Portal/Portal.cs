@@ -1,14 +1,9 @@
 using UnityEngine;
 
-public class Portal : MonoBehaviour
+public class Portal : MonoBehaviour, IInteraction
 {
-    [SerializeField] private string _nextSceneName;
     [SerializeField] private Camera _mainCamera;
-
-    private void OnTriggerEnter(Collider other)
-    {
-        LoadingController.LoadScene(_nextSceneName);
-    }
+    [SerializeField] private Transform _portalTransform;
 
     private void Update()
     {
@@ -18,10 +13,15 @@ public class Portal : MonoBehaviour
     private void LookCamera()
     {
         Vector3 camPos = _mainCamera.transform.position;
-        Vector3 portalPos = transform.position;
+        Vector3 portalPos = _portalTransform.position;
         Vector3 dir = portalPos - camPos;
         dir.y = 0f;
 
-        transform.rotation = Quaternion.LookRotation(dir, Vector3.up);
+        _portalTransform.rotation = Quaternion.LookRotation(dir, Vector3.up);
+    }
+
+    public void Interaction()
+    {
+        
     }
 }
