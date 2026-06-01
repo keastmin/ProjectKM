@@ -29,6 +29,8 @@ namespace Player
         public bool ESkillInput { get; private set; }
         public bool InteractInput { get; private set; }
 
+        public bool BlockInput = false;
+
         private void Awake()
         {
             TryGetComponent(out _pi);
@@ -38,11 +40,12 @@ namespace Player
             _qSkillAction = _pi.actions[_qSkillName];
             _eSkillAction = _pi.actions[_eSkillName];
             _interactAction = _pi.actions[_interactName];
+            BlockInput = false;
         }
 
         private void Update()
         {
-            if (GameManager.Instance != null && GameManager.Instance.State == GameState.UI)
+            if (BlockInput)
             {
                 ResetInput();
                 return;

@@ -22,6 +22,12 @@ public class Portal : MonoBehaviour, IInteraction
 
     public void Interaction()
     {
-        
+        if(GameManager.Instance == null)
+        {
+            Debug.LogError("게임 매니저가 없습니다");
+            return;
+        }
+
+        GameManager.Instance.CurrentState = GameState.NodeMap;
     }
 }

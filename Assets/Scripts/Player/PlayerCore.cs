@@ -205,6 +205,16 @@ namespace Player
             _isCoreReady = true;
         }
 
+        private void OnEnable()
+        {
+            BindGameStateChangeAction();
+        }
+
+        private void OnDisable()
+        {
+            UnbindGameStateChangeAction();
+        }
+
         private void Start()
         {
             TryInitializeWhenReady();
@@ -515,6 +525,37 @@ namespace Player
 
             _volumeEffect = volumeEffect;
             TryInitializeWhenReady();
+        }
+
+        private void BindGameStateChangeAction()
+        {
+            if(GameManager.Instance == null)
+            {
+                Debug.LogError("게임 매니저가 없습니다");
+                return;
+            }
+
+            GameManager.Instance.OnChangeGameState -= BlockInput;
+            GameManager.Instance.OnChangeGameState += BlockInput;
+        }
+
+        private void UnbindGameStateChangeAction()
+        {
+            if (GameManager.Instance == null)
+            {
+                Debug.LogError("게임 매니저가 없습니다");
+                return;
+            }
+
+            GameManager.Instance.OnChangeGameState -= BlockInput;
+        }
+
+        private void BlockInput(GameState prev, GameState curr)
+        {
+            if (curr == GameState.Game)
+                InputController.BlockInput = false;
+            else
+                InputController.BlockInput = true;
         }
     }
 }

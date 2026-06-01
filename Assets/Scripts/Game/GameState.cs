@@ -3,5 +3,6 @@ public enum GameState
     Main,
     Loading,
     Game,
-    UI
+    UI,
+    NodeMap
 }

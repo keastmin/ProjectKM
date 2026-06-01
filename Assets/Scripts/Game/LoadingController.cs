@@ -19,7 +19,7 @@ public class LoadingController : MonoBehaviour
     {
         if(GameManager.Instance != null)
         {
-            GameManager.Instance.State = GameState.Loading;
+            GameManager.Instance.CurrentState = GameState.Loading;
         }
         _loadingUIProgress.fillAmount = 0f;
         StartCoroutine(LoadSceneProcess());
@@ -47,7 +47,7 @@ public class LoadingController : MonoBehaviour
                 {
                     if (GameManager.Instance != null)
                     {
-                        GameManager.Instance.State = GameState.Game;
+                        GameManager.Instance.CurrentState = GameState.Game;
                     }
                     op.allowSceneActivation = true;
                     yield break;

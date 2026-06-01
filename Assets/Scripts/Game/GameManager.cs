@@ -7,22 +7,24 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameState _startGameState;
 
-    private GameState _state;
+    private GameState _prevState;
+    private GameState _currState;
 
-    public GameState State
+    public GameState CurrentState
     {
         get 
         { 
-            return _state; 
+            return _currState; 
         }
         set
         {
-            _state = value;
-            OnChangeGameState?.Invoke(_state);
+            _prevState = _currState;
+            _currState = value;
+            OnChangeGameState?.Invoke(_prevState, _currState);
         }
     }
 
-    public event Action<GameState> OnChangeGameState;
+    public event Action<GameState, GameState> OnChangeGameState; // 이전 상태, 현재 상태
 
     private void Awake()
     {
@@ -48,12 +50,12 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        State = _startGameState;
+        CurrentState = _startGameState;
     }
 
-    private void MouseVisable(GameState state)
+    private void MouseVisable(GameState prev, GameState current)
     {
-        switch (state)
+        switch (current)
         {
             case GameState.Game:
                 Cursor.visible = false;
@@ -68,6 +70,10 @@ public class GameManager : MonoBehaviour
                 Cursor.lockState = CursorLockMode.None;
                 break;
             case GameState.UI:
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                break;
+            case GameState.NodeMap:
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
                 break;

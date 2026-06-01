@@ -18,6 +18,7 @@ public class GameStarter : MonoBehaviour
     [SerializeField] private Camera _mainCamera;
 
     public event Action<PlayerCore> OnPlayerSpawnedAction;
+    public event Action<PlayerCinemachineController> OnPlayerCinemachineControllerSpawnedAction;
 
     private void Start()
     {
@@ -48,5 +49,6 @@ public class GameStarter : MonoBehaviour
         player.BindVolumeEffectReference(volumeEffect);
 
         OnPlayerSpawnedAction?.Invoke(player);
+        OnPlayerCinemachineControllerSpawnedAction?.Invoke(cineCam);
     }
 }
