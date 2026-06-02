@@ -176,9 +176,9 @@ public class BasecampCanvas : MonoBehaviour
     private IEnumerator InNodeMap(float fadeInDuration, float fadeContinueDuration, float fadeOutDuration)
     {
         float startPlayerCinemachineFOV = _playerCineCamController.FOV;
-        float startNodeMapCinemachineFOV = _nodeWorld.FOV / 2f;
+        float startNodeMapCinemachineFOV = _nodeWorld.GetFOV() / 2f;
         float endPlayerCinemachineFOV = startPlayerCinemachineFOV / 2f;
-        float endNodeMapCinemachineFOV = _nodeWorld.FOV;
+        float endNodeMapCinemachineFOV = _nodeWorld.GetFOV();
         float fromAlpha = 0f;
         float toAlpha = 1f;
         _nodeWorld.SetFOV(startNodeMapCinemachineFOV);
@@ -231,7 +231,7 @@ public class BasecampCanvas : MonoBehaviour
     private IEnumerator OutNodeMap(float fadeInDuration, float fadeContinueDuration, float fadeOutDuration)
     {
         float startPlayerCinemachineFOV = _playerCineCamController.FOV / 2f;
-        float startNodeMapCinemachineFOV = _nodeWorld.FOV;
+        float startNodeMapCinemachineFOV = _nodeWorld.GetFOV();
         float endPlayerCinemachineFOV = _playerCineCamController.FOV;
         float endNodeMapCinemachineFOV = startNodeMapCinemachineFOV / 2f;
         float fromAlpha = 0f;

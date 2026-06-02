@@ -3,28 +3,38 @@ using UnityEngine;
 
 public class NodeWorld : MonoBehaviour
 {
-    [SerializeField] private CinemachineCamera _nodeMapCinemachine;
-
-    public float FOV => _nodeMapCinemachine.Lens.FieldOfView;
-
-    private void Awake()
-    {
-        SetCamActive(false);
-    }
+    [SerializeField] private NodeMapCameraController _nodeMapCameraController;
 
     public void SetCamActive(bool active)
     {
-        if (_nodeMapCinemachine == null)
+        if (_nodeMapCameraController == null)
         {
-            Debug.LogError("노드 맵 시네머신이 없습니다");
+            Debug.LogError("노드 맵 카메라 컨트롤러가 없습니다");
             return;
         }
 
-        _nodeMapCinemachine.enabled = active;
+        _nodeMapCameraController.SetActiveCinemachine(active);
     }
 
     public void SetFOV(float fov)
     {
-        _nodeMapCinemachine.Lens.FieldOfView = fov;
+        if (_nodeMapCameraController == null)
+        {
+            Debug.LogError("노드 맵 카메라 컨트롤러가 없습니다");
+            return;
+        }
+
+        _nodeMapCameraController.SetFOV(fov);
+    }
+
+    public float GetFOV()
+    {
+        if (_nodeMapCameraController == null)
+        {
+            Debug.LogError("노드 맵 카메라 컨트롤러가 없습니다");
+            return 0f;
+        }
+
+        return _nodeMapCameraController.GetFOV();
     }
 }
