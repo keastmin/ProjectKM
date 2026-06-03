@@ -1096,6 +1096,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NodeMapCameraController
   _cinemachineCamera: {fileID: 6116343345890348373}
+  _tickSpeed: 5
+  _wheelSensitivity: 10
+  _dragSensitivity: 0.008
+  _maxSpeed: 15
+  _decelerationForcePerSeconds: 30
+  _maxDistance: 30
 --- !u!114 &6116343345890348373 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7070078964139611584, guid: fcd63c68e6299ff4085d9d3cbc0e9484, type: 3}
