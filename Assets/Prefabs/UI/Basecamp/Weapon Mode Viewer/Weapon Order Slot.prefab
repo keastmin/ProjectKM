@@ -372,6 +372,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8276901214176681078}
   - component: {fileID: 7625024136129546090}
+  - component: {fileID: 3585297011004465469}
   m_Layer: 5
   m_Name: Weapon Order Slot
   m_TagString: Untagged
@@ -416,6 +417,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponOrderSlot
   _rectTransform: {fileID: 8276901214176681078}
   _weaponNameText: {fileID: 8548230262163056162}
+  _canvasGroup: {fileID: 3585297011004465469}
+--- !u!225 &3585297011004465469
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5543613345800324624}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5630638828607085055
 GameObject:
   m_ObjectHideFlags: 0

@@ -1237,6 +1237,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6052071835554361516, guid: 3535d23560024054eabee268d61749b6, type: 3}
+      propertyPath: _orderSlotPrefab
+      value: 
+      objectReference: {fileID: 7625024136129546090, guid: d1ca3c164528ef84ab17451890828788, type: 3}
     - target: {fileID: 7269925737877070707, guid: 3535d23560024054eabee268d61749b6, type: 3}
       propertyPath: m_Name
       value: Basecamp Canvas
@@ -1247,7 +1251,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8554628737099649454, guid: 3535d23560024054eabee268d61749b6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8831860593561033776, guid: 3535d23560024054eabee268d61749b6, type: 3}
       propertyPath: _nodeWorld

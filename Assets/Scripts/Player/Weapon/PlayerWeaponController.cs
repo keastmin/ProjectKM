@@ -147,4 +147,11 @@ public class PlayerWeaponController : MonoBehaviour
         actor.transform.localRotation = Quaternion.identity;
         actor.transform.localScale = Vector3.one;
     }
+
+    public void ChangeWeaponSlotOrder(List<WeaponSlot> slotList)
+    {
+        if (slotList == null)
+            return;
+        _weaponList = slotList;
+    }
 }

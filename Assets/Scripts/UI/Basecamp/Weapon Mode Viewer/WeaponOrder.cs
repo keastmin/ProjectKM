@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class WeaponOrder : MonoBehaviour
 {
-    [SerializeField] private WeaponOrderSlot _orderSlot;
+    [SerializeField] private WeaponOrderSlot _orderSlotPrefab;
     [SerializeField] private float _slotSpace = 20f;
 
-    private List<WeaponOrderSlot> _slotList;
+    private List<(WeaponSlot, WeaponOrderSlot)> _slotList = new();
+
+    private PlayerCore _player;
 
     public void InitializeWeaponOrder(PlayerCore player)
     {
@@ -17,7 +19,8 @@ public class WeaponOrder : MonoBehaviour
             return;
         }
 
-        PlayerWeaponController weaponController = player.WeaponController;
+        _player = player;
+        PlayerWeaponController weaponController = _player.WeaponController;
 
         if(weaponController == null)
         {
@@ -25,37 +28,70 @@ public class WeaponOrder : MonoBehaviour
             return;
         }
 
-        WeaponSlot[] slots = weaponController.WeaponList.ToArray();
+        List<WeaponSlot> weaponList = _player.WeaponController.WeaponList;
 
-        if(slots == null)
+        if(weaponList == null)
         {
             Debug.LogError("무기 슬롯이 없습니다");
             return;
         }
 
-        if(_slotList == null)
-            _slotList = new List<WeaponOrderSlot>();
+        if (_slotList == null)
+            _slotList = new List<(WeaponSlot, WeaponOrderSlot)>();
 
         float localYPos = 0f;
-        for(int i = 0; i < slots.Length; i++)
+        foreach(var slot in weaponList)
         {
-            WeaponOrderSlot orderSlot = Instantiate(_orderSlot, transform);
-            _slotList.Add(orderSlot);
-            orderSlot.InitializeSlot(slots[i], localYPos);
+            WeaponOrderSlot orderSlot = Instantiate(_orderSlotPrefab, transform);
+            orderSlot.InitializeSlot(slot, localYPos);
+            orderSlot.OnDetectOtherSlot += ChangeSlot;
             localYPos -= (orderSlot.Height + _slotSpace);
+            _slotList.Add((slot, orderSlot));
         }
     }
 
     public void ClearWeaponOrder()
     {
+        if(_slotList != null)
+        {
+            foreach(var orderSlot in _slotList)
+            {
+                Destroy(orderSlot.Item2);
+            }
+            _slotList.Clear();
+            _slotList = null;
+        }
+    }
+
+    private void ChangeSlot(WeaponOrderSlot grabbingSlot, WeaponOrderSlot changedSlot)
+    {
         if (_slotList == null)
             return;
 
-        WeaponOrderSlot[] orderSlots = _slotList.ToArray();
-        foreach(var slot in orderSlots)
+        if (grabbingSlot == null || changedSlot == null)
+            return;
+
+        if (grabbingSlot == changedSlot)
+            return;
+
+        int grabbingIndex = _slotList.FindIndex(pair => pair.Item2 == grabbingSlot);
+        int changedIndex = _slotList.FindIndex(pair => pair.Item2 == changedSlot);
+
+        if (grabbingIndex < 0 || changedIndex < 0)
+            return;
+
+        (_slotList[grabbingIndex], _slotList[changedIndex]) =
+            (_slotList[changedIndex], _slotList[grabbingIndex]);
+
+        Vector3 originPos = grabbingSlot.OriginPos;
+        grabbingSlot.SetOriginPosition(changedSlot.OriginPos);
+        changedSlot.SetOriginPosition(originPos);
+
+        List<WeaponSlot> newWeaponSlot = new List<WeaponSlot>();
+        foreach(var slot in _slotList)
         {
-            Destroy(slot.gameObject);
+            newWeaponSlot.Add(slot.Item1);
         }
-        _slotList = null;
+        _player.ChangeWeaponSlotOrder(newWeaponSlot);
     }
 }

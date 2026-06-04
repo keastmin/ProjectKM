@@ -557,5 +557,14 @@ namespace Player
             else
                 InputController.BlockInput = true;
         }
+
+        public void ChangeWeaponSlotOrder(List<WeaponSlot> weaponSlotList)
+        {
+            if (weaponSlotList == null)
+                return;
+            WeaponController.UnequipWeapon();
+            WeaponController.ChangeWeaponSlotOrder(weaponSlotList);
+            WeaponController.EquipWeapon();
+        }
     }
 }
