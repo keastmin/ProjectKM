@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d380f2cce2d5fc42bcc11bc53b9887c, type: 3}
   m_Name: SciFi Katana Data
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
+  WeaponName: "\uAE30\uBCF8 \uCE74\uD0C0\uB098"
   Actor: {fileID: -8639420953251709462, guid: 99a0f0c8affd782478ffd04daf9d6f84, type: 3}
   OriginDamage: 100

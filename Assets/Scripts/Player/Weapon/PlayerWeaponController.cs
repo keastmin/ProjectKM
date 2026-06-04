@@ -40,7 +40,7 @@ public class PlayerWeaponController : MonoBehaviour
             _weaponList = new List<WeaponSlot>();
         }
 
-        WeaponInstance instance = new WeaponInstance(data.OriginDamage);
+        WeaponInstance instance = new WeaponInstance(data.WeaponName, data.OriginDamage);
         WeaponActor actor = Instantiate(data.Actor);
         actor.gameObject.SetActive(false);
         WeaponSlot newSlot = new WeaponSlot(instance, actor);

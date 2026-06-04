@@ -5,6 +5,9 @@ using UnityEngine;
 public class WeaponOrder : MonoBehaviour
 {
     [SerializeField] private WeaponOrderSlot _orderSlot;
+    [SerializeField] private float _slotSpace = 20f;
+
+    private List<WeaponOrderSlot> _slotList;
 
     public void InitializeWeaponOrder(PlayerCore player)
     {
@@ -22,7 +25,7 @@ public class WeaponOrder : MonoBehaviour
             return;
         }
 
-        List<WeaponSlot> slots = weaponController.WeaponList;
+        WeaponSlot[] slots = weaponController.WeaponList.ToArray();
 
         if(slots == null)
         {
@@ -30,19 +33,29 @@ public class WeaponOrder : MonoBehaviour
             return;
         }
 
-        foreach(var slot in slots)
+        if(_slotList == null)
+            _slotList = new List<WeaponOrderSlot>();
+
+        float localYPos = 0f;
+        for(int i = 0; i < slots.Length; i++)
         {
             WeaponOrderSlot orderSlot = Instantiate(_orderSlot, transform);
-            orderSlot.InitializeSlot();
+            _slotList.Add(orderSlot);
+            orderSlot.InitializeSlot(slots[i], localYPos);
+            localYPos -= (orderSlot.Height + _slotSpace);
         }
     }
 
     public void ClearWeaponOrder()
     {
-        WeaponOrderSlot[] orderSlots = this.GetComponentsInChildren<WeaponOrderSlot>();
+        if (_slotList == null)
+            return;
+
+        WeaponOrderSlot[] orderSlots = _slotList.ToArray();
         foreach(var slot in orderSlots)
         {
             Destroy(slot.gameObject);
         }
+        _slotList = null;
     }
 }
