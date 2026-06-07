@@ -5,15 +5,21 @@ using UnityEngine.UI;
 
 public class QSkillUI : MonoBehaviour
 {
-    [SerializeField] private PlayerCore _playerCore;
     [SerializeField] private Image _qSkillIcon;
     [SerializeField] private Image _disableImage;
     [SerializeField] private TextMeshProUGUI _timerText;
     [SerializeField] private Image _timerImage;
+    
+    private PlayerCore _player;
 
     private void OnEnable()
     {
-        BindPlayer();
+        BindPlayerEvent();
+    }
+
+    private void OnDisable()
+    {
+        UnbindPlayerEvent();
     }
 
     private void Start()
@@ -24,27 +30,33 @@ public class QSkillUI : MonoBehaviour
         _timerImage.gameObject.SetActive(false);
     }
 
-    private void OnDisable()
+    public void InitQSkillUI(PlayerCore player)
     {
-        if (_playerCore != null)
-        {
-            _playerCore.SkillController.OnQSkillEquiped -= SkillEquipHandle;
-        }
+        _player = player;
+        BindPlayerEvent();
     }
 
-    private void BindPlayer()
+    private void BindPlayerEvent()
     {
-        if (_playerCore == null)
+        if (_player == null)
         {
-            _playerCore = FindFirstObjectByType<PlayerCore>();
-        }
-
-        if (_playerCore == null)
-        {
+            Debug.LogError("플레이어가 없습니다");
             return;
         }
 
-        _playerCore.OnQSkillChanged += SkillEquipHandle;
+        _player.OnQSkillChanged -= SkillEquipHandle;
+        _player.OnQSkillChanged += SkillEquipHandle;
+    }
+
+    private void UnbindPlayerEvent()
+    {
+        if (_player == null)
+        {
+            Debug.LogError("플레이어가 없습니다");
+            return;
+        }
+
+        _player.OnQSkillChanged -= SkillEquipHandle;
     }
 
     private void SkillEquipHandle(SkillDefinition skill)

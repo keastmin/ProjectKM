@@ -468,6 +468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f12bf26599bf885489f9847b69cd3e18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCore
+  _playerStatData: {fileID: 11400000, guid: d74c7682d65947a499a8abc8e3ab6581, type: 2}
   _maxHealth: 100
   _attackPower: 10
   _defensePower: 5
@@ -687,6 +688,7 @@ MonoBehaviour:
   _qSkillName: QSkill
   _eSkillName: ESkill
   _interactName: Interact
+  BlockInput: 0
 --- !u!114 &807235723518459982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1082,6 +1084,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6704852309151567284}
     m_Modifications:
+    - target: {fileID: 1879237817253455898, guid: cc35cc1ed58549645ada7e13724352f6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3443793630985834587, guid: cc35cc1ed58549645ada7e13724352f6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

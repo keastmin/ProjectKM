@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     private GameState _prevState;
     private GameState _currState;
+    private PlayerInstance _playerInstance;
 
     public GameState CurrentState
     {
@@ -25,6 +26,25 @@ public class GameManager : MonoBehaviour
     }
 
     public event Action<GameState, GameState> OnChangeGameState; // 이전 상태, 현재 상태
+
+    public PlayerInstance CurrentPlayerInstance => _playerInstance;
+
+    public PlayerInstance GetOrCreatePlayerInstance(PlayerStatData statData)
+    {
+        if (_playerInstance != null)
+        {
+            return _playerInstance;
+        }
+
+        if (statData == null)
+        {
+            Debug.LogError("PlayerStatData is null.");
+            return null;
+        }
+
+        _playerInstance = new PlayerInstance(statData);
+        return _playerInstance;
+    }
 
     private void Awake()
     {

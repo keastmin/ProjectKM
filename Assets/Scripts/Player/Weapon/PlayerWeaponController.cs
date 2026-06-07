@@ -19,14 +19,20 @@ public class PlayerWeaponController : MonoBehaviour
 
     private void Awake()
     {
+        InitializeWeaponDatas(_testWeaponArray);
+    }
+
+    public void InitializeWeaponDatas(IEnumerable<WeaponData> weaponDatas)
+    {
+        ClearWeaponActors();
         _weaponList = new List<WeaponSlot>();
         _weaponIndex = 0;
         _currentWeaponSlot = WeaponSlot.Empty;
         _isEquipped = true;
 
-        if(_testWeaponArray != null)
+        if(weaponDatas != null)
         {
-            foreach(var data in _testWeaponArray)
+            foreach(var data in weaponDatas)
             {
                 AcquisitionWeaponData(data);
             }
@@ -35,21 +41,53 @@ public class PlayerWeaponController : MonoBehaviour
 
     public void AcquisitionWeaponData(WeaponData data)
     {
+        WeaponSlot newSlot;
+        if (!TryCreateWeaponSlot(data, null, out newSlot))
+        {
+            return;
+        }
+
         if(_weaponList == null)
         {
             _weaponList = new List<WeaponSlot>();
         }
 
-        WeaponInstance instance = new WeaponInstance(data.WeaponName, data.OriginDamage);
-        WeaponActor actor = Instantiate(data.Actor);
-        actor.gameObject.SetActive(false);
-        WeaponSlot newSlot = new WeaponSlot(instance, actor);
         _weaponList.Add(newSlot);
 
         if (IsEquipped && ((WeaponList.Count - 1) == WeaponIndex))
         {
             EquipWeapon();
         }
+    }
+
+    public void InitializeWeaponSlots(IEnumerable<WeaponSlot> weaponSlots, int weaponIndex)
+    {
+        ClearWeaponActors();
+        _weaponList = new List<WeaponSlot>();
+        _weaponIndex = 0;
+        _currentWeaponSlot = WeaponSlot.Empty;
+        _isEquipped = true;
+
+        if (weaponSlots != null)
+        {
+            foreach (var savedSlot in weaponSlots)
+            {
+                WeaponSlot restoredSlot;
+                if (TryCreateWeaponSlot(savedSlot.Data, savedSlot.Instance, out restoredSlot))
+                {
+                    _weaponList.Add(restoredSlot);
+                }
+            }
+        }
+
+        if (_weaponList.Count <= 0)
+        {
+            _isEquipped = false;
+            return;
+        }
+
+        _weaponIndex = Mathf.Clamp(weaponIndex, 0, _weaponList.Count - 1);
+        EquipWeapon();
     }
 
     public void ChangeNextWeapon()
@@ -119,7 +157,7 @@ public class PlayerWeaponController : MonoBehaviour
             Debug.LogError("무기 리스트가 없습니다");
             return false;
         }
-        if (index < 0 && index >= WeaponList.Count)
+        if (index < 0 || index >= WeaponList.Count)
         {
             Debug.LogError("인덱스가 리스트 카운트를 벗어납니다");
             return false;
@@ -153,5 +191,68 @@ public class PlayerWeaponController : MonoBehaviour
         if (slotList == null)
             return;
         _weaponList = slotList;
+        if (_weaponIndex >= _weaponList.Count)
+        {
+            _weaponIndex = 0;
+        }
+    }
+
+    public List<WeaponSlot> GetWeaponSlotOrder()
+    {
+        List<WeaponSlot> weaponSlots = new List<WeaponSlot>();
+
+        if (_weaponList == null)
+        {
+            return weaponSlots;
+        }
+
+        foreach (var slot in _weaponList)
+        {
+            if (slot.Instance != null && slot.Data != null)
+            {
+                weaponSlots.Add(new WeaponSlot(slot.Instance, null, slot.Data));
+            }
+        }
+
+        return weaponSlots;
+    }
+
+    private void ClearWeaponActors()
+    {
+        if (_weaponList == null)
+        {
+            return;
+        }
+
+        foreach (var slot in _weaponList)
+        {
+            if (slot.Actor != null)
+            {
+                Destroy(slot.Actor.gameObject);
+            }
+        }
+    }
+
+    private bool TryCreateWeaponSlot(WeaponData data, WeaponInstance instance, out WeaponSlot slot)
+    {
+        slot = WeaponSlot.Empty;
+
+        if (data == null)
+        {
+            Debug.LogError("WeaponData is null.");
+            return false;
+        }
+
+        if (data.Actor == null)
+        {
+            Debug.LogError("WeaponData Actor is null.");
+            return false;
+        }
+
+        WeaponInstance weaponInstance = instance ?? new WeaponInstance(data.WeaponName, data.OriginDamage);
+        WeaponActor actor = Instantiate(data.Actor);
+        actor.gameObject.SetActive(false);
+        slot = new WeaponSlot(weaponInstance, actor, data);
+        return true;
     }
 }

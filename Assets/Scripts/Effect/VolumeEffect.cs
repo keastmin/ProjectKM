@@ -1,3 +1,4 @@
+using Player;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -5,6 +6,8 @@ using UnityEngine.Rendering.Universal;
 
 public class VolumeEffect : MonoBehaviour
 {
+    [SerializeField] private PlayerCore _player;
+    [SerializeField] private GameStarter _gameStarter;
     [SerializeField] private Volume _globalVolume;
 
     [SerializeField]
@@ -71,6 +74,20 @@ public class VolumeEffect : MonoBehaviour
         _defaultSaturation = _colorAdjustments.saturation.value;
 
         ResetEffects();
+
+        if(_player != null)
+        {
+            BindPlayerEvent();
+            return;
+        }
+
+        // 플레이어 참조 받는 이벤트
+        _gameStarter.OnPlayerSpawnedAction += PlayerReferenceInject;
+    }
+
+    private void OnEnable()
+    {
+        BindPlayerEvent();
     }
 
     private void OnDisable()
@@ -80,14 +97,43 @@ public class VolumeEffect : MonoBehaviour
             StopCoroutine(_dodgeEffectCoroutine);
             _dodgeEffectCoroutine = null;
         }
-
+        UnbindPlayerEvent();
         ResetEffects();
+    }
+
+    private void PlayerReferenceInject(PlayerCore player)
+    {
+        _player = player;
+        BindPlayerEvent();
+    }
+
+    private void BindPlayerEvent()
+    {
+        if (_player == null)
+        {
+            Debug.LogError("플레이어가 없습니다");
+            return;
+        }
+
+        _player.OnPerfectDodge -= PerfectDodgeEffectOn;
+        _player.OnPerfectDodge += PerfectDodgeEffectOn;
+    }
+
+    private void UnbindPlayerEvent()
+    {
+        if (_player == null)
+        {
+            Debug.LogError("플레이어가 없습니다");
+            return;
+        }
+
+        _player.OnPerfectDodge -= PerfectDodgeEffectOn;
     }
 
     /// <summary>
     /// 회피 성공 시 일정 시간 동안 비네팅과 색상 보정 효과를 적용
     /// </summary>
-    public void PerfectDodgeEffectOn(float duration)
+    private void PerfectDodgeEffectOn(float duration)
     {
         if (!enabled)
             return;

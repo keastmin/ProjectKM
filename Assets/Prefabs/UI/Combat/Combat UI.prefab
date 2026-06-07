@@ -808,7 +808,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0faef0277777a943a3e9c5941ccca22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DodgeIcon
-  _playerCore: {fileID: 0}
   _disableImage: {fileID: 4688160208856431972}
   _timerText: {fileID: 3694149225040573424}
   _timerImage: {fileID: 403826842162773345}
@@ -1090,6 +1089,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CombatUI
   _hpUI: {fileID: 2396384144065987463}
   _dodgeUI: {fileID: 5332326240307354570}
+  _qSkillUI: {fileID: 1799501684727864780}
 --- !u!1 &8220738084019552656
 GameObject:
   m_ObjectHideFlags: 0
@@ -1289,6 +1289,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e516d04eb27118046a65e5cfea8e4ccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHPUI
-  _player: {fileID: 0}
   _playerHpSlider: {fileID: 1007732194843097726}
   _hpSliderLerpDuration: 0.2

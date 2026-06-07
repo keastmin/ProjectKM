@@ -5,46 +5,56 @@ using UnityEngine.UI;
 
 public class PlayerHPUI : MonoBehaviour
 {
-    [SerializeField] private PlayerCore _player;
     [SerializeField] private Slider _playerHpSlider;
     [SerializeField] private float _hpSliderLerpDuration = 0.2f;
 
+    private PlayerCore _player;
     private Coroutine _hpSliderCoroutine;
 
     private void OnEnable()
     {
-        BindPlayer();
-        RefreshPlayerHpSlider(true);
+        BindPlayerEvent();
     }
 
     private void OnDisable()
     {
+        UnbindPlayerEvent();
+    }
+
+    public void InitPlayerHPUI(PlayerCore player)
+    {
+        _player = player;
+        BindPlayerEvent();
+    }
+
+    private void BindPlayerEvent()
+    {
+        if (_player == null)
+        {
+            Debug.LogError("플레이어가 없습니다");
+            return;
+        }
+
+        _player.OnHealthChanged -= OnPlayerHealthChanged;
+        _player.OnHealthChanged += OnPlayerHealthChanged;
+        RefreshPlayerHpSlider(true);
+    }
+
+    private void UnbindPlayerEvent()
+    {
+        if(_player == null)
+        {
+            Debug.LogError("플레이어가 없습니다");
+            return;
+        }
+
         if (_hpSliderCoroutine != null)
         {
             StopCoroutine(_hpSliderCoroutine);
             _hpSliderCoroutine = null;
         }
 
-        if (_player != null)
-        {
-            _player.OnHealthChanged -= OnPlayerHealthChanged;
-        }
-    }
-
-    private void BindPlayer()
-    {
-        if (_player == null)
-        {
-            _player = FindFirstObjectByType<PlayerCore>();
-        }
-
-        if (_player == null)
-        {
-            return;
-        }
-
-        _player.OnHealthChanged += OnPlayerHealthChanged;
-        RefreshPlayerHpSlider(true);
+        _player.OnHealthChanged -= OnPlayerHealthChanged;
     }
 
     private void OnPlayerHealthChanged(float currentHp, float maxHp)

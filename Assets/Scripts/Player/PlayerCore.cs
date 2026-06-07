@@ -16,14 +16,10 @@ namespace Player
     [RequireComponent(typeof(Animator))]
     public class PlayerCore : MonoBehaviour, IDamageable
     {
-        [Header("스탯")]
-        [SerializeField] private float _maxHealth = 100f;
-        [SerializeField] private float _attackPower = 10f;
-        [SerializeField] private float _defensePower = 5f;
-
-        [Header("움직임")]
-        [SerializeField] private float _jogSpeed = 5f;
-        [SerializeField] private float _runSpeed = 8f;
+        [Header("테스트")]
+        [SerializeField] private bool _loadOnScene = false;
+        [SerializeField] private PlayerStatData _testStatData;
+        [SerializeField] private Camera _mainCamera;
 
         [Header("공격")]
         [SerializeField] private AttackData[] _katanaComboDatas; // 콤보 공격
@@ -37,7 +33,6 @@ namespace Player
         [Header("카메라")]
         [SerializeField] private Camera _playerCamera;
         [SerializeField] private CinemachineImpulseSource _cinemachineImpulseSource;
-        [SerializeField] private VolumeEffect _volumeEffect;
         [SerializeField] private Transform _cameraPivot;
 
         [Header("상태")]
@@ -73,10 +68,11 @@ namespace Player
         private PlayerWeaponController _weaponController;
         private Coroutine _perfectDodgeTimeScaleCoroutine;
         private Coroutine _hitStopCoroutine;
-        private Coroutine _bindingWaitCoroutine;
         private bool _canPerfectDodge = false;
-        private bool _isCoreReady = false;
         private bool _isInitialized = false;
+
+        // 인스턴스
+        private PlayerInstance _playerInstance;
 
         // 속도
         private float _targetSpeed;
@@ -86,14 +82,14 @@ namespace Player
         private StateMachine _fsm;
 
         // 스탯
-        private float _hp;
         private bool _isDead = false;
 
         // Action
         public event Action<float, float> OnHealthChanged;
         public event Action<int> OnDodgeCountChanged;
         public event Action<float, float> OnDodgeTimerRunning;
-        public event Action<SkillDefinition> OnQSkillChanged;
+        public event Action<SkillDefinition> OnQSkillChanged; 
+        public event Action<float> OnPerfectDodge; // 완벽 회피 발동
 
         public StateMachine FSM => _fsm;
         public InputController InputController => _inputController;
@@ -104,12 +100,11 @@ namespace Player
         public AttackEffectController AttackEffectController => _attackEffectController;
         public PlayerSkillController SkillController => _skillController;
         public Animator Animator => _animator;
-        public VolumeEffect VolumeEffect => _volumeEffect;
         public MeshTrailEffectController TrailEffector => _trailEffector;
         public PlayerWeaponController WeaponController => _weaponController;
         public Transform CameraPivot => _cameraPivot;
-        public float JogSpeed => _jogSpeed;
-        public float RunSpeed => _runSpeed;
+        public float JogSpeed => Instance.JogSpeed;
+        public float RunSpeed => Instance.RunSpeed;
         public float TargetSpeed
         {
             get { return _targetSpeed; }
@@ -155,19 +150,36 @@ namespace Player
             }
         }
         public bool CanPerfectDodge => _canPerfectDodge;
-        public float HP
+        public PlayerInstance Instance
         {
-            get { return _hp; }
-            set
+            get
             {
-                _hp = value;
-                _hp = Mathf.Clamp(_hp, 0f, MaxHealth);
-                OnHealthChanged?.Invoke(_hp, MaxHealth);
+                if (_playerInstance == null)
+                {
+                    _playerInstance = new PlayerInstance(_testStatData);
+                }
+                return _playerInstance;
+            }
+            private set
+            {
+                _playerInstance = value;
             }
         }
-        public float MaxHealth => _maxHealth;
-        public float AttackPower => _attackPower;
-        public float DefensePower => _defensePower;
+        public float HP
+        {
+            get 
+            { 
+                return Instance.CurrentHealth; 
+            }
+            set
+            {
+                Instance.CurrentHealth = Mathf.Clamp(value, 0f, MaxHealth);
+                OnHealthChanged?.Invoke(Instance.CurrentHealth, MaxHealth);
+            }
+        }
+        public float MaxHealth => Instance.MaxHealth;
+        public float Strength => Instance.Strength;
+        public float Defense => Instance.Defence;
         public bool IsDead
         {
             get
@@ -184,25 +196,15 @@ namespace Player
 
         private void Awake()
         {
-            TryGetComponent(out _inputController);
-            TryGetComponent(out _avatarMover);
-            TryGetComponent(out _hitController);
-            TryGetComponent(out _targetingController);
-            TryGetComponent(out _attackEffectController);
-            TryGetComponent(out _skillController);
-            TryGetComponent(out _weaponController);
-            _skillController.OnQSkillEquiped += QSkillChange;
-
-            TryGetComponent(out _animator);
-            TryGetComponent(out _cinemachineImpulseSource);
-            TryGetComponent(out _trailEffector);
-            _fsm = new StateMachine(this);
-            HP = MaxHealth;
+            if (_loadOnScene)
+            {
+                PlayerInstance instance = new PlayerInstance(_testStatData);
+                InitializePlayer(instance, _mainCamera);
+            }
 
             DodgeAvailableCount = _maxDodgeAvailableCount;
             CurrentDodgeCooldownTimer = _dodgeCooldown;
             _isDead = false;
-            _isCoreReady = true;
         }
 
         private void OnEnable()
@@ -213,11 +215,6 @@ namespace Player
         private void OnDisable()
         {
             UnbindGameStateChangeAction();
-        }
-
-        private void Start()
-        {
-            TryInitializeWhenReady();
         }
 
         private void Update()
@@ -235,6 +232,7 @@ namespace Player
             if (Input.GetKeyDown(KeyCode.C))
             {
                 WeaponController.ChangeNextWeapon();
+                SaveWeaponSlotsToInstance();
             }
 
             if(HP <= 0f && !IsDead)
@@ -304,55 +302,6 @@ namespace Player
             _fsm.AnimationTick();
         }
 
-        private bool HasRequiredBindings()
-        {
-            return _playerCamera != null && _volumeEffect != null;
-        }
-
-        private bool TryInitializeWhenReady()
-        {
-            if (_isInitialized)
-            {
-                return true;
-            }
-
-            if (!_isCoreReady)
-            {
-                return false;
-            }
-
-            if (!HasRequiredBindings())
-            {
-                if (_bindingWaitCoroutine == null)
-                {
-                    _bindingWaitCoroutine = StartCoroutine(WaitForRequiredBindings());
-                }
-
-                return false;
-            }
-
-            if (_bindingWaitCoroutine != null)
-            {
-                StopCoroutine(_bindingWaitCoroutine);
-                _bindingWaitCoroutine = null;
-            }
-
-            _fsm.InitStateMachine(_fsm.IdleState);
-            _isInitialized = true;
-            return true;
-        }
-
-        private IEnumerator WaitForRequiredBindings()
-        {
-            while (!HasRequiredBindings())
-            {
-                yield return null;
-            }
-
-            _bindingWaitCoroutine = null;
-            TryInitializeWhenReady();
-        }
-
         private void SmoothSpeedChanger()
         {
             CurrentSpeed = Mathf.Lerp(CurrentSpeed, TargetSpeed, Time.fixedDeltaTime * 8f);
@@ -368,7 +317,7 @@ namespace Player
             }
 
             DamageFlag = true;
-            HP -= (damage - DefensePower);
+            HP -= (damage - Defense);
         }
 
         public void Heal(float amount)
@@ -493,38 +442,13 @@ namespace Player
 
         public void BindCameraReference(Camera mainCamera)
         {
-            if (_playerCamera != null)
-            {
-                TryInitializeWhenReady();
-                return;
-            }
-
             if (mainCamera == null)
             {
-                TryInitializeWhenReady();
+                Debug.LogError("메인 카메라가 없습니다");
                 return;
             }
 
             _playerCamera = mainCamera;
-            TryInitializeWhenReady();
-        }
-
-        public void BindVolumeEffectReference(VolumeEffect volumeEffect)
-        {
-            if (_volumeEffect != null)
-            {
-                TryInitializeWhenReady();
-                return;
-            }
-
-            if (volumeEffect == null)
-            {
-                TryInitializeWhenReady();
-                return;
-            }
-
-            _volumeEffect = volumeEffect;
-            TryInitializeWhenReady();
         }
 
         private void BindGameStateChangeAction()
@@ -565,6 +489,78 @@ namespace Player
             WeaponController.UnequipWeapon();
             WeaponController.ChangeWeaponSlotOrder(weaponSlotList);
             WeaponController.EquipWeapon();
+            SaveWeaponSlotsToInstance();
+        }
+
+        public void PerfectDodgeSequence()
+        {
+            TriggerPerfectDodgeTimeScale();
+            TrailEffector.PerfactDodgeMeshTrailEffectOn(DodgeCounterDuration);
+            OnPerfectDodge?.Invoke(DodgeCounterDuration);
+            //VolumeEffect.PerfectDodgeEffectOn(DodgeCounterDuration);
+        }
+
+        public void InitializePlayer(PlayerInstance instance, Camera camera)
+        {
+            Instance = instance;
+            CacheComponents();
+            SyncWeaponSlotsWithInstance();
+            BindCameraReference(camera);
+            BindComponentEvents();
+            InitializeFSM();
+            _isInitialized = true;
+        }
+
+        private void SyncWeaponSlotsWithInstance()
+        {
+            if (_playerInstance == null || _weaponController == null)
+            {
+                return;
+            }
+
+            if (_playerInstance.WeaponSlots != null && _playerInstance.WeaponSlots.Count > 0)
+            {
+                _weaponController.InitializeWeaponSlots(_playerInstance.WeaponSlots, _playerInstance.WeaponIndex);
+                return;
+            }
+
+            _playerInstance.SetWeaponSlots(_weaponController.GetWeaponSlotOrder(), _weaponController.WeaponIndex);
+        }
+
+        private void SaveWeaponSlotsToInstance()
+        {
+            if (_playerInstance == null || _weaponController == null)
+            {
+                return;
+            }
+
+            _playerInstance.SetWeaponSlots(_weaponController.GetWeaponSlotOrder(), _weaponController.WeaponIndex);
+        }
+
+        private void CacheComponents()
+        {
+            TryGetComponent(out _inputController);
+            TryGetComponent(out _avatarMover);
+            TryGetComponent(out _hitController);
+            TryGetComponent(out _targetingController);
+            TryGetComponent(out _attackEffectController);
+            TryGetComponent(out _skillController);
+            TryGetComponent(out _weaponController);
+            TryGetComponent(out _animator);
+            TryGetComponent(out _cinemachineImpulseSource);
+            TryGetComponent(out _trailEffector);
+        }
+
+        private void BindComponentEvents()
+        {
+            _skillController.OnQSkillEquiped += QSkillChange;
+            BindGameStateChangeAction();
+        }
+
+        private void InitializeFSM()
+        {
+            _fsm = new StateMachine(this);
+            _fsm.InitStateMachine(_fsm.IdleState);
         }
     }
 }

@@ -96,7 +96,6 @@ public class DodgeState : StateBase
 
         if (_currentStateTime >= _perfectDodgeEndNormalizedTime && _isPerfectDodge)
         {
-            PerfectDodgeEnd();
             _isPerfectDodge = false;
         }
 
@@ -110,8 +109,6 @@ public class DodgeState : StateBase
 
     public override void Exit()
     {
-        if (_isPerfectDodge)
-            PerfectDodgeEnd();
         _isPerfectDodge = false;
     }
 
@@ -156,23 +153,13 @@ public class DodgeState : StateBase
 
     private void PerfectDodgeStart()
     {
-        float animLength = GetAnimationPlayTime();
-        OnPerfectDodgeVolumeEffectStarted?.Invoke(animLength);
-
         if (_core.DamageFlag)
         {
             _core.DamageFlag = false;
             // 잃은 HP 복원
 
         }
-        _core.TriggerPerfectDodgeTimeScale();
-        _core.TrailEffector.PerfactDodgeMeshTrailEffectOn(_core.DodgeCounterDuration);
-        _core.VolumeEffect.PerfectDodgeEffectOn(_core.DodgeCounterDuration);
-    }
-
-    private void PerfectDodgeEnd()
-    {
-        OnPerfectDodgeVolumeEffectEnded?.Invoke();
+        _core.PerfectDodgeSequence();
     }
 
     private float GetAnimationPlayTime()

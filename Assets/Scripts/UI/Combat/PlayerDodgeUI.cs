@@ -5,14 +5,20 @@ using UnityEngine.UI;
 
 public class PlayerDodgeUI : MonoBehaviour
 {
-    [SerializeField] private PlayerCore _playerCore;
     [SerializeField] private Image _disableImage;
     [SerializeField] private TextMeshProUGUI _timerText;
     [SerializeField] private Image _timerImage;
+    
+    private PlayerCore _player;
 
     private void OnEnable()
     {
-        BindPlayer();
+        BindPlayerEvent();
+    }
+
+    private void OnDisable()
+    {
+        UnbindPlayerEvent();
     }
 
     private void Start()
@@ -22,29 +28,36 @@ public class PlayerDodgeUI : MonoBehaviour
         _timerImage.gameObject.SetActive(false);
     }
 
-    private void OnDisable()
+    public void InitDodgeUI(PlayerCore player)
     {
-        if (_playerCore != null)
-        {
-            _playerCore.OnDodgeCountChanged -= SetDisableImageVisible;
-            _playerCore.OnDodgeTimerRunning -= RunningDodgeTimer;
-        }
+        _player = player;
+        BindPlayerEvent();
     }
 
-    private void BindPlayer()
+    private void BindPlayerEvent()
     {
-        if (_playerCore == null)
+        if (_player == null)
         {
-            _playerCore = FindFirstObjectByType<PlayerCore>();
-        }
-
-        if (_playerCore == null)
-        {
+            Debug.LogError("플레이어가 없습니다");
             return;
         }
 
-        _playerCore.OnDodgeCountChanged += SetDisableImageVisible;
-        _playerCore.OnDodgeTimerRunning += RunningDodgeTimer;
+        _player.OnDodgeCountChanged -= SetDisableImageVisible;
+        _player.OnDodgeTimerRunning -= RunningDodgeTimer;
+        _player.OnDodgeCountChanged += SetDisableImageVisible;
+        _player.OnDodgeTimerRunning += RunningDodgeTimer;
+    }
+
+    private void UnbindPlayerEvent()
+    {
+        if (_player == null)
+        {
+            Debug.LogError("플레이어가 없습니다");
+            return;
+        }
+
+        _player.OnDodgeCountChanged -= SetDisableImageVisible;
+        _player.OnDodgeTimerRunning -= RunningDodgeTimer;
     }
 
     private void SetDisableImageVisible(int dodgeAvailableCount)

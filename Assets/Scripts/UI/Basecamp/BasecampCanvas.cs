@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class BasecampCanvas : MonoBehaviour
 {
     [Header("UI")]
-    [SerializeField] private PlayerCore _player;
     [SerializeField] private GameStarter _gameStarter;
     [SerializeField] private WeaponModeViewerUI _weaponModeViewerUI;
     [SerializeField] private PlayerUpgradeUI _playerUpgradeUI;
@@ -23,6 +22,7 @@ public class BasecampCanvas : MonoBehaviour
     [SerializeField] private NodeWorld _nodeWorld;
 
     [Header("Player")]
+    [SerializeField] private PlayerCore _player;
     [SerializeField] private PlayerCinemachineController _playerCineCamController;
 
     private BasecampUI _currentFocusUI;

@@ -8,11 +8,8 @@ public class GameStarter : MonoBehaviour
     [Header("Player")]
     [SerializeField] private PlayerCore _playerPrefab;
     [SerializeField] private PlayerCinemachineController _playerCineCamPrefab;
-    [SerializeField] private VolumeEffect _volumeEffectPrefab;
     [SerializeField] private Transform _playerSpawnPoint;
-
-    [Header("Protal")]
-    [SerializeField] private GameObject _portalPrefab;
+    [SerializeField] private PlayerStatData _playerStatData;
 
     [Header("Camera")]
     [SerializeField] private Camera _mainCamera;
@@ -29,7 +26,6 @@ public class GameStarter : MonoBehaviour
     {
         if(!DebugUtil.IsExistComponent(_playerPrefab) ||
            !DebugUtil.IsExistComponent(_playerCineCamPrefab) ||
-           !DebugUtil.IsExistComponent(_volumeEffectPrefab) ||
            !DebugUtil.IsExistComponent(_playerSpawnPoint))
         {
             return;
@@ -37,7 +33,6 @@ public class GameStarter : MonoBehaviour
 
         var player = Instantiate(_playerPrefab, _playerSpawnPoint.transform.position, _playerSpawnPoint.transform.rotation);
         var cineCam = Instantiate(_playerCineCamPrefab);
-        var volumeEffect = Instantiate(_volumeEffectPrefab);
         if (!cineCam.TrySetTarget(player.CameraPivot))
         {
             Debug.LogError("플레이어 카메라 연결 실패");
@@ -45,10 +40,31 @@ public class GameStarter : MonoBehaviour
         }
 
         Camera mainCamera = _mainCamera != null ? _mainCamera : Camera.main;
-        player.BindCameraReference(mainCamera);
-        player.BindVolumeEffectReference(volumeEffect);
+        PlayerInstance playerInstance = GetPlayerInstance();
+        if (playerInstance == null)
+        {
+            return;
+        }
+
+        player.InitializePlayer(playerInstance, mainCamera);
 
         OnPlayerSpawnedAction?.Invoke(player);
         OnPlayerCinemachineControllerSpawnedAction?.Invoke(cineCam);
+    }
+
+    private PlayerInstance GetPlayerInstance()
+    {
+        if (GameManager.Instance != null)
+        {
+            return GameManager.Instance.GetOrCreatePlayerInstance(_playerStatData);
+        }
+
+        if (_playerStatData == null)
+        {
+            Debug.LogError("PlayerStatData is null.");
+            return null;
+        }
+
+        return new PlayerInstance(_playerStatData);
     }
 }

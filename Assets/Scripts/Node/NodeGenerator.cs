@@ -9,7 +9,7 @@ public class NodeGenerator : MonoBehaviour
     [SerializeField] private float _zSpace = 2f;
     [SerializeField] private Transform _nodeAreaTransform;
     [SerializeField] private StageNode _nodePrefab;
-    [SerializeField] private string _startNodeName = "PlayerScene";
+    [SerializeField] private string _startNodeName = "NormalCombatScene";
     [SerializeField] private float _nodeFloatingHeight = 0.7f;
 
     private StageNode[,] _nodeGrid;
