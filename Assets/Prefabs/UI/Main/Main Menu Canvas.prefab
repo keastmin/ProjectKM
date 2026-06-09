@@ -128,6 +128,42 @@ PrefabInstance:
       propertyPath: _mainMenuButtons
       value: 
       objectReference: {fileID: 2807395713498350640}
+    - target: {fileID: 2798081412250322559, guid: 1ce669ab49172eb4886693c0b903838f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2807395713498350640}
+    - target: {fileID: 2798081412250322559, guid: 1ce669ab49172eb4886693c0b903838f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickContinueButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 2798081412250322559, guid: 1ce669ab49172eb4886693c0b903838f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainMenuButtons, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3551269817358730145, guid: 1ce669ab49172eb4886693c0b903838f, type: 3}
+      propertyPath: _continueButton
+      value: 
+      objectReference: {fileID: 3560573430605545966}
+    - target: {fileID: 3714538793513559816, guid: 1ce669ab49172eb4886693c0b903838f, type: 3}
+      propertyPath: m_Spacing
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3714538793513559816, guid: 1ce669ab49172eb4886693c0b903838f, type: 3}
+      propertyPath: m_ChildAlignment
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3714538793513559816, guid: 1ce669ab49172eb4886693c0b903838f, type: 3}
+      propertyPath: m_ChildForceExpandHeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4464174407979277730, guid: 1ce669ab49172eb4886693c0b903838f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2807395713498350640}
+    - target: {fileID: 4464174407979277730, guid: 1ce669ab49172eb4886693c0b903838f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainMenuButtons, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 6725349735115147532, guid: 1ce669ab49172eb4886693c0b903838f, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -212,6 +248,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Menu Panel
       objectReference: {fileID: 0}
+    - target: {fileID: 8064347153151166833, guid: 1ce669ab49172eb4886693c0b903838f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2807395713498350640}
+    - target: {fileID: 8064347153151166833, guid: 1ce669ab49172eb4886693c0b903838f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainMenuButtons, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -239,6 +283,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0db1b89db8609d04a8d4bc50b2e99390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuButtons
+--- !u!114 &3560573430605545966 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2798081412250322559, guid: 1ce669ab49172eb4886693c0b903838f, type: 3}
+  m_PrefabInstance: {fileID: 1710658208105613201}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!224 &5397642631951126173 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6725349735115147532, guid: 1ce669ab49172eb4886693c0b903838f, type: 3}

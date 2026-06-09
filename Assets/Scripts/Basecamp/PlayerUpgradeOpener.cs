@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class PlayerUpgrade : MonoBehaviour, IInteraction
+public class PlayerUpgradeOpener : MonoBehaviour, IInteraction
 {
     public event Action OnInteractPlayerUpgradeAction;
 

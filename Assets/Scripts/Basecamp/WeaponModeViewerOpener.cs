@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class WeaponModeViewer : MonoBehaviour, IInteraction
+public class WeaponModeViewerOpener : MonoBehaviour, IInteraction
 {
     public event Action OnInteractWeaponModeViewerAction;
 

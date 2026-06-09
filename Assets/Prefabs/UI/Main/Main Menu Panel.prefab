@@ -455,6 +455,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0db1b89db8609d04a8d4bc50b2e99390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuButtons
+  _continueButton: {fileID: 0}
+  _continueLoadScene: 
+  _newGameLoadScene: BasecampScene
 --- !u!114 &3714538793513559816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -472,10 +475,10 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 4
-  m_Spacing: 0
+  m_ChildAlignment: 7
+  m_Spacing: 20
   m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
@@ -802,7 +805,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1cdb9471f2394e46b5c2f4230db9a0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuUI
-  _gameScene: BasecampScene
   _mainMenuButtons: {fileID: 3551269817358730145}
 --- !u!222 &214425613332830297
 CanvasRenderer:

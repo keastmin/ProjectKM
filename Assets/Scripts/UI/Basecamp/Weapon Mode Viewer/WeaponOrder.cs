@@ -11,14 +11,10 @@ public class WeaponOrder : MonoBehaviour
 
     private PlayerCore _player;
 
+    private bool _isInitialized = false;
+
     public void InitializeWeaponOrder(PlayerCore player)
     {
-        if(player == null)
-        {
-            Debug.LogError("플레이어가 없습니다");
-            return;
-        }
-
         _player = player;
         PlayerWeaponController weaponController = _player.WeaponController;
 
@@ -48,6 +44,8 @@ public class WeaponOrder : MonoBehaviour
             localYPos -= (orderSlot.Height + _slotSpace);
             _slotList.Add((slot, orderSlot));
         }
+
+        _isInitialized = true;
     }
 
     public void ClearWeaponOrder()

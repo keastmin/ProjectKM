@@ -136,7 +136,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4256192261827395207}
   - component: {fileID: 249268440621314431}
-  - component: {fileID: 5445658297282075245}
+  - component: {fileID: 2880968186361920709}
   m_Layer: 5
   m_Name: Weapon Order
   m_TagString: Untagged
@@ -175,8 +175,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b635b0e291af50a438d2bb9e17c66b7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponOrder
-  _orderSlot: {fileID: 7625024136129546090, guid: d1ca3c164528ef84ab17451890828788, type: 3}
---- !u!114 &5445658297282075245
+  _orderSlotPrefab: {fileID: 0}
+  _slotSpace: 20
+--- !u!114 &2880968186361920709
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

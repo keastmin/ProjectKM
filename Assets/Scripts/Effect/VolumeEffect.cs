@@ -7,7 +7,6 @@ using UnityEngine.Rendering.Universal;
 public class VolumeEffect : MonoBehaviour
 {
     [SerializeField] private PlayerCore _player;
-    [SerializeField] private GameStarter _gameStarter;
     [SerializeField] private Volume _globalVolume;
 
     [SerializeField]
@@ -80,14 +79,14 @@ public class VolumeEffect : MonoBehaviour
             BindPlayerEvent();
             return;
         }
-
-        // 플레이어 참조 받는 이벤트
-        _gameStarter.OnPlayerSpawnedAction += PlayerReferenceInject;
     }
 
     private void OnEnable()
     {
-        BindPlayerEvent();
+        if (_player != null)
+        {
+            BindPlayerEvent();
+        }
     }
 
     private void OnDisable()
@@ -97,8 +96,18 @@ public class VolumeEffect : MonoBehaviour
             StopCoroutine(_dodgeEffectCoroutine);
             _dodgeEffectCoroutine = null;
         }
-        UnbindPlayerEvent();
+
+        if (_player != null)
+        {
+            UnbindPlayerEvent();
+        }
         ResetEffects();
+    }
+
+    public void InitializeVolumeEffect(PlayerCore player)
+    {
+        _player = player;
+        BindPlayerEvent();
     }
 
     private void PlayerReferenceInject(PlayerCore player)
@@ -109,12 +118,6 @@ public class VolumeEffect : MonoBehaviour
 
     private void BindPlayerEvent()
     {
-        if (_player == null)
-        {
-            Debug.LogError("플레이어가 없습니다");
-            return;
-        }
-
         _player.OnPerfectDodge -= PerfectDodgeEffectOn;
         _player.OnPerfectDodge += PerfectDodgeEffectOn;
     }

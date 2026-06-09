@@ -4,7 +4,6 @@ using UnityEngine;
 public class CombatCanvas : MonoBehaviour
 {
     [SerializeField] private PlayerCore _player;
-    [SerializeField] private GameStarter _gameStarter;
     [SerializeField] private CombatUI _combatUI;
 
     private void Awake()
@@ -14,8 +13,6 @@ public class CombatCanvas : MonoBehaviour
             PlayerReferenceInject(_player);
             return;
         }
-
-        _gameStarter.OnPlayerSpawnedAction += PlayerReferenceInject;
     }
 
     private void PlayerReferenceInject(PlayerCore player)

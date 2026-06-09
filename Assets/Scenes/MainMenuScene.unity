@@ -917,125 +917,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2393527981168208083, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2393527981168208083, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2393527981168208083, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2393527981168208083, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2807395713498350640, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: _continueButton
-      value: 
-      objectReference: {fileID: 6270451961300305081}
-    - target: {fileID: 3048537186682231347, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 6270451961300305082}
-    - target: {fileID: 3048537186682231347, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClickQuitButton
-      objectReference: {fileID: 0}
-    - target: {fileID: 3048537186682231347, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: MainMenuButtons, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 3343656905126472980, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3343656905126472980, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3343656905126472980, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3343656905126472980, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3560573430605545966, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 6270451961300305082}
-    - target: {fileID: 3560573430605545966, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClickContinueButton
-      objectReference: {fileID: 0}
-    - target: {fileID: 3560573430605545966, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: MainMenuButtons, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 6280755588707651763, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6280755588707651763, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6280755588707651763, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6280755588707651763, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8070812043412713385, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
       propertyPath: m_Name
       value: Main Menu Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 8671447513510694624, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 6270451961300305082}
-    - target: {fileID: 8671447513510694624, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClickNewGameButton
-      objectReference: {fileID: 0}
-    - target: {fileID: 8671447513510694624, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: MainMenuButtons, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
---- !u!114 &6270451961300305081 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3560573430605545966, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-  m_PrefabInstance: {fileID: 6270451961300305080}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
---- !u!114 &6270451961300305082 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2807395713498350640, guid: c6cbfa55aa98a50419ad1684b56e70f8, type: 3}
-  m_PrefabInstance: {fileID: 6270451961300305080}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0db1b89db8609d04a8d4bc50b2e99390, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MenuButtons
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

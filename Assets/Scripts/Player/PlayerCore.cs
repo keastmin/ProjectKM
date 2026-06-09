@@ -302,6 +302,11 @@ namespace Player
             _fsm.AnimationTick();
         }
 
+        public void InitializePlayerCore()
+        {
+
+        }
+
         private void SmoothSpeedChanger()
         {
             CurrentSpeed = Mathf.Lerp(CurrentSpeed, TargetSpeed, Time.fixedDeltaTime * 8f);

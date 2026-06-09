@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class BasecampUI : MonoBehaviour
 {
-    protected PlayerCore _player;
+    public event Action<BasecampUI> OnOpenThisUIAction;
+    public event Action<BasecampUI> OnCloseThisUIAction;
 
-    public event Action<BasecampUI> OnEscapeThisUIAction;
-
-    public void GetPlayerReference(PlayerCore player)
+    protected void Open()
     {
-        _player = player;
+        OnOpenThisUIAction?.Invoke(this);
     }
 
-    public virtual void InputEscapeKey()
+    protected void Close()
     {
-        OnEscapeThisUIAction?.Invoke(this);
+        OnCloseThisUIAction?.Invoke(this);
     }
 }

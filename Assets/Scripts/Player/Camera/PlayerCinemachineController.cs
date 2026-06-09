@@ -1,3 +1,4 @@
+using Player;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -8,32 +9,32 @@ public class PlayerCinemachineController : MonoBehaviour
 
     public float FOV => _cineCam.Lens.FieldOfView;
 
+    private PlayerCore _player;
+
     private void Awake()
     {
         TryGetComponent(out _cineCam);
         TryGetComponent(out _inputAxisController);
     }
 
-    private void OnEnable()
+    public void InitializePlayerCinemachineController(PlayerCore player)
     {
-        if(GameManager.Instance != null)
-        {
-            GameManager.Instance.OnChangeGameState += StopCameraRotate;
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnChangeGameState -= StopCameraRotate;
-        }
+        _player = player;
+        TrySetTarget(_player.CameraPivot);
     }
 
     public bool TrySetTarget(Transform target)
     {
-        if (!DebugUtil.IsExistComponent(_cineCam) || !DebugUtil.IsExistComponent(target))
+        if(_cineCam == null)
+        {
+            Debug.LogError("시네머신 카메라가 없음");
             return false;
+        }
+        if(target == null)
+        {
+            Debug.LogError("타겟이 없음");
+            return false;
+        }
 
         _cineCam.Target.TrackingTarget = target;
         return true;

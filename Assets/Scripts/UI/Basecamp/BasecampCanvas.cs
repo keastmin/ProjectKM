@@ -1,6 +1,7 @@
 using Player;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,283 +9,151 @@ using UnityEngine.UI;
 public class BasecampCanvas : MonoBehaviour
 {
     [Header("UI")]
-    [SerializeField] private GameStarter _gameStarter;
     [SerializeField] private WeaponModeViewerUI _weaponModeViewerUI;
     [SerializeField] private PlayerUpgradeUI _playerUpgradeUI;
-    [SerializeField] private Image _nodeMapChangeImage;
-    [SerializeField] private Button _nodeMapExitButton;
 
-    [Header("World")]
-    [SerializeField] private WeaponModeViewer _weaponModeViewerWorld;
-    [SerializeField] private PlayerUpgrade _playerUpgradeWorld;
+    private WeaponModeViewerOpener _weaponModeViewerOpener;
+    private PlayerUpgradeOpener _playerUpgradeOpener;
+    private InputModeManager _inputModeManager;
 
-    [Header("Node World")]
-    [SerializeField] private NodeWorld _nodeWorld;
+    private bool _isInitialized = false;
 
-    [Header("Player")]
-    [SerializeField] private PlayerCore _player;
-    [SerializeField] private PlayerCinemachineController _playerCineCamController;
-
-    private BasecampUI _currentFocusUI;
-
-    private void Awake()
-    {
-        _currentFocusUI = null;
-        _gameStarter.OnPlayerSpawnedAction += PlayerReferenceInject;
-        _gameStarter.OnPlayerCinemachineControllerSpawnedAction += PlayerCinemachineControllerReferenceInject;
-        _weaponModeViewerUI.gameObject.SetActive(false);
-        _playerUpgradeUI.gameObject.SetActive(false);
-        _nodeMapExitButton.gameObject.SetActive(false);
-
-        Color nodeMapChangeImageColor = _nodeMapChangeImage.color;
-        nodeMapChangeImageColor.a = 0f;
-        _nodeMapChangeImage.color = nodeMapChangeImageColor;
-    }
+    private BasecampUI _currentFocusedUI;
 
     private void OnEnable()
     {
-        _weaponModeViewerWorld.OnInteractWeaponModeViewerAction += ActiveWeaponModeViewerUIHandle;
-        _playerUpgradeWorld.OnInteractPlayerUpgradeAction += ActivePlayerUpgradeUIHandle;
+        if(_weaponModeViewerOpener != null)
+        {
+            _weaponModeViewerOpener.OnInteractWeaponModeViewerAction -= OpenWeaponModeViewerUIHandle;
+            _weaponModeViewerOpener.OnInteractWeaponModeViewerAction += OpenWeaponModeViewerUIHandle;
+        }
 
-        _weaponModeViewerUI.OnEscapeThisUIAction += DisactiveUI;
-        _playerUpgradeUI.OnEscapeThisUIAction += DisactiveUI;
+        if(_playerUpgradeOpener != null)
+        {
+            _playerUpgradeOpener.OnInteractPlayerUpgradeAction -= OpenWeaponModeViewerUIHandle;
+            _playerUpgradeOpener.OnInteractPlayerUpgradeAction += OpenWeaponModeViewerUIHandle;
+        }
 
-        BindGameStateChangeAction();
+        if(_weaponModeViewerUI != null)
+        {
+            _weaponModeViewerUI.OnOpenThisUIAction -= OpenUI;
+            _weaponModeViewerUI.OnOpenThisUIAction += OpenUI;
+        }
+
+        if(_playerUpgradeUI != null)
+        {
+            _playerUpgradeUI.OnOpenThisUIAction -= OpenUI;
+            _playerUpgradeUI.OnOpenThisUIAction += OpenUI;
+        }
     }
 
     private void OnDisable()
     {
-        _weaponModeViewerWorld.OnInteractWeaponModeViewerAction -= ActiveWeaponModeViewerUIHandle;
-        _playerUpgradeWorld.OnInteractPlayerUpgradeAction -= ActivePlayerUpgradeUIHandle;
+        if (_weaponModeViewerOpener != null)
+        {
+            _weaponModeViewerOpener.OnInteractWeaponModeViewerAction -= OpenWeaponModeViewerUIHandle;
+        }
 
-        _weaponModeViewerUI.OnEscapeThisUIAction -= DisactiveUI;
-        _playerUpgradeUI.OnEscapeThisUIAction -= DisactiveUI;
+        if (_playerUpgradeOpener != null)
+        {
+            _playerUpgradeOpener.OnInteractPlayerUpgradeAction -= OpenWeaponModeViewerUIHandle;
+        }
 
-        UnbindGameStateChangeAction();
+        if (_weaponModeViewerUI != null)
+        {
+            _weaponModeViewerUI.OnOpenThisUIAction -= OpenUI;
+        }
+
+        if (_playerUpgradeUI != null)
+        {
+            _playerUpgradeUI.OnOpenThisUIAction -= OpenUI;
+        }
     }
 
     private void Update()
     {
-        if(GameManager.Instance == null)
-        {
-            Debug.LogError("게임 매니저가 없습니다");
+        if (!_isInitialized || _currentFocusedUI == null)
             return;
-        }
-        if(GameManager.Instance.CurrentState == GameState.Game)
-        {
-            return;
-        }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            _currentFocusUI.InputEscapeKey();
+            InputEscapeKey();
         }
     }
 
-    private void PlayerReferenceInject(PlayerCore player)
+    public void InitBasecampCanvas(PlayerCore player,
+                                   InputModeManager inputModeManager, 
+                                   WeaponModeViewerOpener weaponModeViewerOpener, 
+                                   PlayerUpgradeOpener playerUpgradeOpener)
     {
-        _player = player;
-        _weaponModeViewerUI.GetPlayerReference(player);
-        _playerUpgradeUI.GetPlayerReference(player);
-    }
+        _weaponModeViewerOpener = weaponModeViewerOpener;
+        _playerUpgradeOpener = playerUpgradeOpener;
+        _inputModeManager = inputModeManager;
 
-    private void PlayerCinemachineControllerReferenceInject(PlayerCinemachineController cineController)
-    {
-        _playerCineCamController = cineController;
-    }
+        _weaponModeViewerOpener.OnInteractWeaponModeViewerAction -= OpenWeaponModeViewerUIHandle;
+        _weaponModeViewerOpener.OnInteractWeaponModeViewerAction += OpenWeaponModeViewerUIHandle;
+        _playerUpgradeOpener.OnInteractPlayerUpgradeAction -= OpenPlayerUpgradeUIHandle;
+        _playerUpgradeOpener.OnInteractPlayerUpgradeAction += OpenPlayerUpgradeUIHandle;
 
-    private void ActiveWeaponModeViewerUIHandle()
-    {
-        ActiveUI(_weaponModeViewerUI);
-    }
-
-    private void ActivePlayerUpgradeUIHandle()
-    {
-        ActiveUI(_playerUpgradeUI);
-    }
-
-    private void ActiveUI(BasecampUI ui)
-    {
-        if (GameManager.Instance == null)
+        if(_playerUpgradeUI == null)
         {
-            Debug.LogError("게임 매니저가 없습니다");
+            Debug.LogError("플레이어 업그레이드 UI가 없음");
+            return;
+        }
+        if(_weaponModeViewerUI == null)
+        {
+            Debug.LogError("무기 모드 뷰어 UI가 없음");
             return;
         }
 
-        GameManager.Instance.CurrentState = GameState.UI;
-        ui.gameObject.SetActive(true);
-        _currentFocusUI = ui;
+        _weaponModeViewerUI.InitializeWeaponModeViewerUI(player);
+        _playerUpgradeUI.InitializePlayerUpgradeUI(player);
+        _weaponModeViewerUI.gameObject.SetActive(false);
+        _playerUpgradeUI.gameObject.SetActive(false);
+
+        _playerUpgradeUI.OnOpenThisUIAction -= OpenUI;
+        _playerUpgradeUI.OnOpenThisUIAction += OpenUI;
+        _playerUpgradeUI.OnCloseThisUIAction -= CloseUI;
+        _playerUpgradeUI.OnCloseThisUIAction += CloseUI;
+        _weaponModeViewerUI.OnOpenThisUIAction -= OpenUI;
+        _weaponModeViewerUI.OnOpenThisUIAction += OpenUI;
+        _weaponModeViewerUI.OnCloseThisUIAction -= CloseUI;
+        _weaponModeViewerUI.OnCloseThisUIAction += CloseUI;
+
+        _isInitialized = true;
     }
 
-    private void DisactiveUI(BasecampUI ui)
+    private void InputEscapeKey()
     {
-        if(GameManager.Instance == null)
-        {
-            Debug.LogError("게임 매니저가 없습니다");
-            return;
-        }
-
-        GameManager.Instance.CurrentState = GameState.Game;
-        ui.gameObject.SetActive(false);
-        _currentFocusUI = null;
+        CloseCurrentUI();
     }
 
-    private void BindGameStateChangeAction()
+    private void OpenWeaponModeViewerUIHandle()
     {
-        if(GameManager.Instance == null)
-        {
-            Debug.LogError("게임 매니저가 없습니다");
-            return;
-        }
-
-        GameManager.Instance.OnChangeGameState -= NodeMapChangeSequence;
-        GameManager.Instance.OnChangeGameState += NodeMapChangeSequence;
+        _weaponModeViewerUI.gameObject.SetActive(true);
     }
 
-    private void UnbindGameStateChangeAction()
+    private void OpenPlayerUpgradeUIHandle()
     {
-        if (GameManager.Instance == null)
-        {
-            Debug.LogError("게임 매니저가 없습니다");
-            return;
-        }
-
-        GameManager.Instance.OnChangeGameState -= NodeMapChangeSequence;
+        _playerUpgradeUI.gameObject.SetActive(true);
     }
 
-    private void NodeMapChangeSequence(GameState prev, GameState curr)
+    private void CloseCurrentUI()
     {
-        if (_playerCineCamController == null || _nodeWorld == null)
-            return;
-
-        if (prev != GameState.NodeMap && curr != GameState.NodeMap)
-            return;
-
-        if (prev == GameState.NodeMap && curr == GameState.NodeMap)
-            return;
-
-        if (curr == GameState.NodeMap)
-        {
-            StartCoroutine(InNodeMap(0.5f, 0.2f, 0.5f));
-        }
-        else
-        {
-            StartCoroutine(OutNodeMap(0.5f, 0.2f, 0.5f));
-        }
+        _currentFocusedUI.gameObject.SetActive(false);
     }
 
-    private IEnumerator InNodeMap(float fadeInDuration, float fadeContinueDuration, float fadeOutDuration)
+    private void OpenUI(BasecampUI ui)
     {
-        float startPlayerCinemachineFOV = _playerCineCamController.FOV;
-        float startNodeMapCinemachineFOV = _nodeWorld.GetFOV() / 2f;
-        float endPlayerCinemachineFOV = startPlayerCinemachineFOV / 2f;
-        float endNodeMapCinemachineFOV = _nodeWorld.GetFOV();
-        float fromAlpha = 0f;
-        float toAlpha = 1f;
-        _nodeWorld.SetFOV(startNodeMapCinemachineFOV);
-
-        float elapsed = 0f;
-
-        while(elapsed < fadeInDuration)
-        {
-            elapsed += Time.deltaTime;
-
-            float t = elapsed / fadeInDuration;
-            float currentFOV = Mathf.Lerp(startPlayerCinemachineFOV, endPlayerCinemachineFOV, t);
-            float alpha = Mathf.Lerp(fromAlpha, toAlpha, t);
-
-            Color nodeMapChangeImageColor = _nodeMapChangeImage.color;
-            nodeMapChangeImageColor.a = alpha;
-
-            _nodeMapChangeImage.color = nodeMapChangeImageColor;
-            _playerCineCamController.SetFOV(currentFOV);
-
-            yield return null;
-        }
-
-        _playerCineCamController.SetFOV(startPlayerCinemachineFOV);
-        _playerCineCamController.SetActiveCinemachine(false);
-        yield return new WaitForSecondsRealtime(fadeContinueDuration);
-        _nodeWorld.SetCamActive(true);
-        _nodeMapExitButton.gameObject.SetActive(true);
-
-        elapsed = 0f;
-
-        while (elapsed < fadeOutDuration)
-        {
-            elapsed += Time.deltaTime;
-
-            float t = elapsed / fadeOutDuration;
-            float currentFOV = Mathf.Lerp(startNodeMapCinemachineFOV, endNodeMapCinemachineFOV, t);
-            float alpha = Mathf.Lerp(toAlpha, fromAlpha, t);
-
-            Color nodeMapChangeImageColor = _nodeMapChangeImage.color;
-            nodeMapChangeImageColor.a = alpha;
-
-            _nodeMapChangeImage.color = nodeMapChangeImageColor;
-            _nodeWorld.SetFOV(currentFOV);
-
-            yield return null;
-        }
+        _currentFocusedUI = ui;
+        _inputModeManager.PushInputState(InputState.UI);
     }
 
-    private IEnumerator OutNodeMap(float fadeInDuration, float fadeContinueDuration, float fadeOutDuration)
+    private void CloseUI(BasecampUI ui)
     {
-        float startPlayerCinemachineFOV = _playerCineCamController.FOV / 2f;
-        float startNodeMapCinemachineFOV = _nodeWorld.GetFOV();
-        float endPlayerCinemachineFOV = _playerCineCamController.FOV;
-        float endNodeMapCinemachineFOV = startNodeMapCinemachineFOV / 2f;
-        float fromAlpha = 0f;
-        float toAlpha = 1f;
-        _playerCineCamController.SetFOV(startNodeMapCinemachineFOV);
+        if (_currentFocusedUI == ui)
+            _currentFocusedUI = null;
 
-        float elapsed = 0f;
-
-        while (elapsed < fadeInDuration)
-        {
-            elapsed += Time.deltaTime;
-
-            float t = elapsed / fadeInDuration;
-            float currentFOV = Mathf.Lerp(startNodeMapCinemachineFOV, endNodeMapCinemachineFOV, t);
-            float alpha = Mathf.Lerp(fromAlpha, toAlpha, t);
-
-            Color nodeMapChangeImageColor = _nodeMapChangeImage.color;
-            nodeMapChangeImageColor.a = alpha;
-
-            _nodeMapChangeImage.color = nodeMapChangeImageColor;
-            _nodeWorld.SetFOV(currentFOV);
-
-            yield return null;
-        }
-
-        _nodeWorld.SetFOV(startNodeMapCinemachineFOV);
-        _nodeWorld.SetCamActive(false);
-        yield return new WaitForSecondsRealtime(fadeContinueDuration);
-        _playerCineCamController.SetActiveCinemachine(true);
-        _nodeMapExitButton.gameObject.SetActive(false);
-
-        elapsed = 0f;
-
-        while (elapsed < fadeOutDuration)
-        {
-            elapsed += Time.deltaTime;
-
-            float t = elapsed / fadeOutDuration;
-            float currentFOV = Mathf.Lerp(startPlayerCinemachineFOV, endPlayerCinemachineFOV, t);
-            float alpha = Mathf.Lerp(toAlpha, fromAlpha, t);
-
-            Color nodeMapChangeImageColor = _nodeMapChangeImage.color;
-            nodeMapChangeImageColor.a = alpha;
-
-            _nodeMapChangeImage.color = nodeMapChangeImageColor;
-            _playerCineCamController.SetFOV(currentFOV);
-
-            yield return null;
-        }
-    }
-
-    public void OnClickNodeMapExitButton()
-    {
-        GameManager.Instance.CurrentState = GameState.Game;
+        _inputModeManager.PopInputState();
     }
 }

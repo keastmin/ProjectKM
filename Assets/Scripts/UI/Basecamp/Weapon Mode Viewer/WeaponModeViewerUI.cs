@@ -6,25 +6,22 @@ public class WeaponModeViewerUI : BasecampUI
 {
     [SerializeField] private WeaponOrder _weaponOrder;
 
-    private void OnEnable()
-    {
-        InitializeWeaponModeViewerUI();
-    }
+    private PlayerCore _player;
 
-    private void OnDisable()
-    {
-        ClearWeaponModeViewerUI();
-    }
+    private bool _isInitialized = false;
 
-    private void InitializeWeaponModeViewerUI()
+    public void InitializeWeaponModeViewerUI(PlayerCore player)
     {
-        if(_player == null)
+        _player = player;
+
+        _isInitialized = true;
+        
+        if(_weaponOrder == null)
         {
-            Debug.LogError("플레이어가 없습니다");
+            Debug.LogError("무기 정렬이 없음");
             return;
         }
-
-        _weaponOrder.InitializeWeaponOrder(_player);
+        _weaponOrder.InitializeWeaponOrder(player);
     }
 
     private void ClearWeaponModeViewerUI()
