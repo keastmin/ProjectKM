@@ -16,11 +16,6 @@ namespace Player
     [RequireComponent(typeof(Animator))]
     public class PlayerCore : MonoBehaviour, IDamageable
     {
-        [Header("테스트")]
-        [SerializeField] private bool _loadOnScene = false;
-        [SerializeField] private PlayerStatData _testStatData;
-        [SerializeField] private Camera _mainCamera;
-
         [Header("공격")]
         [SerializeField] private AttackData[] _katanaComboDatas; // 콤보 공격
         [SerializeField] private AttackData _dodgeCounterData; // 회피 반격
@@ -55,6 +50,10 @@ namespace Player
 
         [Header("상호작용")]
         [SerializeField] private LayerMask _interactLayer;
+
+        // 매니저
+        private SaveDataManager _saveDataManager;
+        private InputModeManager _inputModeManager;
 
         // 컴포넌트
         private InputController _inputController;
@@ -91,9 +90,10 @@ namespace Player
         public event Action<SkillDefinition> OnQSkillChanged; 
         public event Action<float> OnPerfectDodge; // 완벽 회피 발동
 
+        public SaveDataManager SaveDataManager => _saveDataManager;
+        public InputModeManager InputModeManager => _inputModeManager;
         public StateMachine FSM => _fsm;
         public InputController InputController => _inputController;
-        //public CharacterMover CharacterMover => _characterMover;
         public AvatarMover Mover => _avatarMover;
         public HitController HitController => _hitController;
         public TargetingController TargetingController => _targetingController;
@@ -154,10 +154,6 @@ namespace Player
         {
             get
             {
-                if (_playerInstance == null)
-                {
-                    _playerInstance = new PlayerInstance(_testStatData);
-                }
                 return _playerInstance;
             }
             private set
@@ -196,25 +192,25 @@ namespace Player
 
         private void Awake()
         {
-            if (_loadOnScene)
-            {
-                PlayerInstance instance = new PlayerInstance(_testStatData);
-                InitializePlayer(instance, _mainCamera);
-            }
+            //if (_loadOnScene)
+            //{
+            //    PlayerInstance instance = new PlayerInstance(_testStatData);
+            //    InitializePlayer(instance, _mainCamera);
+            //}
 
-            DodgeAvailableCount = _maxDodgeAvailableCount;
-            CurrentDodgeCooldownTimer = _dodgeCooldown;
-            _isDead = false;
+            //DodgeAvailableCount = _maxDodgeAvailableCount;
+            //CurrentDodgeCooldownTimer = _dodgeCooldown;
+            //_isDead = false;
         }
 
         private void OnEnable()
         {
-            BindGameStateChangeAction();
+
         }
 
         private void OnDisable()
         {
-            UnbindGameStateChangeAction();
+
         }
 
         private void Update()
@@ -300,11 +296,6 @@ namespace Player
             }
 
             _fsm.AnimationTick();
-        }
-
-        public void InitializePlayerCore()
-        {
-
         }
 
         private void SmoothSpeedChanger()
@@ -447,44 +438,7 @@ namespace Player
 
         public void BindCameraReference(Camera mainCamera)
         {
-            if (mainCamera == null)
-            {
-                Debug.LogError("메인 카메라가 없습니다");
-                return;
-            }
-
             _playerCamera = mainCamera;
-        }
-
-        private void BindGameStateChangeAction()
-        {
-            if(GameManager.Instance == null)
-            {
-                Debug.LogError("게임 매니저가 없습니다");
-                return;
-            }
-
-            GameManager.Instance.OnChangeGameState -= BlockInput;
-            GameManager.Instance.OnChangeGameState += BlockInput;
-        }
-
-        private void UnbindGameStateChangeAction()
-        {
-            if (GameManager.Instance == null)
-            {
-                Debug.LogError("게임 매니저가 없습니다");
-                return;
-            }
-
-            GameManager.Instance.OnChangeGameState -= BlockInput;
-        }
-
-        private void BlockInput(GameState prev, GameState curr)
-        {
-            if (curr == GameState.Game)
-                InputController.BlockInput = false;
-            else
-                InputController.BlockInput = true;
         }
 
         public void ChangeWeaponSlotOrder(List<WeaponSlot> weaponSlotList)
@@ -502,13 +456,17 @@ namespace Player
             TriggerPerfectDodgeTimeScale();
             TrailEffector.PerfactDodgeMeshTrailEffectOn(DodgeCounterDuration);
             OnPerfectDodge?.Invoke(DodgeCounterDuration);
-            //VolumeEffect.PerfectDodgeEffectOn(DodgeCounterDuration);
         }
 
-        public void InitializePlayer(PlayerInstance instance, Camera camera)
+        public void InitializePlayer(
+            SaveDataManager saveDataManager, 
+            InputModeManager inputModeManager,
+            Camera camera)
         {
-            Instance = instance;
+            Instance = saveDataManager.SavedPlayerInstance;
             CacheComponents();
+            BindManagers(saveDataManager, inputModeManager);
+            BindInputStateEvent(inputModeManager);
             SyncWeaponSlotsWithInstance();
             BindCameraReference(camera);
             BindComponentEvents();
@@ -556,16 +514,38 @@ namespace Player
             TryGetComponent(out _trailEffector);
         }
 
+        private void BindManagers(SaveDataManager saveDataManager, InputModeManager inputModeManager)
+        {
+            _saveDataManager = saveDataManager;
+            _inputModeManager = inputModeManager;
+        }
+
         private void BindComponentEvents()
         {
             _skillController.OnQSkillEquiped += QSkillChange;
-            BindGameStateChangeAction();
+        }
+
+        private void BindInputStateEvent(InputModeManager inputModeManager)
+        {
+            inputModeManager.OnChangeInputState += BlockInput;
         }
 
         private void InitializeFSM()
         {
             _fsm = new StateMachine(this);
             _fsm.InitStateMachine(_fsm.IdleState);
+        }
+
+        private void BlockInput(InputState state)
+        {
+            if(state == InputState.Combat)
+            {
+                InputController.BlockInput = false;
+            }
+            else if(state == InputState.UI)
+            {
+                InputController.BlockInput = true;
+            }
         }
     }
 }

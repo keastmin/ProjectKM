@@ -7,7 +7,6 @@ public class GameManager : MonoBehaviour
 
     private GameState _prevState;
     private GameState _currState;
-    private PlayerInstance _playerInstance;
 
     public GameState CurrentState
     {
@@ -41,5 +40,4 @@ public class GameManager : MonoBehaviour
     {
         CurrentState = state;
     }
-
 }

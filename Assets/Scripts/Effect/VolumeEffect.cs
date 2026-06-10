@@ -110,12 +110,6 @@ public class VolumeEffect : MonoBehaviour
         BindPlayerEvent();
     }
 
-    private void PlayerReferenceInject(PlayerCore player)
-    {
-        _player = player;
-        BindPlayerEvent();
-    }
-
     private void BindPlayerEvent()
     {
         _player.OnPerfectDodge -= PerfectDodgeEffectOn;

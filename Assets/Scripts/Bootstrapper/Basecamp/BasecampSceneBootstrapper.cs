@@ -18,6 +18,7 @@ public class BasecampSceneBootstrapper : MonoBehaviour
     [SerializeField] private VolumeEffect _volumeEffect;
 
     [Header("World")]
+    [SerializeField] private Camera _mainCamera;
     [SerializeField] private WeaponModeViewerOpener _weaponModeViewerOpener;
     [SerializeField] private PlayerUpgradeOpener _playerUpgradeOpener;
 
@@ -34,6 +35,7 @@ public class BasecampSceneBootstrapper : MonoBehaviour
 
     private void InitializeSquence()
     {
+        // 매니저 검사
         if (GameManager.Instance == null)
         {
             Debug.LogError("게임 매니저가 없음");
@@ -44,7 +46,19 @@ public class BasecampSceneBootstrapper : MonoBehaviour
             Debug.LogError("입력 모드 매니저가 없음");
             return;
         }
+        if(SaveDataManager.Instance == null)
+        {
+            Debug.LogError("저장 데이터 매니저가 없음");
+        }
 
+        // 메인 카메라 검사
+        if(_mainCamera == null)
+        {
+            Debug.LogError("메인 카메라가 없음");
+            return;
+        }
+
+        // 플레이어 초기화
         PlayerCore player;
         if (_playerSpawn)
         {
@@ -54,12 +68,15 @@ public class BasecampSceneBootstrapper : MonoBehaviour
         {
             player = _scenePlayer;
         }
-
         if(player == null)
         {
             Debug.LogError("플레이어가 없음");
             return;
         }
+        player.InitializePlayer(
+            SaveDataManager.Instance,
+            InputModeManager.Instance,
+            _mainCamera);
 
         if(_weaponModeViewerOpener == null)
         {

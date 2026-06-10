@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ public class InputModeManager : MonoBehaviour
     public InputState CurrentState => _stateStack.Peek();
 
     private Stack<InputState> _stateStack;
+
+    public event Action<InputState> OnChangeInputState;
 
     private void Awake()
     {
@@ -53,6 +56,8 @@ public class InputModeManager : MonoBehaviour
 
     private void ApplyInputState(InputState inputState)
     {
+        OnChangeInputState?.Invoke(inputState);
+
         switch (inputState)
         {
             case InputState.Combat:
