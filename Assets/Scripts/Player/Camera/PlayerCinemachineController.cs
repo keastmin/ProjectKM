@@ -81,5 +81,9 @@ public class PlayerCinemachineController : MonoBehaviour
         {
             _inputAxisController.enabled = false;
         }
+        else if(state == InputState.NodeMap)
+        {
+            _inputAxisController.enabled = false;
+        }
     }
 }

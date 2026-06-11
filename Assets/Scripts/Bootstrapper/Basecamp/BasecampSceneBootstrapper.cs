@@ -19,6 +19,7 @@ public class BasecampSceneBootstrapper : MonoBehaviour
 
     [Header("World")]
     [SerializeField] private Camera _mainCamera;
+    [SerializeField] private Portal _portal;
     [SerializeField] private WeaponModeViewerOpener _weaponModeViewerOpener;
     [SerializeField] private PlayerUpgradeOpener _playerUpgradeOpener;
 
@@ -78,6 +79,12 @@ public class BasecampSceneBootstrapper : MonoBehaviour
             InputModeManager.Instance,
             _mainCamera);
 
+        // 월드 오브젝트 검사
+        if(_portal == null)
+        {
+            Debug.LogError("포탈이 없음");
+            return;
+        }
         if(_weaponModeViewerOpener == null)
         {
             Debug.LogError("무기 모드 뷰어 오프너가 없음");
@@ -89,10 +96,13 @@ public class BasecampSceneBootstrapper : MonoBehaviour
             return;
         }
 
+        // 매니저 상태 초기화
         GameManager.Instance.SetGameState(_startGameState);
-
         InputModeManager.Instance.ClearInputState();
         InputModeManager.Instance.PushInputState(_startInputState);
+
+        // 포탈 초기화
+        _portal.InitializePortal(inputModeManager: InputModeManager.Instance, gameManager: GameManager.Instance);
 
         if(_volumeEffect == null)
         {

@@ -68,6 +68,10 @@ public class InputModeManager : MonoBehaviour
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
                 break;
+            case InputState.NodeMap:
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                break;
         }
     }
 }

@@ -1,5 +1,6 @@
 public enum InputState
 {
-    UI,
-    Combat
+    Combat,
+    NodeMap,
+    UI
 }

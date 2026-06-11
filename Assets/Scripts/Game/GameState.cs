@@ -4,6 +4,5 @@ public enum GameState
     Basecamp,
     Loading,
     Game,
-    UI,
     NodeMap
 }

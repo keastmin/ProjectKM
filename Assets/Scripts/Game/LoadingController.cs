@@ -17,10 +17,6 @@ public class LoadingController : MonoBehaviour
 
     private void Start()
     {
-        if(GameManager.Instance != null)
-        {
-            GameManager.Instance.CurrentState = GameState.Loading;
-        }
         _loadingUIProgress.fillAmount = 0f;
         StartCoroutine(LoadSceneProcess());
     }
@@ -29,6 +25,9 @@ public class LoadingController : MonoBehaviour
     {
         AsyncOperation op = SceneManager.LoadSceneAsync(_nextSceneName);
         op.allowSceneActivation = false;
+
+        GameManager.Instance.SetGameState(GameState.Loading);
+        InputModeManager.Instance.PushInputState(InputState.UI);
 
         float timer = 0f;
         while (!op.isDone)
@@ -45,10 +44,6 @@ public class LoadingController : MonoBehaviour
                 _loadingUIProgress.fillAmount = Mathf.Lerp(0.9f, 1f, timer);
                 if(_loadingUIProgress.fillAmount >= 1f)
                 {
-                    if (GameManager.Instance != null)
-                    {
-                        GameManager.Instance.CurrentState = GameState.Game;
-                    }
                     op.allowSceneActivation = true;
                     yield break;
                 }

@@ -546,6 +546,10 @@ namespace Player
             {
                 InputController.BlockInput = true;
             }
+            else if(state == InputState.NodeMap)
+            {
+                InputController.BlockInput = true;
+            }
         }
     }
 }
