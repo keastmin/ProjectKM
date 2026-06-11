@@ -9,6 +9,8 @@ public class PlayerCinemachineController : MonoBehaviour
 
     public float FOV => _cineCam.Lens.FieldOfView;
 
+    private InputModeManager _inputModeManager;
+
     private PlayerCore _player;
 
     private void Awake()
@@ -17,9 +19,21 @@ public class PlayerCinemachineController : MonoBehaviour
         TryGetComponent(out _inputAxisController);
     }
 
-    public void InitializePlayerCinemachineController(PlayerCore player)
+    private void OnEnable()
+    {
+        BindManagerEvents(_inputModeManager);
+    }
+
+    private void OnDisable()
+    {
+        UnbindManagerEvents(_inputModeManager);
+    }
+
+    public void InitializePlayerCinemachineController(PlayerCore player, InputModeManager inputModeManager)
     {
         _player = player;
+        _inputModeManager = inputModeManager;
+        BindManagerEvents(_inputModeManager);
         TrySetTarget(_player.CameraPivot);
     }
 
@@ -40,32 +54,32 @@ public class PlayerCinemachineController : MonoBehaviour
         return true;
     }
 
-    private void StopCameraRotate(GameState prev, GameState curr)
+    private void BindManagerEvents(InputModeManager inputModeManager)
     {
-        switch (curr)
+        if (inputModeManager != null)
         {
-            case GameState.UI:
-                _inputAxisController.enabled = false;
-                break;
-            case GameState.Game:
-                _inputAxisController.enabled = true;
-                break;
-            case GameState.NodeMap:
-                _inputAxisController.enabled = false;
-                break;
-            default:
-                _inputAxisController.enabled = true;
-                break;
+            inputModeManager.OnChangeInputState -= BlockCameraRotate;
+            inputModeManager.OnChangeInputState += BlockCameraRotate;
         }
     }
 
-    public void SetFOV(float fov)
+    private void UnbindManagerEvents(InputModeManager inputModeManager)
     {
-        _cineCam.Lens.FieldOfView = fov;
+        if (inputModeManager != null)
+        {
+            inputModeManager.OnChangeInputState -= BlockCameraRotate;
+        }
     }
 
-    public void SetActiveCinemachine(bool active)
+    private void BlockCameraRotate(InputState state)
     {
-        _cineCam.enabled = active;
+        if(state == InputState.Combat)
+        {
+            _inputAxisController.enabled = true;
+        }
+        else if(state == InputState.UI)
+        {
+            _inputAxisController.enabled = false;
+        }
     }
 }

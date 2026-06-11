@@ -7,6 +7,16 @@ public class PlayerUpgradeUI : BasecampUI
 
     private bool _isInitialized = false;
 
+    private void OnEnable()
+    {
+        Open();
+    }
+
+    private void OnDisable()
+    {
+        Close();
+    }
+
     public void InitializePlayerUpgradeUI(PlayerCore player)
     {
         _player = player;

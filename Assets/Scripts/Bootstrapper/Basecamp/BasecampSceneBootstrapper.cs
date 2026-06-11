@@ -116,7 +116,7 @@ public class BasecampSceneBootstrapper : MonoBehaviour
             Debug.LogError("플레이어 시네머신 컨트롤러가 없음");
             return;
         }
-        playerCinemachineController.InitializePlayerCinemachineController(player);
+        playerCinemachineController.InitializePlayerCinemachineController(player, InputModeManager.Instance);
 
         _basecampCanvas.InitBasecampCanvas(
             player, 

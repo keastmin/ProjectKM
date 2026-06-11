@@ -22,24 +22,24 @@ public class BasecampCanvas : MonoBehaviour
 
     private void OnEnable()
     {
+        // 월드 오프너 이벤트 바인드
         if(_weaponModeViewerOpener != null)
         {
             _weaponModeViewerOpener.OnInteractWeaponModeViewerAction -= OpenWeaponModeViewerUIHandle;
             _weaponModeViewerOpener.OnInteractWeaponModeViewerAction += OpenWeaponModeViewerUIHandle;
         }
-
         if(_playerUpgradeOpener != null)
         {
             _playerUpgradeOpener.OnInteractPlayerUpgradeAction -= OpenWeaponModeViewerUIHandle;
             _playerUpgradeOpener.OnInteractPlayerUpgradeAction += OpenWeaponModeViewerUIHandle;
         }
 
+        // UI 이벤트 바인드
         if(_weaponModeViewerUI != null)
         {
             _weaponModeViewerUI.OnOpenThisUIAction -= OpenUI;
             _weaponModeViewerUI.OnOpenThisUIAction += OpenUI;
         }
-
         if(_playerUpgradeUI != null)
         {
             _playerUpgradeUI.OnOpenThisUIAction -= OpenUI;
@@ -49,21 +49,21 @@ public class BasecampCanvas : MonoBehaviour
 
     private void OnDisable()
     {
+        // 월드 오프너 이벤트 언바인드
         if (_weaponModeViewerOpener != null)
         {
             _weaponModeViewerOpener.OnInteractWeaponModeViewerAction -= OpenWeaponModeViewerUIHandle;
         }
-
         if (_playerUpgradeOpener != null)
         {
             _playerUpgradeOpener.OnInteractPlayerUpgradeAction -= OpenWeaponModeViewerUIHandle;
         }
 
+        // UI 이벤트 언바인드
         if (_weaponModeViewerUI != null)
         {
             _weaponModeViewerUI.OnOpenThisUIAction -= OpenUI;
         }
-
         if (_playerUpgradeUI != null)
         {
             _playerUpgradeUI.OnOpenThisUIAction -= OpenUI;
@@ -90,6 +90,7 @@ public class BasecampCanvas : MonoBehaviour
         _playerUpgradeOpener = playerUpgradeOpener;
         _inputModeManager = inputModeManager;
 
+        // 월드 오프너 이벤트 바인드
         _weaponModeViewerOpener.OnInteractWeaponModeViewerAction -= OpenWeaponModeViewerUIHandle;
         _weaponModeViewerOpener.OnInteractWeaponModeViewerAction += OpenWeaponModeViewerUIHandle;
         _playerUpgradeOpener.OnInteractPlayerUpgradeAction -= OpenPlayerUpgradeUIHandle;
@@ -146,7 +147,10 @@ public class BasecampCanvas : MonoBehaviour
     private void OpenUI(BasecampUI ui)
     {
         _currentFocusedUI = ui;
-        _inputModeManager.PushInputState(InputState.UI);
+        if (_inputModeManager != null)
+        {
+            _inputModeManager.PushInputState(InputState.UI);
+        }
     }
 
     private void CloseUI(BasecampUI ui)
@@ -154,6 +158,9 @@ public class BasecampCanvas : MonoBehaviour
         if (_currentFocusedUI == ui)
             _currentFocusedUI = null;
 
-        _inputModeManager.PopInputState();
+        if (_inputModeManager != null)
+        {
+            _inputModeManager.PopInputState();
+        }
     }
 }

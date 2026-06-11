@@ -10,6 +10,16 @@ public class WeaponModeViewerUI : BasecampUI
 
     private bool _isInitialized = false;
 
+    private void OnEnable()
+    {
+        Open();
+    }
+
+    private void OnDisable()
+    {
+        Close();
+    }
+
     public void InitializeWeaponModeViewerUI(PlayerCore player)
     {
         _player = player;
