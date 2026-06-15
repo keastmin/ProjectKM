@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f44ab16d5bfc7441abb900bf2239e12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VolumeEffect
+  _player: {fileID: 0}
   _globalVolume: {fileID: 8378133166856399353}
   _dodgeVignette:
     serializedVersion: 2

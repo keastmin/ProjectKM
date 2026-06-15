@@ -44,5 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81866c5d27a37d347b12760372fa9720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasecampSceneBootstrapper
+  _playerSpawn: 1
+  _scenePlayer: {fileID: 0}
+  _sceneCinemachineController: {fileID: 0}
+  _playerSpawnPoint: {fileID: 0}
+  _playerPrefab: {fileID: 9150668991346565315, guid: f0b95dae58215cd49ad664eeee1c77b1, type: 3}
+  _cinemachineControllerPrefab: {fileID: 3921434412115293063, guid: a932be03b88f46548b788f8d15ab49fd, type: 3}
+  _volumeEffect: {fileID: 4024599095989888979, guid: ec4de5a957d98cd458647ce2cec8af31, type: 3}
+  _mainCamera: {fileID: 0}
+  _portal: {fileID: 0}
+  _weaponModeViewerOpener: {fileID: 0}
+  _playerUpgradeOpener: {fileID: 0}
+  _basecampCanvas: {fileID: 0}
   _startGameState: 1
-  _startInputState: 1
+  _startInputState: 0

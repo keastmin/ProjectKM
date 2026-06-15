@@ -64,7 +64,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 469115629662995220}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Hitboxes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,7 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1234811140484086336}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Dash Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7267716536505729209}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Combo4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +222,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3540976463141701855}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Katana Attack VFX Postions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,7 +290,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5077667787455680034}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Dodge Counter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -352,7 +352,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6503526858248983263}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Combo1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -383,7 +383,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4793298195213899530}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Combo3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -468,12 +468,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f12bf26599bf885489f9847b69cd3e18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCore
-  _playerStatData: {fileID: 11400000, guid: d74c7682d65947a499a8abc8e3ab6581, type: 2}
-  _maxHealth: 100
-  _attackPower: 10
-  _defensePower: 5
-  _jogSpeed: 5
-  _runSpeed: 8
   _katanaComboDatas:
   - {fileID: 11400000, guid: dcfa7acc1b742e34f9e159f98b3efdee, type: 2}
   - {fileID: 11400000, guid: dc54ab3f31ae5064fb38fd8c1b699723, type: 2}
@@ -485,7 +479,6 @@ MonoBehaviour:
   _basicComboAttackMotionWarpSpeed: 20
   _playerCamera: {fileID: 0}
   _cinemachineImpulseSource: {fileID: 9169834115983168031}
-  _volumeEffect: {fileID: 0}
   _cameraPivot: {fileID: 5852798176326268176}
   _stateVariables:
     _dodgeVariable:
@@ -969,7 +962,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2610213198064457521}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: VFX Positions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1001,7 +994,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2076219026418302351}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Combo2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1033,7 +1026,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5181349613125651662}
   - component: {fileID: 5814630061041907937}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Katana Basic Combo Attack Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
