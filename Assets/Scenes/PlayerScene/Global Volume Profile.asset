@@ -145,10 +145,10 @@ MonoBehaviour:
     m_Value: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.4
   clamp:
-    m_OverrideState: 1
-    m_Value: 0.115
+    m_OverrideState: 0
+    m_Value: 0.05
 --- !u!114 &2738081026791171917
 MonoBehaviour:
   m_ObjectHideFlags: 3

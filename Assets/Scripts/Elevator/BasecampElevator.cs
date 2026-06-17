@@ -1,13 +1,12 @@
+using System;
 using UnityEngine;
 
 public class BasecampElevator : MonoBehaviour
 {
     [SerializeField] private ElevatorDoorOpener _elevatorDoorOpener;
-    [SerializeField] private ElevatorDetector _elevatorDetector;
+    [SerializeField] private ElevatorDetector _playerInElevatorDetector;
 
-    private bool _isInPlayerElevator;
-
-    public bool IsInPlayerElevator => _isInPlayerElevator;
+    public event Action OnPlayerInElevator;
 
     private void Awake()
     {
@@ -28,38 +27,41 @@ public class BasecampElevator : MonoBehaviour
     {
         if(!TryGetComponent(out _elevatorDoorOpener))
         {
-            Debug.LogError("엘레베이터 문 오프너가 없음");
+            Debug.LogError("ElevatorDoorOpener가 없음");
             return;
         }
-        _isInPlayerElevator = false;
     }
 
     private void BindDetectEvent()
     {
-        if(_elevatorDetector == null)
+        if(_playerInElevatorDetector == null)
         {
-            Debug.LogError("엘레베이터 디텍터가 없음");
+            Debug.LogError("ElevatorDetector가 없음");
             return;
         }
 
-        _elevatorDetector.OnDetectPlayerEnter -= SetPlayerInElevator;
-        _elevatorDetector.OnDetectPlayerEnter += SetPlayerInElevator;
+        _playerInElevatorDetector.OnDetectPlayerEnter -= SetPlayerInElevator;
+        _playerInElevatorDetector.OnDetectPlayerEnter += SetPlayerInElevator;
     }
 
     private void UnbindDetectEvent()
     {
-        if (_elevatorDetector == null)
+        if (_playerInElevatorDetector == null)
         {
-            Debug.LogError("엘레베이터 디텍터가 없음");
+            Debug.LogError("ElevatorDetector가 없음");
             return;
         }
 
-        _elevatorDetector.OnDetectPlayerEnter -= SetPlayerInElevator;
+        _playerInElevatorDetector.OnDetectPlayerEnter -= SetPlayerInElevator;
     }
 
     private void SetPlayerInElevator()
     {
-        _elevatorDoorOpener.BlockElevatorDoorOpen(true);
-        _isInPlayerElevator = true;
+        OnPlayerInElevator?.Invoke();
+    }
+
+    public void BlockElevatorDoor(bool block)
+    {
+        _elevatorDoorOpener.BlockElevatorDoorOpen(block);
     }
 }

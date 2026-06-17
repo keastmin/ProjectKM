@@ -1,4 +1,5 @@
 using Player;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class BasecampSceneBootstrapper : MonoBehaviour
@@ -19,12 +20,17 @@ public class BasecampSceneBootstrapper : MonoBehaviour
 
     [Header("World")]
     [SerializeField] private Camera _mainCamera;
+    [SerializeField] private CinemachineBrain _cinemachineBrain;
     [SerializeField] private WeaponModeViewerOpener _weaponModeViewerOpener;
     [SerializeField] private PlayerUpgradeOpener _playerUpgradeOpener;
 
     [Header("UI")]
     [SerializeField] private BasecampCanvas _basecampCanvas;
 
+    [Header("System")]
+    [SerializeField] private NodeMapTransitionDirector _nodeMapTransitionDirector;
+
+    [Header("Start Setting Variable")]
     [SerializeField] private GameState _startGameState = GameState.Basecamp;
     [SerializeField] private InputState _startInputState = InputState.Combat;
 
@@ -94,6 +100,19 @@ public class BasecampSceneBootstrapper : MonoBehaviour
         GameManager.Instance.SetGameState(_startGameState);
         InputModeManager.Instance.ClearInputState();
         InputModeManager.Instance.PushInputState(_startInputState);
+
+        // 노드맵 전환 시스템 초기화
+        if(_nodeMapTransitionDirector == null)
+        {
+            Debug.LogError("NodeMapTransitionDirector가 없음");
+            return;
+        }
+        if(_cinemachineBrain == null)
+        {
+            Debug.LogError("CinemachineBrain이 없음");
+            return;
+        }
+        _nodeMapTransitionDirector.InitializeNodeMapTransitionDirector(GameManager.Instance, InputModeManager.Instance, _cinemachineBrain);
 
         if(_volumeEffect == null)
         {

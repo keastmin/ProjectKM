@@ -192,15 +192,7 @@ namespace Player
 
         private void Awake()
         {
-            //if (_loadOnScene)
-            //{
-            //    PlayerInstance instance = new PlayerInstance(_testStatData);
-            //    InitializePlayer(instance, _mainCamera);
-            //}
 
-            //DodgeAvailableCount = _maxDodgeAvailableCount;
-            //CurrentDodgeCooldownTimer = _dodgeCooldown;
-            //_isDead = false;
         }
 
         private void OnEnable()

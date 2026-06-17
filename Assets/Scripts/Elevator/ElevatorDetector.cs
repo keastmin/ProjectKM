@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider))]
 public class ElevatorDetector : MonoBehaviour
 {
     public event Action OnDetectPlayerEnter;

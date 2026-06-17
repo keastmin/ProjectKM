@@ -4,7 +4,7 @@ public class ElevatorDoorOpener : MonoBehaviour
 {
     [SerializeField] private Transform _leftDoorTransform;
     [SerializeField] private Transform _rightDoorTransform;
-    [SerializeField] private ElevatorDetector _detector;
+    [SerializeField] private ElevatorDetector _elevatorDoorDetector;
     [SerializeField] private float _openDistance = 5f;
     [SerializeField] private float _openSpeed = 8f;
 
@@ -64,30 +64,30 @@ public class ElevatorDoorOpener : MonoBehaviour
 
     private void BindDetectEvent()
     {
-        if(_detector == null)
+        if(_elevatorDoorDetector == null)
         {
-            Debug.LogError("디텍터가 없음");
+            Debug.LogError("ElevatorDetector가 없음");
             return;
         }
 
-        _detector.OnDetectPlayerEnter -= DoorFlagSetTrue;
-        _detector.OnDetectPlayerEnter += DoorFlagSetTrue;
+        _elevatorDoorDetector.OnDetectPlayerEnter -= DoorFlagSetTrue;
+        _elevatorDoorDetector.OnDetectPlayerEnter += DoorFlagSetTrue;
 
-        _detector.OnDetectPlayerExit -= DoorFlagSetFalse;
-        _detector.OnDetectPlayerExit += DoorFlagSetFalse;
+        _elevatorDoorDetector.OnDetectPlayerExit -= DoorFlagSetFalse;
+        _elevatorDoorDetector.OnDetectPlayerExit += DoorFlagSetFalse;
     }
 
     private void UnbindDetectEvent()
     {
-        if (_detector == null)
+        if (_elevatorDoorDetector == null)
         {
-            Debug.LogError("디텍터가 없음");
+            Debug.LogError("ElevatorDetector가 없음");
             return;
         }
 
-        _detector.OnDetectPlayerEnter -= DoorFlagSetTrue;
+        _elevatorDoorDetector.OnDetectPlayerEnter -= DoorFlagSetTrue;
 
-        _detector.OnDetectPlayerExit -= DoorFlagSetFalse;
+        _elevatorDoorDetector.OnDetectPlayerExit -= DoorFlagSetFalse;
     }
 
     private void DoorFlagSetTrue()
