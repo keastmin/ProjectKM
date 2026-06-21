@@ -17,7 +17,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &577980902282227262
 Transform:
@@ -129,7 +129,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4676972805797397394
 Transform:
@@ -159,4 +159,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b808c0de94aee024aaf969cf42104df9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponEditor
-  _weaponModeViewerUI: {fileID: 0}

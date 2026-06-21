@@ -300,17 +300,6 @@ MonoBehaviour:
   - {fileID: 2024005287}
   - {fileID: 868534797}
   - {fileID: 153459359}
---- !u!114 &99824071 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8325907548913374562, guid: 3535d23560024054eabee268d61749b6, type: 3}
-  m_PrefabInstance: {fileID: 6255726412838642859}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c209fe0a017074845a3a8dd4eed4fd63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerUpgradeUI
 --- !u!1 &142621554
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,7 +427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &153459360
 Transform:
   m_ObjectHideFlags: 0
@@ -583,10 +572,6 @@ PrefabInstance:
     - target: {fileID: 3780400816810861242, guid: ec4de5a957d98cd458647ce2cec8af31, type: 3}
       propertyPath: m_Name
       value: Global Volume
-      objectReference: {fileID: 0}
-    - target: {fileID: 4024599095989888979, guid: ec4de5a957d98cd458647ce2cec8af31, type: 3}
-      propertyPath: _player
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 4461421293849714980, guid: ec4de5a957d98cd458647ce2cec8af31, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2403,7 +2388,7 @@ Camera:
   m_ShutterSpeed: 0.005
   m_Aperture: 16
   m_FocusDistance: 10
-  m_FocalLength: 50
+  m_FocalLength: 91.14905
   m_BladeCount: 5
   m_Curvature: {x: 2, y: 11}
   m_BarrelClipping: 0.25
@@ -2418,7 +2403,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.000004
+  field of view: 15.000001
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -2444,8 +2429,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 795986862}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.1133133, y: 1.3e-44, z: -1e-45, w: 0.9935593}
-  m_LocalPosition: {x: 4.6, y: 2.4970002, z: -18.44}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 7, z: -48.58}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4132,7 +4117,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1363841505
 Transform:
   m_ObjectHideFlags: 0
@@ -4653,7 +4638,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1626773390
 Transform:
   m_ObjectHideFlags: 0
@@ -5819,7 +5804,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &2024005288
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -6218,17 +6203,6 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!114 &2081251704 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6684839405552347469, guid: 3535d23560024054eabee268d61749b6, type: 3}
-  m_PrefabInstance: {fileID: 6255726412838642859}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ea451b5fbb3d634d875ffb9567089d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponEditUI
 --- !u!1 &2115088910
 GameObject:
   m_ObjectHideFlags: 0
@@ -6648,10 +6622,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8082535364499100847, guid: 81d2478e7ea5bf245881fc94c49cff2a, type: 3}
-      propertyPath: _portal
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8082535364499100847, guid: 81d2478e7ea5bf245881fc94c49cff2a, type: 3}
       propertyPath: _mainCamera
       value: 
       objectReference: {fileID: 795986864}
@@ -6732,26 +6702,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6840303161434292455, guid: d9b877de89262324faea9ff06571e93b, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
-      objectReference: {fileID: 0}
     - target: {fileID: 6877112780604738247, guid: d9b877de89262324faea9ff06571e93b, type: 3}
       propertyPath: m_Name
       value: Weapon Mode Viewer
       objectReference: {fileID: 0}
     - target: {fileID: 6877112780604738247, guid: d9b877de89262324faea9ff06571e93b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6877112780604738247, guid: d9b877de89262324faea9ff06571e93b, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
-      objectReference: {fileID: 0}
-    - target: {fileID: 7338079538493710009, guid: d9b877de89262324faea9ff06571e93b, type: 3}
-      propertyPath: _weaponModeViewerUI
-      value: 
-      objectReference: {fileID: 2081251704}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6865,10 +6823,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Basecamp Canvas
       objectReference: {fileID: 0}
-    - target: {fileID: 8554628737099649454, guid: 3535d23560024054eabee268d61749b6, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6922,14 +6876,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1513979325728030609, guid: ef96759df0985394f82543555476cd34, type: 3}
-      propertyPath: _playerInElevatorDetector
-      value: 
-      objectReference: {fileID: 6330022609656867767}
-    - target: {fileID: 2483309461932939380, guid: ef96759df0985394f82543555476cd34, type: 3}
-      propertyPath: _elevatorDoorDetector
-      value: 
-      objectReference: {fileID: 6330022609656867768}
     - target: {fileID: 3651241386318691546, guid: ef96759df0985394f82543555476cd34, type: 3}
       propertyPath: m_Name
       value: Elevator
@@ -6939,28 +6885,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef96759df0985394f82543555476cd34, type: 3}
---- !u!114 &6330022609656867767 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5726267367945726748, guid: ef96759df0985394f82543555476cd34, type: 3}
-  m_PrefabInstance: {fileID: 6330022609656867766}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad6a7c24d76b0204ea76e59a954c3e41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ElevatorDetector
---- !u!114 &6330022609656867768 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2695752037738140868, guid: ef96759df0985394f82543555476cd34, type: 3}
-  m_PrefabInstance: {fileID: 6330022609656867766}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad6a7c24d76b0204ea76e59a954c3e41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ElevatorDetector
 --- !u!1001 &8174647504752073603
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6969,10 +6893,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1459855571}
     m_Modifications:
-    - target: {fileID: 1027228360078587579, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
-      propertyPath: _playerUpgradeUI
-      value: 
-      objectReference: {fileID: 99824071}
     - target: {fileID: 2053813924801365810, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
       propertyPath: m_LocalPosition.x
       value: -9.42
@@ -7019,15 +6939,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6082819794508606232, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
       propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6082819794508606232, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
-      objectReference: {fileID: 0}
-    - target: {fileID: 6471415254746888511, guid: 056a48ba8e23acb46841f26bf5445027, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

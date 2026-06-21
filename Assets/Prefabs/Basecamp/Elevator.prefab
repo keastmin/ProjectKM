@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasecampElevator
   _elevatorDoorOpener: {fileID: 2483309461932939380}
-  _elevatorDetector: {fileID: 5726267367945726748}
+  _playerInElevatorDetector: {fileID: 5726267367945726748}
 --- !u!114 &2483309461932939380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,7 +66,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BasecampElevatorInteract
   _leftDoorTransform: {fileID: 8626243818431038606}
   _rightDoorTransform: {fileID: 5125337794731954388}
-  _detector: {fileID: 2695752037738140868}
+  _elevatorDoorDetector: {fileID: 2695752037738140868}
   _openDistance: 4.9
   _openSpeed: 8
 --- !u!1 &3819047168969557780
