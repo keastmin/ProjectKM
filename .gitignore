@@ -101,3 +101,9 @@ InitTestScene*.unity*
 # Local .NET CLI cache and telemetry
 /.dotnet-cli/.dotnet/*UserLevelCache
 /.dotnet-cli/.dotnet/TelemetryStorageService/
+
+# Local planning notes and agent context
+/AGENTS.md
+/SPEC.md
+/작업로그/
+/트러블슈팅.txt
