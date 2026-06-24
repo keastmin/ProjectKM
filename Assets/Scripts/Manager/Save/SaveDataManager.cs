@@ -35,4 +35,10 @@ public class SaveDataManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
     }
+
+    // 아무 데이터가 없이 처음 게임을 시작할 때 저장 데이터 생성
+    public void MakeFirstTimeSaveData()
+    {
+
+    }
 }

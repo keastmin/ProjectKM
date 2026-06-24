@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NodeMapTransitionDirector : MonoBehaviour
 {
+    [SerializeField] private Camera _mainCamera;
     [SerializeField] private BasecampElevator _basecampElevator;
     [SerializeField] private ExternalWorldSceneAdditiveController _externalWorldSceneAdditiveController;
 
@@ -15,6 +16,7 @@ public class NodeMapTransitionDirector : MonoBehaviour
     private NodeMapReferenceFinder _nodeMapReferenceFinder;
     private NodeMapPlayerDetector _nodeMapPlayerDetector;
     private NodeMapViewController _nodeMapViewController;
+    private NodeMapInteractor _nodeMapInteractor;
     private bool _isFindNodeMapPlayerDetector;
 
     private void OnEnable()
@@ -152,6 +154,15 @@ public class NodeMapTransitionDirector : MonoBehaviour
             Debug.LogError("NodeMapViewController가 없음");
             return;
         }
+
+        // 노드맵 상호작용에 참조 전달
+        _nodeMapInteractor = _nodeMapReferenceFinder.NodeMapInteractor;
+        if(_nodeMapInteractor == null)
+        {
+            Debug.LogError("NodeMapInteractor가 없음");
+            return;
+        }
+        _nodeMapInteractor.InitializeNodeMapInteractor(_mainCamera, _inputModeManager);
     }
 
     private void SequenceAfterSceneLoaded()

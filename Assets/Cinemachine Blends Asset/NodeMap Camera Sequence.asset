@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: NodeMap Camera Sequence
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBlenderSettings
   CustomBlends:
-  - From: Player TPS Camera
+  - From: Player TPS Camera(Clone)
     To: First Node Map View Camera
     Blend:
-      Style: 6
-      Time: 1.2
+      Style: 1
+      Time: 0.6
       CustomCurve:
         serializedVersion: 2
         m_Curve: []
@@ -27,8 +27,8 @@ MonoBehaviour:
   - From: First Node Map View Camera
     To: Second Node Map View Camera
     Blend:
-      Style: 4
-      Time: 2
+      Style: 1
+      Time: 0.7
       CustomCurve:
         serializedVersion: 2
         m_Curve: []

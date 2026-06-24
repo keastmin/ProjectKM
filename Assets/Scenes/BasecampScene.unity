@@ -276,6 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5f8de32e4830cf4b81f2c99d1a3dca5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NodeMapTransitionDirector
+  _mainCamera: {fileID: 795986864}
   _basecampElevator: {fileID: 2036769328}
   _externalWorldSceneAdditiveController: {fileID: 33457654}
 --- !u!114 &33457654

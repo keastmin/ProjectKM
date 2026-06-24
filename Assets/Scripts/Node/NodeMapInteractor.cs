@@ -4,15 +4,29 @@ using UnityEngine.EventSystems;
 
 public class NodeMapInteractor : MonoBehaviour
 {
-    [SerializeField] private Camera _mainCamera;
     [SerializeField] private LayerMask _nodeLayer;
     [SerializeField] private float _rayDistance;
+
+    private Camera _mainCamera;
+    private InputModeManager _inputModeManager;
 
     private Node _detectedNode;
 
     private void Update()
     {
+        if (_mainCamera == null || _inputModeManager == null)
+            return;
+
+        if (_inputModeManager.CurrentState != InputState.NodeMap)
+            return;
+
         NodeInteractionSequence();
+    }
+
+    public void InitializeNodeMapInteractor(Camera mainCamera, InputModeManager inputModeManager)
+    {
+        _mainCamera = mainCamera;
+        _inputModeManager = inputModeManager;
     }
 
     private void NodeInteractionSequence()

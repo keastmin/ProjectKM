@@ -45,7 +45,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3aaf360fd7d561e43871327527a0ce0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Node
+  _testScene: PlayerScene
   _nodeObjectMeshRenderer: {fileID: 3590185410152277497}
+  _bossMaterial: {fileID: 2100000, guid: a5f40c1dd6bc137419155379037b7558, type: 2}
+  _eliteMaterial: {fileID: 2100000, guid: 17c83faeaa9631a48b7e6a5465c13588, type: 2}
+  _allyMaterial: {fileID: 2100000, guid: cc7315964f577a547a1feca73898143a, type: 2}
+  _eventMaterial: {fileID: 2100000, guid: 69a6f6145d54feb47888ca7985c16e05, type: 2}
+  _normalMaterial: {fileID: 2100000, guid: d80ff5fe2bcd06944a85bc9ba7d1e9d8, type: 2}
+  _upgradeMaterial: {fileID: 2100000, guid: 8bd1f30584817864293f05d092f41342, type: 2}
+  _inactiveMaterial: {fileID: 2100000, guid: 55d7eda007ad6984f8b960a9fd0c91b0, type: 2}
+  _clearMaterial: {fileID: 2100000, guid: 1f773fd1c0149b74b91b3aee45be8fe7, type: 2}
 --- !u!1 &8754265282942127944
 GameObject:
   m_ObjectHideFlags: 0
@@ -75,7 +84,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 15, y: 1, z: 15}
+  m_LocalScale: {x: 30, y: 1, z: 30}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 141069557789908597}
@@ -113,7 +122,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: a5f40c1dd6bc137419155379037b7558, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

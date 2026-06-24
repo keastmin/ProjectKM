@@ -1,9 +1,10 @@
 public enum NodeType
 {
+    Start,
     NormalCombat,
     Upgrade,
     Event,
     EliteCombat,
-    HelperEncounter,
+    AllyEncounter,
     Boss
 }
