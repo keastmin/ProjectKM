@@ -451,14 +451,14 @@ namespace Player
         }
 
         public void InitializePlayer(
-            SaveDataManager saveDataManager, 
-            InputModeManager inputModeManager,
+            GameRunContext context,
+            PlayerInstance instance,
             Camera camera)
         {
-            Instance = saveDataManager.SavedPlayerInstance;
+            Instance = instance;
             CacheComponents();
-            BindManagers(saveDataManager, inputModeManager);
-            BindInputStateEvent(inputModeManager);
+            BindManagers(context.SaveDataManager, context.InputModeManager);
+            BindInputStateEvent(context.InputModeManager);
             SyncWeaponSlotsWithInstance();
             BindCameraReference(camera);
             BindComponentEvents();

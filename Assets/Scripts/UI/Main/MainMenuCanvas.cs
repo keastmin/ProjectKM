@@ -4,8 +4,8 @@ public class MainMenuCanvas : MonoBehaviour
 {
     [SerializeField] private MainMenuUI _mainMenuUI;
 
-    public void InitMainMenuCanvas(SaveDataManager saveDataManager)
+    public void InitMainMenuCanvas(GameRunContext context)
     {
-        _mainMenuUI.InitMainMenuUI(saveDataManager);
+        _mainMenuUI.InitMainMenuUI(context);
     }
 }

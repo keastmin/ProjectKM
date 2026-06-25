@@ -10,22 +10,29 @@ public class MainMenuButtons : MonoBehaviour
     [SerializeField] private Button _continueButton;
     [SerializeField] private string _continueLoadScene;
     [SerializeField] private string _newGameLoadScene = "BasecampScene";
+    [SerializeField] private string _currentScene = "MainMenuScene";
 
-    public void InitMainMenuButtons(SaveDataManager saveDataManager)
+    SceneFlowManager _sceneFlowManager;
+    SaveDataManager _saveDataManager;
+
+    public void InitMainMenuButtons(GameRunContext context)
     {
-        ContinueButtonActivation(saveDataManager.HasSaveData);
+        _sceneFlowManager = context.SceneFlowManager;
+        _saveDataManager = context.SaveDataManager;
+        ContinueButtonActivation(_saveDataManager.HasSaveData);
     }
 
     public void OnClickContinueButton()
-    {
-        LoadingController.LoadScene(_continueLoadScene);
+    {     
+        // LoadingController.LoadScene(_continueLoadScene);
     }
 
     public void OnClickNewGameButton()
     {
-        LoadingController.LoadScene(_newGameLoadScene);
+        _sceneFlowManager.AdditiveSceneLoad(_newGameLoadScene);
+        _sceneFlowManager.UnLoadScene(_currentScene);
+        // LoadingController.LoadScene(_newGameLoadScene);
     }
-
 
     public void OnClickQuitButton()
     {

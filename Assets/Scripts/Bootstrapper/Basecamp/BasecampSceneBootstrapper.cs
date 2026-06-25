@@ -2,25 +2,18 @@ using Player;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class BasecampSceneBootstrapper : MonoBehaviour
+public class BasecampSceneBootstrapper : Bootstrapper
 {
     [SerializeField] private bool _playerSpawn = true;
 
     [Header("Scene Player")]
-    [SerializeField] private PlayerCore _scenePlayer;
-    [SerializeField] private PlayerCinemachineController _sceneCinemachineController;
-
-    [Header("Prefab Player")]
-    [SerializeField] private Transform _playerSpawnPoint;
-    [SerializeField] private PlayerCore _playerPrefab;
-    [SerializeField] private PlayerCinemachineController _cinemachineControllerPrefab;
+    [SerializeField] private PlayerSpawner _playerSpawner;
+    [SerializeField] private PlayerCinemachineController _playerCinemachineController;
 
     [Header("Effect")]
     [SerializeField] private VolumeEffect _volumeEffect;
 
     [Header("World")]
-    [SerializeField] private Camera _mainCamera;
-    [SerializeField] private CinemachineBrain _cinemachineBrain;
     [SerializeField] private WeaponModeViewerOpener _weaponModeViewerOpener;
     [SerializeField] private PlayerUpgradeOpener _playerUpgradeOpener;
 
@@ -34,136 +27,30 @@ public class BasecampSceneBootstrapper : MonoBehaviour
     [SerializeField] private GameState _startGameState = GameState.Basecamp;
     [SerializeField] private InputState _startInputState = InputState.Combat;
 
-    private void Start()
+    public override void InitializeScene(GameRunContext context)
     {
-        InitializeSquence();
-    }
-
-    private void InitializeSquence()
-    {
-        // 매니저 검사
-        if (GameManager.Instance == null)
-        {
-            Debug.LogError("게임 매니저가 없음");
-            return;
-        }
-        if (InputModeManager.Instance == null)
-        {
-            Debug.LogError("입력 모드 매니저가 없음");
-            return;
-        }
-        if(SaveDataManager.Instance == null)
-        {
-            Debug.LogError("저장 데이터 매니저가 없음");
-        }
-
-        // 메인 카메라 검사
-        if(_mainCamera == null)
-        {
-            Debug.LogError("메인 카메라가 없음");
-            return;
-        }
-
         // 플레이어 초기화
-        PlayerCore player;
-        if (_playerSpawn)
-        {
-            player = PlayerSpawn();
-        }
-        else
-        {
-            player = _scenePlayer;
-        }
-        if(player == null)
-        {
-            Debug.LogError("플레이어가 없음");
-            return;
-        }
-        player.InitializePlayer(
-            SaveDataManager.Instance,
-            InputModeManager.Instance,
-            _mainCamera);
+        PlayerCore player = _playerSpawner.SpawnPlayer(context, context.SaveDataManager.SavedPlayerInstance, context.MainCamera);
+        _playerCinemachineController.InitializePlayerCinemachineController(player, context.InputModeManager);
 
         // 월드 오브젝트 검사
-        if(_weaponModeViewerOpener == null)
-        {
-            Debug.LogError("무기 모드 뷰어 오프너가 없음");
-            return;
-        }
-        if (_playerUpgradeOpener == null)
-        {
-            Debug.LogError("플레이어 업그레이드 오프너가 없음");
-            return;
-        }
 
         // 매니저 상태 초기화
-        GameManager.Instance.SetGameState(_startGameState);
-        InputModeManager.Instance.ClearInputState();
-        InputModeManager.Instance.PushInputState(_startInputState);
+        context.GameManager.SetGameState(_startGameState);
+        context.InputModeManager.ClearInputState();
+        context.InputModeManager.PushInputState(_startInputState);
 
         // 노드맵 전환 시스템 초기화
-        if(_nodeMapTransitionDirector == null)
-        {
-            Debug.LogError("NodeMapTransitionDirector가 없음");
-            return;
-        }
-        if(_cinemachineBrain == null)
-        {
-            Debug.LogError("CinemachineBrain이 없음");
-            return;
-        }
-        _nodeMapTransitionDirector.InitializeNodeMapTransitionDirector(GameManager.Instance, InputModeManager.Instance, _cinemachineBrain);
+        _nodeMapTransitionDirector.InitializeNodeMapTransitionDirector(context.GameManager, context.InputModeManager, context.CinemachineBrain);
 
-        if(_volumeEffect == null)
-        {
-            Debug.LogError("볼륨 이펙트가 없음");
-            return;
-        }
+        // 볼륨 이펙트 초기화
         _volumeEffect.InitializeVolumeEffect(player);
 
-        PlayerCinemachineController playerCinemachineController;
-        if(_playerSpawn)
-        {
-            playerCinemachineController = PlayerCinemachineControllerSpawn();
-        }
-        else
-        {
-            playerCinemachineController = _sceneCinemachineController;
-        }
-
-        if(playerCinemachineController == null)
-        {
-            Debug.LogError("플레이어 시네머신 컨트롤러가 없음");
-            return;
-        }
-        playerCinemachineController.InitializePlayerCinemachineController(player, InputModeManager.Instance);
-
+        // 베이스캠프 UI 초기화
         _basecampCanvas.InitBasecampCanvas(
-            player, 
-            InputModeManager.Instance,
+            player,
+            context.InputModeManager,
             _weaponModeViewerOpener,
             _playerUpgradeOpener);
-    }
-
-    private PlayerCore PlayerSpawn()
-    {
-        if(_playerPrefab == null)
-        {
-            Debug.LogError("플레이어 프리팹이 없음");
-            return null;
-        }
-
-        return Instantiate(_playerPrefab, _playerSpawnPoint.position, _playerSpawnPoint.rotation);
-    }
-
-    private PlayerCinemachineController PlayerCinemachineControllerSpawn()
-    {
-        if(_cinemachineControllerPrefab == null)
-        {
-            Debug.LogError("플레이어 시네머신 컨트롤러 프리팹이 없음");
-            return null;
-        }
-
-        return Instantiate(_cinemachineControllerPrefab);
     }
 }
