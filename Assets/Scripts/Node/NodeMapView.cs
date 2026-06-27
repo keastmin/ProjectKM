@@ -8,8 +8,19 @@ public class NodeMapView : MonoBehaviour
 
     private HashSet<NodeInstance> _createdNode;
 
+    private void Awake()
+    {
+        InactiveNodeView();
+    }
+
+    public void SetActiveNodeView(bool active)
+    {
+        _nodesTransform.gameObject.SetActive(active);
+    }
+
     public void CreateNodeView(NodeInstance baseNode)
     {
+        Debug.Log("노드 월드 배치 수행");
         _createdNode = new HashSet<NodeInstance>();
 
         if (baseNode.NextNodes != null)
@@ -26,7 +37,7 @@ public class NodeMapView : MonoBehaviour
         if (_createdNode.Contains(node))
             return;
 
-        Node nodeView = Instantiate(_nodePrefab, node.NodePosition, Quaternion.identity);
+        Node nodeView = Instantiate(_nodePrefab, node.NodePosition, Quaternion.identity, _nodesTransform);
         nodeView.InitializeNode(node);
         _createdNode.Add(node);
 
@@ -37,5 +48,10 @@ public class NodeMapView : MonoBehaviour
                 InstantiateNode(nextNode);
             }
         }
+    }
+
+    private void InactiveNodeView()
+    {
+        SetActiveNodeView(false);
     }
 }

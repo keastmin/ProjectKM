@@ -231,69 +231,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 15645297}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &33457651
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 33457652}
-  - component: {fileID: 33457653}
-  - component: {fileID: 33457654}
-  m_Layer: 0
-  m_Name: Node Map Transition Director
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &33457652
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 33457651}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &33457653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 33457651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5f8de32e4830cf4b81f2c99d1a3dca5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NodeMapTransitionDirector
-  _mainCamera: {fileID: 0}
-  _basecampElevator: {fileID: 2036769328}
-  _externalWorldSceneAdditiveController: {fileID: 33457654}
---- !u!114 &33457654
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 33457651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b1f1d5ae6c091d46ad7702515b36939, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WorldObjectsChanger
-  _externalWorldSceneName: NodeMapScene
-  _basecampObjects:
-  - {fileID: 1459855570}
 --- !u!1 &142621554
 GameObject:
   m_ObjectHideFlags: 0
@@ -1870,74 +1807,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &671941490
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1047183723110580088, guid: a932be03b88f46548b788f8d15ab49fd, type: 3}
-      propertyPath: m_Name
-      value: Player TPS Camera
-      objectReference: {fileID: 0}
-    - target: {fileID: 5176687126831571810, guid: a932be03b88f46548b788f8d15ab49fd, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -5.91557
-      objectReference: {fileID: 0}
-    - target: {fileID: 5176687126831571810, guid: a932be03b88f46548b788f8d15ab49fd, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 5.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 5176687126831571810, guid: a932be03b88f46548b788f8d15ab49fd, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -14.95
-      objectReference: {fileID: 0}
-    - target: {fileID: 5176687126831571810, guid: a932be03b88f46548b788f8d15ab49fd, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.96736073
-      objectReference: {fileID: 0}
-    - target: {fileID: 5176687126831571810, guid: a932be03b88f46548b788f8d15ab49fd, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.25340343
-      objectReference: {fileID: 0}
-    - target: {fileID: 5176687126831571810, guid: a932be03b88f46548b788f8d15ab49fd, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5176687126831571810, guid: a932be03b88f46548b788f8d15ab49fd, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5176687126831571810, guid: a932be03b88f46548b788f8d15ab49fd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 29.358
-      objectReference: {fileID: 0}
-    - target: {fileID: 5176687126831571810, guid: a932be03b88f46548b788f8d15ab49fd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5176687126831571810, guid: a932be03b88f46548b788f8d15ab49fd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a932be03b88f46548b788f8d15ab49fd, type: 3}
---- !u!114 &671941491 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3921434412115293063, guid: a932be03b88f46548b788f8d15ab49fd, type: 3}
-  m_PrefabInstance: {fileID: 671941490}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7f3c46d3e13e724bb9cb50caa4f2275, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCinemachineController
 --- !u!1 &683584135
 GameObject:
   m_ObjectHideFlags: 0
@@ -6272,6 +6141,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 423040439}
     - target: {fileID: 8082535364499100847, guid: 81d2478e7ea5bf245881fc94c49cff2a, type: 3}
+      propertyPath: _basecampElevator
+      value: 
+      objectReference: {fileID: 2036769328}
+    - target: {fileID: 8082535364499100847, guid: 81d2478e7ea5bf245881fc94c49cff2a, type: 3}
       propertyPath: _cinemachineBrain
       value: 
       objectReference: {fileID: 0}
@@ -6290,11 +6163,11 @@ PrefabInstance:
     - target: {fileID: 8082535364499100847, guid: 81d2478e7ea5bf245881fc94c49cff2a, type: 3}
       propertyPath: _nodeMapTransitionDirector
       value: 
-      objectReference: {fileID: 33457653}
+      objectReference: {fileID: 0}
     - target: {fileID: 8082535364499100847, guid: 81d2478e7ea5bf245881fc94c49cff2a, type: 3}
       propertyPath: _playerCinemachineController
       value: 
-      objectReference: {fileID: 671941491}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6613,7 +6486,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 659801257}
-  - {fileID: 671941490}
   - {fileID: 2046469868}
   - {fileID: 168845689}
   - {fileID: 1001381544}
@@ -6621,4 +6493,3 @@ SceneRoots:
   - {fileID: 1255469465}
   - {fileID: 319529989888778175}
   - {fileID: 1657323118}
-  - {fileID: 33457652}

@@ -3,20 +3,31 @@ using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class NodeMapViewController : MonoBehaviour
+public class NodeMapCameraController : MonoBehaviour
 {
+    [SerializeField] private CinemachineBrain _cinemachineBrain;
     [SerializeField] private CinemachineCamera _firstNodeMapViewCamera;
     [SerializeField] private CinemachineCamera _secondNodeMapViewCamera;
 
     private void Awake()
     {
-        InitializeCinemachineCameras();
+        SetInactiveCinemachineCameras();
     }
 
-    private void InitializeCinemachineCameras()
+    public void InitializeNodeMapViewController(CinemachineBrain cineBrain)
+    {
+        _cinemachineBrain = cineBrain;
+    }
+
+    private void SetInactiveCinemachineCameras()
     {
         _firstNodeMapViewCamera.gameObject.SetActive(false);
         _secondNodeMapViewCamera.gameObject.SetActive(false);
+    }
+
+    public void NodeMapCinemachineBlend()
+    {
+        StartCoroutine(StartNodeMapCinemachineBlend(_cinemachineBrain));
     }
 
     public IEnumerator StartNodeMapCinemachineBlend(CinemachineBrain brain)

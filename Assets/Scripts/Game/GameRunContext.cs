@@ -8,14 +8,16 @@ public class GameRunContext
     public InputModeManager InputModeManager;
     public SaveDataManager SaveDataManager;
     public SceneFlowManager SceneFlowManager;
+    public PlayerCinemachineController PlayerCinemachineController;
     public CinemachineBrain CinemachineBrain;
     public Camera MainCamera;
 
     public GameRunContext(
-        GameManager gameManager, 
-        InputModeManager inputModeManager, 
-        SaveDataManager saveDataManager, 
-        SceneFlowManager sceneFlowManager, 
+        GameManager gameManager,
+        InputModeManager inputModeManager,
+        SaveDataManager saveDataManager,
+        SceneFlowManager sceneFlowManager,
+        PlayerCinemachineController playerCinemachineController,
         CinemachineBrain cinemachineBrain,
         Camera mainCamera)
     {
@@ -23,6 +25,7 @@ public class GameRunContext
         this.InputModeManager = inputModeManager;
         this.SaveDataManager = saveDataManager;
         this.SceneFlowManager = sceneFlowManager;
+        this.PlayerCinemachineController = playerCinemachineController;
         this.CinemachineBrain = cinemachineBrain;
         this.MainCamera = mainCamera;
     }

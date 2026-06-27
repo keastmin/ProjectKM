@@ -8,7 +8,6 @@ public class BasecampSceneBootstrapper : Bootstrapper
 
     [Header("Scene Player")]
     [SerializeField] private PlayerSpawner _playerSpawner;
-    [SerializeField] private PlayerCinemachineController _playerCinemachineController;
 
     [Header("Effect")]
     [SerializeField] private VolumeEffect _volumeEffect;
@@ -16,12 +15,10 @@ public class BasecampSceneBootstrapper : Bootstrapper
     [Header("World")]
     [SerializeField] private WeaponModeViewerOpener _weaponModeViewerOpener;
     [SerializeField] private PlayerUpgradeOpener _playerUpgradeOpener;
+    [SerializeField] private BasecampElevator _basecampElevator;
 
     [Header("UI")]
     [SerializeField] private BasecampCanvas _basecampCanvas;
-
-    [Header("System")]
-    [SerializeField] private NodeMapTransitionDirector _nodeMapTransitionDirector;
 
     [Header("Start Setting Variable")]
     [SerializeField] private GameState _startGameState = GameState.Basecamp;
@@ -31,17 +28,13 @@ public class BasecampSceneBootstrapper : Bootstrapper
     {
         // 플레이어 초기화
         PlayerCore player = _playerSpawner.SpawnPlayer(context, context.SaveDataManager.SavedPlayerInstance, context.MainCamera);
-        _playerCinemachineController.InitializePlayerCinemachineController(player, context.InputModeManager);
-
-        // 월드 오브젝트 검사
+        context.PlayerCinemachineController.gameObject.SetActive(true);
+        context.PlayerCinemachineController.InitializePlayerCinemachineController(player, context.InputModeManager);
 
         // 매니저 상태 초기화
         context.GameManager.SetGameState(_startGameState);
         context.InputModeManager.ClearInputState();
         context.InputModeManager.PushInputState(_startInputState);
-
-        // 노드맵 전환 시스템 초기화
-        _nodeMapTransitionDirector.InitializeNodeMapTransitionDirector(context.GameManager, context.InputModeManager, context.CinemachineBrain);
 
         // 볼륨 이펙트 초기화
         _volumeEffect.InitializeVolumeEffect(player);
@@ -52,5 +45,7 @@ public class BasecampSceneBootstrapper : Bootstrapper
             context.InputModeManager,
             _weaponModeViewerOpener,
             _playerUpgradeOpener);
+
+        _basecampElevator.InitializeElevator(player, context);
     }
 }

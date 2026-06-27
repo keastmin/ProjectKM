@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36baaa8bdcb9d8b49b9199833965d2c3, type: 3}
-  m_Name: NodeMap Camera Sequence
+  m_Name: Cinemachine Blends Asset
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBlenderSettings
   CustomBlends:
-  - From: Player TPS Camera(Clone)
+  - From: Player TPS Camera
     To: First Node Map View Camera
     Blend:
       Style: 1
@@ -28,6 +28,28 @@ MonoBehaviour:
     To: Second Node Map View Camera
     Blend:
       Style: 1
+      Time: 0.7
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - From: Main Menu Cinemachine
+    To: '**ANY CAMERA**'
+    Blend:
+      Style: 0
+      Time: 0.7
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - From: '**ANY CAMERA**'
+    To: Main Menu Cinemachine
+    Blend:
+      Style: 0
       Time: 0.7
       CustomCurve:
         serializedVersion: 2

@@ -35,6 +35,8 @@ public class NodeMapGenerator : MonoBehaviour
     private NodeInstance _baseNode;
     private NodeInstance[,] _nodeGrid;
 
+    public NodeInstance BaseNode => _baseNode;
+
     private void OnValidate()
     {
         InitializeNodeMap();
@@ -68,6 +70,7 @@ public class NodeMapGenerator : MonoBehaviour
 
     private void GenerateNodeMap()
     {
+        Debug.Log("노드맵 생성 수행");
         Vector3 centerPos = GetCellPosition((int)(_rowSize / 2f), (int)(_colSize / 2f));
         int startX = (int)(_colSize / 2f);
         int startZ = (int)(_rowSize / 2f);
@@ -85,7 +88,7 @@ public class NodeMapGenerator : MonoBehaviour
             prevNode = newNode;
         }
 
-        _nodeMapView.CreateNodeView(_baseNode);
+        _nodeMapView.CreateNodeView(BaseNode);
         _baseNode.ClearThisNode();
     }
 
