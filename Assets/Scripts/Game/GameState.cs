@@ -3,6 +3,6 @@ public enum GameState
     Main,
     Basecamp,
     Loading,
-    Game,
+    Combat,
     NodeMap
 }

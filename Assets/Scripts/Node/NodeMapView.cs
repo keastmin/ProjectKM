@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class NodeMapView : MonoBehaviour
 {
+    [SerializeField] private SceneSwitchRequester _sceneSwitchRequester;
     [SerializeField] private Node _nodePrefab;
     [SerializeField] private Transform _nodesTransform;
 
@@ -23,29 +24,34 @@ public class NodeMapView : MonoBehaviour
         Debug.Log("노드 월드 배치 수행");
         _createdNode = new HashSet<NodeInstance>();
 
+        if(_sceneSwitchRequester == null)
+        {
+            Debug.LogError("씬 전환 요청자가 없음");
+        }
+
         if (baseNode.NextNodes != null)
         {
             foreach (var node in baseNode.NextNodes)
             {
-                InstantiateNode(node);
+                InstantiateNode(node, _sceneSwitchRequester);
             }
         }
     }
 
-    private void InstantiateNode(NodeInstance node)
+    private void InstantiateNode(NodeInstance node, SceneSwitchRequester sceneSwitchRequester)
     {
         if (_createdNode.Contains(node))
             return;
 
         Node nodeView = Instantiate(_nodePrefab, node.NodePosition, Quaternion.identity, _nodesTransform);
-        nodeView.InitializeNode(node);
+        nodeView.InitializeNode(node, sceneSwitchRequester);
         _createdNode.Add(node);
 
         if(node.NextNodes != null)
         {
             foreach(var nextNode in node.NextNodes)
             {
-                InstantiateNode(nextNode);
+                InstantiateNode(nextNode, sceneSwitchRequester);
             }
         }
     }

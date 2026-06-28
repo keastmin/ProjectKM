@@ -74,7 +74,6 @@ public class BasecampElevator : MonoBehaviour
 
         List<GameObject> objList = new List<GameObject>();
         objList.Add(_playerCore.gameObject);
-        objList.Add(_playerCinemachineController.gameObject);
         objList.Add(this.gameObject);
         _sceneFlowManager.SwitchSceneWithMoveGameObjects(_nodeMapSceneName, _basecampSceneName, objList);
     }

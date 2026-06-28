@@ -8,9 +8,6 @@ using UnityEditor;
 
 public class NodeMapGenerator : MonoBehaviour
 {
-    [Header("View")]
-    [SerializeField] private NodeMapView _nodeMapView;
-
     [Header("Grid")]
     [SerializeField] private Collider _worldCollider;
     [SerializeField] private Vector3 _gridOffset = Vector3.zero;
@@ -47,11 +44,6 @@ public class NodeMapGenerator : MonoBehaviour
         OnValidate();
     }
 
-    private void Start()
-    {
-        GenerateNodeMap();
-    }
-
     private void InitializeNodeMap()
     {
         CacheVariable();
@@ -68,7 +60,7 @@ public class NodeMapGenerator : MonoBehaviour
         _maxPosition = _worldCollider.bounds.max;
     }
 
-    private void GenerateNodeMap()
+    public void GenerateNodeMap()
     {
         Debug.Log("노드맵 생성 수행");
         Vector3 centerPos = GetCellPosition((int)(_rowSize / 2f), (int)(_colSize / 2f));
@@ -88,7 +80,6 @@ public class NodeMapGenerator : MonoBehaviour
             prevNode = newNode;
         }
 
-        _nodeMapView.CreateNodeView(BaseNode);
         _baseNode.ClearThisNode();
     }
 

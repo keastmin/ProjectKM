@@ -11,6 +11,7 @@ public class GameRunContext
     public PlayerCinemachineController PlayerCinemachineController;
     public CinemachineBrain CinemachineBrain;
     public Camera MainCamera;
+    public PlayerCore PlayerCore;
 
     public GameRunContext(
         GameManager gameManager,
@@ -28,5 +29,12 @@ public class GameRunContext
         this.PlayerCinemachineController = playerCinemachineController;
         this.CinemachineBrain = cinemachineBrain;
         this.MainCamera = mainCamera;
+    }
+
+    public void SetPlayerCore(PlayerCore playerCore)
+    {
+        if (playerCore == null)
+            return;
+        this.PlayerCore = playerCore;
     }
 }

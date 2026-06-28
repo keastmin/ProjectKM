@@ -37,7 +37,7 @@ public class PlayerCinemachineController : MonoBehaviour
         TrySetTarget(_player.CameraPivot);
     }
 
-    public bool TrySetTarget(Transform target)
+    private bool TrySetTarget(Transform target)
     {
         if(_cineCam == null)
         {

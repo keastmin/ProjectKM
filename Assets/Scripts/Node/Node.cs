@@ -6,8 +6,6 @@ using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class Node : MonoBehaviour
 {
-    [SerializeField] private string _testScene = "PlayerScene";
-
     [SerializeField] private MeshRenderer _nodeObjectMeshRenderer;
     [SerializeField] private Material _bossMaterial;
     [SerializeField] private Material _eliteMaterial;
@@ -20,6 +18,8 @@ public class Node : MonoBehaviour
 
     private NodeInstance _instance;
 
+    private SceneSwitchRequester _sceneSwitchRequester;
+
     private void OnEnable()
     {
         BindEvent();
@@ -30,9 +30,10 @@ public class Node : MonoBehaviour
         UnbindEvent();
     }
 
-    public void InitializeNode(NodeInstance instance)
+    public void InitializeNode(NodeInstance instance, SceneSwitchRequester sceneSwitchRequester)
     {
         _instance = instance;
+        _sceneSwitchRequester = sceneSwitchRequester;
         BindEvent();
         SetNodeVisual(_instance.Type, _instance.State);
     }
@@ -115,6 +116,9 @@ public class Node : MonoBehaviour
         if (_instance.State != NodeState.Active)
             return;
 
-        LoadingController.LoadScene(_testScene);
+        if(_instance.Type == NodeType.NormalCombat)
+        {
+            _sceneSwitchRequester.SwitchCombatScene();
+        }
     }
 }

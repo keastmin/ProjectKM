@@ -26,15 +26,16 @@ public class BasecampSceneBootstrapper : Bootstrapper
 
     public override void InitializeScene(GameRunContext context)
     {
-        // 플레이어 초기화
-        PlayerCore player = _playerSpawner.SpawnPlayer(context, context.SaveDataManager.SavedPlayerInstance, context.MainCamera);
-        context.PlayerCinemachineController.gameObject.SetActive(true);
-        context.PlayerCinemachineController.InitializePlayerCinemachineController(player, context.InputModeManager);
-
         // 매니저 상태 초기화
         context.GameManager.SetGameState(_startGameState);
         context.InputModeManager.ClearInputState();
         context.InputModeManager.PushInputState(_startInputState);
+
+        // 플레이어 초기화
+        PlayerCore player = _playerSpawner.SpawnPlayer(context, context.SaveDataManager.SavedPlayerInstance, context.MainCamera);
+        context.PlayerCinemachineController.gameObject.SetActive(true);
+        context.PlayerCinemachineController.InitializePlayerCinemachineController(player, context.InputModeManager);
+        context.SetPlayerCore(player);
 
         // 볼륨 이펙트 초기화
         _volumeEffect.InitializeVolumeEffect(player);
