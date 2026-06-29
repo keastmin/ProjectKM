@@ -192,7 +192,9 @@ namespace Player
 
         private void Awake()
         {
-
+            // 회피 초기화
+            DodgeAvailableCount = _maxDodgeAvailableCount;
+            CurrentDodgeCooldownTimer = _dodgeCooldown;
         }
 
         private void OnEnable()
