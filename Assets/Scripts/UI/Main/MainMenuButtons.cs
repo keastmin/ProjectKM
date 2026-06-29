@@ -24,14 +24,14 @@ public class MainMenuButtons : MonoBehaviour
 
     public void OnClickContinueButton()
     {     
-        // LoadingController.LoadScene(_continueLoadScene);
+
     }
 
     public void OnClickNewGameButton()
     {
-        _sceneFlowManager.AdditiveSceneLoad(_newGameLoadScene);
-        _sceneFlowManager.UnLoadScene(_currentScene);
-        // LoadingController.LoadScene(_newGameLoadScene);
+        //_sceneFlowManager.AdditiveSceneLoad(_newGameLoadScene);
+        //_sceneFlowManager.UnLoadScene(_currentScene);
+        _sceneFlowManager.SwitchScene(_newGameLoadScene, _currentScene, true, 2f);
     }
 
     public void OnClickQuitButton()

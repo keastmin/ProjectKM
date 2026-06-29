@@ -14,6 +14,7 @@ public class ElevatorDetector : MonoBehaviour
         if (_isBlock)
             return;
 
+        Debug.Log($"플레이어 감지됨: {this.name}");
         OnDetectPlayerEnter?.Invoke();
     }
 

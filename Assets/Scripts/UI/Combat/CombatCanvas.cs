@@ -9,4 +9,9 @@ public class CombatCanvas : MonoBehaviour
     {
         _combatUI.InitCombatUI(playerCore);
     }
+
+    public void SetActiveCombatUI(bool active)
+    {
+        _combatUI.gameObject.SetActive(active);
+    }
 }

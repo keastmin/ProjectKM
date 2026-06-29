@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class InputModeManager : MonoBehaviour
 {
-    public static InputModeManager Instance;
-
     public InputState CurrentState => _stateStack.Peek();
 
     private Stack<InputState> _stateStack;
@@ -15,16 +13,6 @@ public class InputModeManager : MonoBehaviour
     private void Awake()
     {
         _stateStack = new Stack<InputState>();
-
-        if(Instance != null)
-        {
-            Debug.Log("InputModeManager가 이미 있음");
-            Destroy(this.gameObject);
-            return;
-        }
-
-        DontDestroyOnLoad(this.gameObject);
-        Instance = this;
     }
 
     public void PushInputState(InputState inputState)

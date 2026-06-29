@@ -34,8 +34,8 @@ Transform:
   - {fileID: 8400248363036875300}
   - {fileID: 412210548784753972}
   - {fileID: 7949570809161812622}
-  - {fileID: 5781065741024975250}
   - {fileID: 258304912606656615}
+  - {fileID: 5781065741024975250}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1513979325728030609
@@ -50,8 +50,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8e1fb6cfa1f2a94eb08aba42dc14a0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasecampElevator
+  _nodeMapSceneName: NodeMapScene
+  _basecampSceneName: BasecampScene
   _elevatorDoorOpener: {fileID: 2483309461932939380}
   _playerInElevatorDetector: {fileID: 5726267367945726748}
+  _combatUICamera: {fileID: 0}
+  _combatCanvas: {fileID: 0}
 --- !u!114 &2483309461932939380
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,6 +12,8 @@ public class GameRunContext
     public CinemachineBrain CinemachineBrain;
     public Camera MainCamera;
     public PlayerCore PlayerCore;
+    public Camera CombatUICamera;
+    public CombatCanvas CombatCanvas;
 
     public GameRunContext(
         GameManager gameManager,
@@ -36,5 +38,11 @@ public class GameRunContext
         if (playerCore == null)
             return;
         this.PlayerCore = playerCore;
+    }
+
+    public void SetCombatUI(Camera combatUICamera, CombatCanvas combatCanvas)
+    {
+        this.CombatCanvas = combatCanvas;
+        this.CombatUICamera = combatUICamera;
     }
 }

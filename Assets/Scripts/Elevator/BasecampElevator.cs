@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class BasecampElevator : MonoBehaviour
 {
@@ -10,12 +11,13 @@ public class BasecampElevator : MonoBehaviour
     [SerializeField] private string _basecampSceneName = "BasecampScene";
     [SerializeField] private ElevatorDoorOpener _elevatorDoorOpener;
     [SerializeField] private ElevatorDetector _playerInElevatorDetector;
-
-    public event Action OnPlayerInElevator;
+    [SerializeField] private Camera _combatUICamera;
+    [SerializeField] private CombatCanvas _combatCanvas;
+    [SerializeField] private Camera _basecampUICamera;
 
     private PlayerCore _playerCore;
-    private PlayerCinemachineController _playerCinemachineController;
     private SceneFlowManager _sceneFlowManager;
+    private Camera _mainCamera;
 
     private void OnEnable()
     {
@@ -29,9 +31,11 @@ public class BasecampElevator : MonoBehaviour
 
     public void InitializeElevator(PlayerCore player, GameRunContext context)
     {
+        Debug.Log("엘레베이터 초기화");
+
         _playerCore = player;
-        _playerCinemachineController = context.PlayerCinemachineController;
         _sceneFlowManager = context.SceneFlowManager;
+        _mainCamera = context.MainCamera;
 
         BindDetectEvent();
     }
@@ -71,10 +75,16 @@ public class BasecampElevator : MonoBehaviour
     private void SetPlayerInElevator()
     {
         BlockElevatorDoor(true);
+        Debug.Log("엘리베이터 들어감");
+
+        var mainCameraData = _mainCamera.GetUniversalAdditionalCameraData();
+        mainCameraData.cameraStack.Remove(_basecampUICamera);
 
         List<GameObject> objList = new List<GameObject>();
         objList.Add(_playerCore.gameObject);
         objList.Add(this.gameObject);
+        objList.Add(_combatUICamera.gameObject);
+        objList.Add(_combatCanvas.gameObject);
         _sceneFlowManager.SwitchSceneWithMoveGameObjects(_nodeMapSceneName, _basecampSceneName, objList);
     }
 
@@ -83,13 +93,16 @@ public class BasecampElevator : MonoBehaviour
         _elevatorDoorOpener.BlockElevatorDoorOpen(block);
     }
 
-    private void SwitchToNodeMap()
+    private void SwitchToNodeMap(string unloadSceneName, string loadedSceneName)
     {
-        // 엘레베이터에서 플레이어 감지 막기
-        _playerInElevatorDetector.BlockDetect(true);
+        if (unloadSceneName == _basecampSceneName && loadedSceneName == _nodeMapSceneName)
+        {
+            // 엘레베이터에서 플레이어 감지 막기
+            _playerInElevatorDetector.BlockDetect(true);
 
-        // 문 열기 기다리기
-        StartCoroutine(WaitOpenDoorRoutine(2f));
+            // 문 열기 기다리기
+            StartCoroutine(WaitOpenDoorRoutine(2f));
+        }
     }
 
     private IEnumerator WaitOpenDoorRoutine(float waitSeconds)

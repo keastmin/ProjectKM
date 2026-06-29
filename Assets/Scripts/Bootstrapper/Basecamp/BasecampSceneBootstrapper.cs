@@ -1,11 +1,10 @@
 using Player;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class BasecampSceneBootstrapper : Bootstrapper
 {
-    [SerializeField] private bool _playerSpawn = true;
-
     [Header("Scene Player")]
     [SerializeField] private PlayerSpawner _playerSpawner;
 
@@ -19,6 +18,9 @@ public class BasecampSceneBootstrapper : Bootstrapper
 
     [Header("UI")]
     [SerializeField] private BasecampCanvas _basecampCanvas;
+    [SerializeField] private Camera _basecampUICamera;
+    [SerializeField] private CombatCanvas _combatCanvas;
+    [SerializeField] private Camera _combatUICamera;
 
     [Header("Start Setting Variable")]
     [SerializeField] private GameState _startGameState = GameState.Basecamp;
@@ -40,13 +42,21 @@ public class BasecampSceneBootstrapper : Bootstrapper
         // 볼륨 이펙트 초기화
         _volumeEffect.InitializeVolumeEffect(player);
 
+        // 전투 UI 초기화
+        var mainCameraData = context.MainCamera.GetUniversalAdditionalCameraData();
+        _combatCanvas.InitializeCombatCanvas(player);
+        mainCameraData.cameraStack.Add(_combatUICamera);
+        context.SetCombatUI(_combatUICamera, _combatCanvas);
+
         // 베이스캠프 UI 초기화
         _basecampCanvas.InitBasecampCanvas(
             player,
             context.InputModeManager,
             _weaponModeViewerOpener,
             _playerUpgradeOpener);
+        mainCameraData.cameraStack.Add(_basecampUICamera);
 
+        // 엘레베이터 초기화
         _basecampElevator.InitializeElevator(player, context);
     }
 }

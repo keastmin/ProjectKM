@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1743255942322742081}
   - component: {fileID: 194900620814516614}
   m_Layer: 0
-  m_Name: UI Camera
+  m_Name: Combat UI Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

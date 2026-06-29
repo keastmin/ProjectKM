@@ -546,6 +546,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SceneSwitchRequester
   _playerCore: {fileID: 0}
   _sceneFlowManager: {fileID: 0}
+  _mainCamera: {fileID: 0}
+  _combatUICamera: {fileID: 0}
+  _secondNodeViewCinemachineCamera: {fileID: 1928439673}
   _nodeMapSceneName: NodeMapScene
   _normalCombatSceneName: NormalCombatScene
 --- !u!1 &816107162
@@ -594,6 +597,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NodeMapSequenceDirector
   _gameManager: {fileID: 0}
   _inputModeManager: {fileID: 0}
+  _combatCanvas: {fileID: 0}
   _nodeMapPlayerDetector: {fileID: 5036170}
   _nodeMapCameraController: {fileID: 1237845775}
   _nodeMapView: {fileID: 2010314740}

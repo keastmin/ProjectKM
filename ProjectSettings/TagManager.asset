@@ -41,6 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Combat
+    uniqueID: 3032197389
+    locked: 0
+  - name: Basecamp
+    uniqueID: 384475849
+    locked: 0
   m_RenderingLayers:
   - Default
   - Light Layer 1

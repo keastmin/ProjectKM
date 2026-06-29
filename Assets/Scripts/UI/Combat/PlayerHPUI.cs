@@ -11,6 +11,8 @@ public class PlayerHPUI : MonoBehaviour
     private PlayerCore _player;
     private Coroutine _hpSliderCoroutine;
 
+    private bool _isInitialized = false;
+
     private void OnEnable()
     {
         BindPlayerEvent();
@@ -23,15 +25,22 @@ public class PlayerHPUI : MonoBehaviour
 
     public void InitPlayerHPUI(PlayerCore player)
     {
+        _isInitialized = false;
+
         _player = player;
+
+        _isInitialized = true;
         BindPlayerEvent();
     }
 
     private void BindPlayerEvent()
     {
-        if (_player == null)
+        if (!_isInitialized)
+            return;
+
+        if(_player == null)
         {
-            Debug.LogError("플레이어가 없습니다");
+            Debug.LogError("PlayerCore가 없음");
             return;
         }
 
@@ -42,9 +51,12 @@ public class PlayerHPUI : MonoBehaviour
 
     private void UnbindPlayerEvent()
     {
-        if(_player == null)
+        if (!_isInitialized)
+            return;
+
+        if (_player == null)
         {
-            Debug.LogError("플레이어가 없습니다");
+            Debug.LogError("PlayerCore가 없음");
             return;
         }
 

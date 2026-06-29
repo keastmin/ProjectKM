@@ -11,6 +11,8 @@ public class PlayerDodgeUI : MonoBehaviour
     
     private PlayerCore _player;
 
+    private bool _isInitialized = false;
+
     private void OnEnable()
     {
         BindPlayerEvent();
@@ -30,12 +32,19 @@ public class PlayerDodgeUI : MonoBehaviour
 
     public void InitDodgeUI(PlayerCore player)
     {
+        _isInitialized = false;
+
         _player = player;
+
+        _isInitialized = true;
         BindPlayerEvent();
     }
 
     private void BindPlayerEvent()
     {
+        if (!_isInitialized)
+            return;
+
         if (_player == null)
         {
             Debug.LogError("플레이어가 없습니다");
@@ -50,6 +59,9 @@ public class PlayerDodgeUI : MonoBehaviour
 
     private void UnbindPlayerEvent()
     {
+        if (!_isInitialized)
+            return;
+
         if (_player == null)
         {
             Debug.LogError("플레이어가 없습니다");
