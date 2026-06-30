@@ -37,6 +37,7 @@ public class HellCatCore : EnemyCore
     [SerializeField] private Transform _modelRootTransform;
 
     private Animator _animator;
+    private AnimatorRM _animatorRM;
     private Rigidbody _rigidbody;
     private NavMeshAgent _agent;
     private bool _hasModelRotationTarget;
@@ -80,10 +81,7 @@ public class HellCatCore : EnemyCore
     {
         base.Awake();
         _animator = GetComponentInChildren<Animator>();
-        if (_animator != null && _animator.gameObject != gameObject && !_animator.TryGetComponent(out HellCatAnimRM _))
-        {
-            _animator.gameObject.AddComponent<HellCatAnimRM>();
-        }
+        _animatorRM = GetComponentInChildren<AnimatorRM>();
 
         TryGetComponent(out _rigidbody);
         TryGetComponent(out _agent);
@@ -98,6 +96,16 @@ public class HellCatCore : EnemyCore
         _fsm = new HellCatFSM(this);
     }
 
+    private void OnEnable()
+    {
+        BindAnimationEvent();
+    }
+
+    private void OnDisable()
+    {
+        UnbindAnimationEvent();
+    }
+
     private void Start()
     {
         _fsm.Initialize(_fsm.IdleState);
@@ -106,12 +114,6 @@ public class HellCatCore : EnemyCore
     protected override void Update()
     {
         base.Update();
-
-        //// Basic Attack 쿨타임 관리
-        //if (CurrentBasicAttackCoolTime < _basicAttackCoolDown)
-        //{
-        //    CurrentBasicAttackCoolTime += Time.deltaTime;
-        //}
 
         _fsm.Tick();
     }
@@ -127,12 +129,18 @@ public class HellCatCore : EnemyCore
         ApplyModelRotationTarget();
     }
 
-    private void OnAnimatorMove()
+    private void BindAnimationEvent()
     {
-        HandleAnimatorMove();
+        UnbindAnimationEvent();
+        _animatorRM.OnAnimatorMoveAction += HandleAnimatorMove;
     }
 
-    public void HandleAnimatorMove()
+    private void UnbindAnimationEvent()
+    {
+        _animatorRM.OnAnimatorMoveAction -= HandleAnimatorMove;
+    }
+
+    private void HandleAnimatorMove()
     {
         _fsm.AnimationTick();
     }

@@ -22,5 +22,8 @@ public class NormalCombatSceneBootstrapper : Bootstrapper
         context.InputModeManager.PushInputState(InputState.Combat);
         var mainCameraData = context.MainCamera.GetComponent<UniversalAdditionalCameraData>();
         mainCameraData.cameraStack.Add(_uiCamera);
+
+        EnemyCore enemy = _enemySpawner.SpawnEnemy();
+        enemy.InitializeEnemyCore(context);
     }
 }

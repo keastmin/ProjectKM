@@ -2018,6 +2018,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9125465056436916456}
+  - {fileID: 8230814809132664056}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5487937497127101108
@@ -2032,11 +2033,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af80121a216d20a4a8745ac602d9b2af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HellCatCore
-  _stiffnessLevel: 0
-  _enableSuperArmour: 1
-  _superArmourDuration: 3
-  _superArmourDamage: 80
-  _superArmourHoldTime: 3
+  _enemyAttributesSO: {fileID: 11400000, guid: a55d8d359dc44e44eb3f3944436643d9, type: 2}
+  _enemyHPUI: {fileID: 4990801396568517562}
   _playerLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -4403,3 +4401,84 @@ Transform:
   - {fileID: 8110929952689888704}
   m_Father: {fileID: 8055139865728814417}
   m_LocalEulerAnglesHint: {x: -2.7997782, y: -55.78913, z: -1.9020472}
+--- !u!1001 &4223888614021291005
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8222844418534109985}
+    m_Modifications:
+    - target: {fileID: 3236143878143725457, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3236143878143725457, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5127930289389927163, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+      propertyPath: m_Name
+      value: HP UI Pivot
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235432528720879365, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235432528720879365, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.539
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235432528720879365, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235432528720879365, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235432528720879365, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235432528720879365, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235432528720879365, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235432528720879365, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235432528720879365, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235432528720879365, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+--- !u!114 &4990801396568517562 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9213422819125440583, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+  m_PrefabInstance: {fileID: 4223888614021291005}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c585bc11308c945b2c8c2837deecf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHPUIPivot
+--- !u!4 &8230814809132664056 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5235432528720879365, guid: 58f63ce0c24795d4abb469fb2621ffdb, type: 3}
+  m_PrefabInstance: {fileID: 4223888614021291005}
+  m_PrefabAsset: {fileID: 0}
