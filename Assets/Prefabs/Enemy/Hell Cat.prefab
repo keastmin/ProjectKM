@@ -2056,6 +2056,7 @@ MonoBehaviour:
   _backwardStrafeStateData: {fileID: 11400000, guid: 6562c948d268f1f43b09bcc6dd370e8a, type: 2}
   _chaseStateData: {fileID: 11400000, guid: 20fa7f601af43bd45879b9137a7016a2, type: 2}
   _damagedStateData: {fileID: 11400000, guid: 4675caba3e0ded447aede29731bc7350, type: 2}
+  _deadStateData: {fileID: 11400000, guid: fc5664e545876a14a9ac24ecbbd88a68, type: 2}
   _hellCatBiteAttackStateData: {fileID: 11400000, guid: 448249acddb932142af93a58c5ef8af5, type: 2}
   _modelRootTransform: {fileID: 7026498382753054981}
 --- !u!114 &5801187150842432432

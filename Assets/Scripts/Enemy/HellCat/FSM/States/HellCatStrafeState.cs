@@ -50,6 +50,12 @@ public class HellCatStrafeState : IState
 
     public void Tick()
     {
+        if (_core.IsDead)
+        {
+            _core.FSM.Transition(_core.FSM.DeadState);
+            return;
+        }
+
         _currentAttackCooldown += Time.deltaTime;
 
         if (_core.DamagedFlag)

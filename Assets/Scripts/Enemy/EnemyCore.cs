@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +22,7 @@ public class EnemyCore : MonoBehaviour, IDamageable
     private float _runSpeed;
 
     public bool DamagedFlag { get; set; }
+    public bool IsDead { get; private set; }
 
     // 플레이어 감지
     private Collider[] _detectedColliders;
@@ -37,13 +39,17 @@ public class EnemyCore : MonoBehaviour, IDamageable
         set
         {
             _currentHP = value;
+            _enemyHPUI.SetHPSliderValue(_currentHP, MaxHP);
         }
     }
+
+    public event Action OnEnemyDead;
 
     protected virtual void Awake()
     {
         InitializeAttributes(_enemyAttributesSO);
         _detectedColliders = new Collider[3];
+        IsDead = false;
     }
 
     protected virtual void Update()
@@ -57,13 +63,27 @@ public class EnemyCore : MonoBehaviour, IDamageable
         _enemyHPUI.InitializeEnemyHPUI(context.MainCamera);
     }
 
+    // 데미지를 받았을 때
     public virtual void TakeDamage(float damage)
     {
+        if (IsDead)
+            return;
+
         DamagedFlag = true;
+        CurrentHP = Mathf.Max(CurrentHP - damage, 0f);
+
+        if(CurrentHP <= 0f)
+        {
+            IsDead = true;
+            OnEnemyDead?.Invoke();
+        }
     }
 
     private void DetectPlayer()
     {
+        if (IsDead)
+            return;
+
         _detectedPlayer = null;
         int detectedCount = Physics.OverlapSphereNonAlloc(transform.position, DetectRadius, _detectedColliders, PlayerLayer);
         if (detectedCount > 0)

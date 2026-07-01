@@ -31,6 +31,7 @@ public class HellCatCore : EnemyCore
     [SerializeField] private EnemyStateData _backwardStrafeStateData;
     [SerializeField] private EnemyStateData _chaseStateData;
     [SerializeField] private EnemyStateData _damagedStateData;
+    [SerializeField] private EnemyStateData _deadStateData;
     [SerializeField] private EnemyStateAuthoringAsset _hellCatBiteAttackStateData;
 
     [Header("모델")]
@@ -67,6 +68,7 @@ public class HellCatCore : EnemyCore
     public EnemyStateData BackwardStrafeStateData => _backwardStrafeStateData;
     public EnemyStateData ChaseStateData => _chaseStateData;
     public EnemyStateData DamagedStateData => _damagedStateData;
+    public EnemyStateData DeadStateData => _deadStateData;
     public EnemyStateAuthoringAsset BiteAttackData => _hellCatBiteAttackStateData;
 
     // cool down

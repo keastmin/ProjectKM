@@ -28,6 +28,11 @@ public class EnemyHPUI : MonoBehaviour
         _isInitialized = true;
     }
 
+    public void SetHPSliderValue(float currentHP, float maxHP)
+    {
+        _enemyHPSlider.value = Mathf.Clamp(currentHP / maxHP, 0f, 1f);
+    }
+
     private void LookAtCamera()
     {
         LookAtCameraSelf();

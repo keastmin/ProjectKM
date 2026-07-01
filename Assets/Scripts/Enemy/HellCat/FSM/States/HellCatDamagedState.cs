@@ -22,6 +22,12 @@ public class HellCatDamagedState : IState
 
     public void Tick()
     {
+        if (_core.IsDead)
+        {
+            _core.FSM.Transition(_core.FSM.DeadState);
+            return;
+        }
+
         AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animHash, out _aniInfo);
 
         if (_core.DamagedFlag)

@@ -47,6 +47,9 @@ TagManager:
   - name: Basecamp
     uniqueID: 384475849
     locked: 0
+  - name: Stage
+    uniqueID: 2532546341
+    locked: 0
   m_RenderingLayers:
   - Default
   - Light Layer 1

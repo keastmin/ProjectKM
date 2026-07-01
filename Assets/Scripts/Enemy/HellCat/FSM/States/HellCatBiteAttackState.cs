@@ -40,6 +40,12 @@ public class HellCatBiteAttackState : IState
 
     public void Tick()
     {
+        if (_core.IsDead)
+        {
+            _core.FSM.Transition(_core.FSM.DeadState);
+            return;
+        }
+
         _hasStateInfo = AnimatorChecker.TryGetActiveAnimatorStateInfo(_core.Animator, 0, _animHash, out _stateInfo);
 
         if (_hasStateInfo && _stateInfo.normalizedTime > 0.92f)

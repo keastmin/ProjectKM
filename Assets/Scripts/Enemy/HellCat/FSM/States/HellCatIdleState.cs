@@ -19,6 +19,12 @@ public class HellCatIdleState : IState
 
     public void Tick()
     {
+        if (_core.IsDead)
+        {
+            _core.FSM.Transition(_core.FSM.DeadState);
+            return;
+        }
+
         if (_core.DamagedFlag)
         {
             _core.FSM.Transition(_core.FSM.DamagedState);
